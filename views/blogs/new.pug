@@ -1,0 +1,17 @@
+//- index.pug
+doctype html
+html
+    include ../includes/header.pug
+ 
+    body
+        h1 Create a new blog post
+        div.newBlog
+        form(action='/blog' method='POST' label='new blog form').newBlog__form
+            p title 
+            input(name='title' required='true')
+            p body
+            textarea(rows='10' col='200' wrap='hard' name='content' required='true')
+            p tags (seperate tags with a comma)
+            input(name='tags')
+            button.newBlog__button.newBlog__button--submit Submit
+        include ../includes/footer.pug

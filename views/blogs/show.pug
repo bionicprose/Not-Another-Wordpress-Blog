@@ -1,0 +1,11 @@
+//- includes/show.pug
+doctype html
+html
+    include ../includes/header.pug
+    body
+    h1= blog.title
+    p Posted #{blog.postDate}
+    p=blog.content
+    p=blog.tags
+
+    include ../includes/footer.pug
