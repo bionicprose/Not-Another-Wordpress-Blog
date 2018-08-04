@@ -4,29 +4,29 @@ var express         = require('express'),
     bodyParser      = require('body-parser'),
     mongoose        = require('mongoose'),
     User            = require('./models/user.js'),
-    blog            = require('./models/blog.js'),
+    Blog            = require('./models/blog.js'),
     passport        = require('passport'),
     flash           = require('connect-flash'),
     methodOverride  = require('method-override'),
-    LocalStrategy   = require('passport-local');
+    LocalStrategy   = require('passport-local'),
+    myAPIKey        = process.env.MYAPIKEY;
 
-var commentRoutes   = require('./routes/comments'),
+var commentRoutes   = require('./routes/commentRoutes'),
     blogRoutes      = require('./routes/blogRoutes'),
     indexRoutes     = require('./routes/indexRoutes');
 
 mongoose.connect('mongodb://localhost:27017/bionicprose', {useNewUrlParser: true});
 
-app.use(express.static(_dirname + '/public'));
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'pug');
 app.use(methodOverride('_method'));
 
-app.listen(3000, function() {
-    console.log('BionicProse is running!');
-});
 
+// secrets should be set as an environment variable and not in the code
+// figure out how to do that.
 app.use(require('express-session')({
-    secret:             'Yo yo, hinky-ho, hinky-ho. No mo dough',
+    secret:             myAPIKey,
     resave:             false,
     saveUninitialized:  false
 }));
@@ -46,3 +46,10 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use(blogRoutes);
+// app.use(commentRoutes);
+// app.use(indexRoutes);
+
+app.listen(3000, function() {
+    console.log('BionicProse is running!');
+});

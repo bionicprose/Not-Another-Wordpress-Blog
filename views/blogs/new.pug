@@ -6,12 +6,31 @@ html
     body
         h1 Create a new blog post
         div.newBlog
+            div.newBlog__toolbar
+                select.newBlog__dropdown.newBlog__dropdown--style
+                    option(value='paragraph') Paragraph
+                    option(value='h1') h1
+                    option(value='h2') h2
+                    option(value='h3') h3
+                    option(value='h4') h4
+                    option(value='h6') h6
+                button.newBlog__button.newBlog__button--bold
+                button.newBlog__button.newBlog__button--italic
+                button.newBlog__button.newBlog__button--list
+                button.newBlog__button.newBlog__button--numList
+                button.newBlog__button.newBlog__button--quote
+                button.newBlog__button.newBlog__button--lJustify
+                button.newBlog__button.newBlog__button--cJustify
+                button.newBlog__button.newBlog__button--rJustify
+                button.newBlog__button.newBlog__button--link
+                button.newBlog__button.newBlog__button--image
+                
         form(action='/blog' method='POST' label='new blog form').newBlog__form
             p title 
             input(name='title' required='true')
             p body
-            textarea(rows='10' col='200' wrap='hard' name='content' required='true')
+            textarea(rows='10' cols='100' wrap='hard' name='content' required='true').newBlog__form.newBlog__form--content
             p tags (seperate tags with a comma)
             input(name='tags')
             button.newBlog__button.newBlog__button--submit Submit
-        include ../includes/footer.pug
+        include ../includes/newBlogFooter.pug
