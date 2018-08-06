@@ -3,9 +3,22 @@ doctype html
 html
     include ../includes/header.pug
     body
-    h1= blog.title
-    p Posted #{blog.postDate}
-    p=blog.content
-    p=blog.tags
+    div.blog
+        div.blog.blog__title
+            h1= blog.title
+        div.blog.blog__date
+            p Posted #{blog.postDate}
+        div.blog.blog__body
+            p !{blog.content}
+        div.blog.blog__tags
+            p=blog.tags
+        div.blog.blog__edit
+            a(href='/blog/'+blog.title+'/edit'): button.blog.blog__edit.blog__edit__btn--edit Edit post
+            form(method='POST' action='/blog/'+blog.title+'?_method=DELETE')
+                button.blog.blog__edit.blog__edit__btn--delete Delete post
+        div.blog.blog__comment
+            a(href='/comments/new'): button.blog.blog__comment__btn--add Add a comment
+            div.blog.blog__comment--entries
+            
 
     include ../includes/footer.pug

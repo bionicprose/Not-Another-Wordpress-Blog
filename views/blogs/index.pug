@@ -5,6 +5,12 @@ html
  
     body
         h1 BionicProse Index page
-        p stuff will go here, and it'll eventually be style
+        p stuff will go here, and it'll eventually be styled
+
+        dl
+            each val in blogs
+               li: a(href='/blog/'+val.title) !{val.title}</a>
+                    dt=val.postDate
+
 
         include ../includes/footer.pug

@@ -14,23 +14,29 @@ html
                     option(value='h3') h3
                     option(value='h4') h4
                     option(value='h6') h6
-                button.newBlog__button.newBlog__button--bold
-                button.newBlog__button.newBlog__button--italic
-                button.newBlog__button.newBlog__button--list
-                button.newBlog__button.newBlog__button--numList
-                button.newBlog__button.newBlog__button--quote
-                button.newBlog__button.newBlog__button--lJustify
-                button.newBlog__button.newBlog__button--cJustify
-                button.newBlog__button.newBlog__button--rJustify
-                button.newBlog__button.newBlog__button--link
-                button.newBlog__button.newBlog__button--image
-                
-        form(action='/blog' method='POST' label='new blog form').newBlog__form
-            p title 
-            input(name='title' required='true')
-            p body
-            textarea(rows='10' cols='100' wrap='hard' name='content' required='true').newBlog__form.newBlog__form--content
-            p tags (seperate tags with a comma)
-            input(name='tags')
-            button.newBlog__button.newBlog__button--submit Submit
+                button.newBlog__button.newBlog__button--bold bold
+                button.newBlog__button.newBlog__button--italic italics
+                button.newBlog__button.newBlog__button--list list
+                button.newBlog__button.newBlog__button--numList numbered list
+                button.newBlog__button.newBlog__button--quote blockquote
+                button.newBlog__button.newBlog__button--lJustify left justify
+                button.newBlog__button.newBlog__button--cJustify center justify
+                button.newBlog__button.newBlog__button--rJustify right justify
+                button.newBlog__button.newBlog__button--link hyperlink
+                button.newBlog__button.newBlog__button--image image
+
+            form(action='/blog' method='POST' label='new blog form').newBlog__form
+                p title 
+                input(name='title' required='true')
+                p body
+                textarea(rows='10' cols='100' wrap='hard' name='content' required='true').newBlog__form.newBlog__form--content
+                p tags (seperate tags with a comma)
+                input(name='tags')
+                button.newBlog__button.newBlog__button--submit Submit
+            button.newBlog__button.newBlog__button--preview Preview
+            div.newBlog__preview
+                h2 preview.title
+                div.newBlog__preview--content
+                    p preview.content
+
         include ../includes/newBlogFooter.pug
