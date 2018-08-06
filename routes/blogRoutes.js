@@ -1,12 +1,25 @@
 var express = require('express'),
+    app     = express(),
     router  = express.Router({mergeParams:true}),
-    Blog    = require('../models/blog');
+    Blog    = require('../models/blog'),
+    moment  = require('moment'),
+    methodOverride = require('method-override');
 
+app.use(methodOverride('_method'));
 
 // blog index route
+
 router.get('/blog', function(req, res) {
-        res.render('blogs/index');
+    Blog.find({}, function(err, blogs) {
+        if(err){
+            console.log(err);
+            req.flash('error', 'Sorry, no blogs were found. Be sure to check back soon!');
+            res.redirect('/');
+        } else {
+            res.render('blogs/index', {blogs: blogs});
+        }
     });
+});
 
 
 
@@ -21,12 +34,8 @@ router.post('/blog', function(req, res) {
         // get data from form
         var title = req.body.title,
             tags = req.body.tags.split(','),
-            content = req.body.content,
-            today = new Date(),
-            dd     = today.getDate(),
-            mm      = today.getMonth(),
-            yyyy    = today.getFullYear(),
-            date    = mm+ '/'+dd+'/'+yyyy; 
+            content = req.body.content.replace(/\r\n\r\n/gi, '<p>').replace(/\r\n/g, '').replace(/\n/g, '<p>');
+            date = moment();
             // need to make an array of tags
 
             
@@ -48,7 +57,7 @@ router.post('/blog', function(req, res) {
 // //blog show route
 
 router.get('/blog/:title', function(req, res) {
-    Blog.findOne({'title': req.params.title}, function(err, foundBlog) {
+    Blog.findOne({'title': req.params.title}, req.body.blog, function(err, foundBlog) {
         if(err || !foundBlog) {
             console.log(err);
             req.flash('error', 'Sorry, that blog post doesn\'t exist!');
@@ -60,18 +69,60 @@ router.get('/blog/:title', function(req, res) {
 });
 // Edit and Update Blog Routes
 
-router.get('/blog/:id/edit', function(req, res) {
-    res.render('');
+router.get('/blog/:title/edit', function(req, res) {
+    Blog.findOne({'title': req.params.title}, function(err, foundBlog) {
+        console.log(req.params.title);
+        if(err || !foundBlog) {
+            console.log(err);
+            req.flash('error', 'Sorry, that blog post doesn\'t exist.');
+            res.redirect('/blog');
+    } else {
+        res.render('blogs/edit', {blog: foundBlog});
+    }
+        });
 });
 
-router.put('/blog/:id', function(req, res) {
-    res.redirect('/blog/:id');
+router.put('/blog/:title', function(req, res) {
+        req.body.blog.tags = req.body.blog.tags.split(',');
+        req.body.blog.editDate = moment();
+    Blog.find({'title': req.params.title}, function(err, foundBlog) {
+        if(err) {
+            console.log('finding the blog by title' + err + foundBlog);
+            req.flash('error', 'Sorry, that blog post doesn\'t exist.');
+        } else {
+            
+            Blog.findByIdAndUpdate(foundBlog, req.body.blog, function(err, updatedBlog) {
+                if(err || !updatedBlog) {
+                console.log('finding and updating the blog' + err + foundBlog);
+                req.flash('error', 'Sorry, that blog post doesn\'t exist.');
+        } else {
+            req.flash('success', 'You have updated '+foundBlog.title+'.');
+            res.redirect('/blog/' + updatedBlog.title);
+        }
+    });
+    }
+});
 });
 
-// Delete Blog Route
+// Destroy route!!!
 
-router.delete('/blog/:id', function(req, res){
-    res.redirect('/blog')
+router.delete('/blog/:title', function(req, res){
+    Blog.find({'title': req.params.title}, function(err, foundBlog){
+        if(err || !foundBlog) {
+            console.log(err);
+            req.flash('error', 'Sorry, that blog does not exist!');
+        } else {
+            Blog.findByIdAndDelete(foundBlog, function(err) {
+                if(err) {
+                    console.log(err);
+                    req.flash("error", "Sorry, something went wrong!");
+                } else {
+                    req.flash('success', 'You\'ve deleted the post \''+req.params.title+'\'.');
+                    res.redirect('/blog');
+                }
+            });
+    }
+    });
 });
 
 module.exports = router;
