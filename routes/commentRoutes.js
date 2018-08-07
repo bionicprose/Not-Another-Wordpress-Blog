@@ -61,11 +61,12 @@ router.get('/blog/:title/comments/:comments_id/edit', function(req, res) {
             req.flash('error', 'Sorry, that comment does not exist!');
             res.back();
         } else {
-            Blog.findById(req.params.id, function(err, foundBlog) {
+            console.log(req.params.id);
+            Blog.findOne({'title': req.params.title}, function(err, foundBlog) {
                 if(err || !foundBlog) {
                     console.log(err)
                     req.flash('error', 'Sorry, that blog does not exist!');
-                    res.back();
+                    res.redirect('/blog')
                 } else {
             console.log(foundBlog + 'blog');
             res.render('comments/edit', {blog: foundBlog, comment: foundComment});
@@ -75,5 +76,52 @@ router.get('/blog/:title/comments/:comments_id/edit', function(req, res) {
 });
 });
 
+////
+//update
+///
+
+router.put('/blog/:title/comments/:comments_id', function(req, res) {
+    req.body.comment.editDate = moment();
+    Comment.findByIdAndUpdate(req.params.comments_id, req.body.comment, function(err, updatedComment) {
+        if (err) {
+            console.log(err);
+            req.flash('error', 'Sorry, that comment could not be updated.');
+            res.back();
+        } else {
+            req.flash('success', 'You updated your comment for the post ' +req.params.title+'.');
+            res.redirect('/blog/'+req.params.title);
+        }
+
+    });
+});
+
+
+//////////////////
+// DESTROY Route/
+////////////////
+
+router.delete('/blog/:title/comments/:comments_id', function(req, res) {
+    Comment.findByIdAndDelete(req.params.comments_id, function(err) {
+        if(err) {
+            console.log(err);
+            req.flash('error', 'Sorry, there was a problem deleting this comment.');
+            res.back();
+        } else {
+            Blog.findOne({'title': req.params.title}, function(err, foundBlog) {
+                if(err) {
+                    console.log(err);
+                    req.flash('error', 'Sorry, that blog post could not be found.');
+                    res.back();
+                } else {
+                    var delId = foundBlog.comments.indexOf(req.params.comments_id);
+                    foundBlog.comments.splice(delId, delId+1);
+                    foundBlog.save();
+                    req.flash('success', 'You have deleted a comment for the blog post '+req.params.title+'.');
+                    res.redirect('/blog/'+req.params.title);
+        }
+    });
+}
+});
+});
 
 module.exports = router;

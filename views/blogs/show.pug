@@ -28,7 +28,10 @@ html
                             div.blog.blog__comment__entries--comment
                                 p !{val.content} test
                             div.blog.blog__comment__entries--postDate
-                                p !{val.postDate} test
+                                p posted on !{val.postDate}
+                            if val.editDate
+                                div.blog.blog__comment_entries--editDate
+                                    p last edited on !{val.editDate}
                             a(href='/blog/'+blog.title+'/comments/'+val._id+'/edit'): button.blog.blog__comment__btn--edit Edit comment
                             form(method='POST' action='/blog/'+blog.title+'/comments/'+val._id+'?_method=DELETE')
                                 button.blog.blog__comment__btn--delete Delete comment
