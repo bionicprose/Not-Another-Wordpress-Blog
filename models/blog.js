@@ -9,6 +9,12 @@ var blogSchema = new mongoose.Schema({
         },
         username: String,
     },
+    comments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Comment'
+        }
+    ],    
     postDate: {type: Date},
     editDate:[{type: Date}],
     content: {type: String, required: true},

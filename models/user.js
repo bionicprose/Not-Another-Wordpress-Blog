@@ -10,7 +10,23 @@ var mongoose = require('mongoose'),
         creation: {type: Date},
         f_name: {type: String},
         l_name: {type: String},
-        image: {type: String}
+        image: {type: String},
+        
+        blogPost: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Blog'
+            },
+            
+            
+        ],
+
+        comments: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Comment'
+            }
+        ]
 
     });
 

@@ -9,6 +9,7 @@ var express         = require('express'),
     flash           = require('connect-flash'),
     methodOverride  = require('method-override'),
     LocalStrategy   = require('passport-local'),
+    back            = require("express-back"),
     myAPIKey        = process.env.MYAPIKEY;
 
 var commentRoutes   = require('./routes/commentRoutes'),
@@ -47,7 +48,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use(blogRoutes);
-// app.use(commentRoutes);
+app.use(commentRoutes);
 // app.use(indexRoutes);
 
 app.listen(3000, function() {

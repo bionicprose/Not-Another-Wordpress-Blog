@@ -1,0 +1,18 @@
+//- editt.pug for comments
+doctype html
+html
+    include ../includes/header.pug
+    body
+       h1 Edit your comment for !{blog.title}
+       div.comment
+            form(method='POST' action='/blog/'+blog.title+'/comments').comment.comment__form
+                p Your name
+                input(name='username' type='text' required='true')
+                p email address
+                input(name='email' type='email' required='true')
+                p Comment
+                textarea(rows='10' cols='50' name='content' required='true')
+                button.comment.comment__form__btn--submit Submit
+            
+
+include ../includes/footer.pug

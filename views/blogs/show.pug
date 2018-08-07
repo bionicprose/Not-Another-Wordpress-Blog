@@ -16,9 +16,20 @@ html
             a(href='/blog/'+blog.title+'/edit'): button.blog.blog__edit.blog__edit__btn--edit Edit post
             form(method='POST' action='/blog/'+blog.title+'?_method=DELETE')
                 button.blog.blog__edit.blog__edit__btn--delete Delete post
-        div.blog.blog__comment
-            a(href='/comments/new'): button.blog.blog__comment__btn--add Add a comment
-            div.blog.blog__comment--entries
-            
-
+        
+            div.blog.blog__comment
+                h2 Reader Comments
+                a(href='/blog/'+blog.title+'/comments/new'): button.blog.blog__comment__btn--add Add a comment
+                if blog.comments
+                    each val in blog.comments
+                        div.blog.blog__comment__entries
+                            div.blog.blog__comment__entries--author
+                                p !{val.username} test
+                            div.blog.blog__comment__entries--comment
+                                p !{val.content} test
+                            div.blog.blog__comment__entries--postDate
+                                p !{val.postDate} test
+                            a(href='/blog/'+blog.title+'/comments/'+val._id+'/edit'): button.blog.blog__comment__btn--edit Edit comment
+                            form(method='POST' action='/blog/'+blog.title+'/comments/'+val._id+'?_method=DELETE')
+                                button.blog.blog__comment__btn--delete Delete comment
     include ../includes/footer.pug

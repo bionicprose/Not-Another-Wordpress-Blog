@@ -54,20 +54,26 @@ router.post('/blog', function(req, res) {
             }
         });
     });
+//////////////////////
 // //blog show route
+/////////////////////
 
 router.get('/blog/:title', function(req, res) {
-    Blog.findOne({'title': req.params.title}, req.body.blog, function(err, foundBlog) {
+    Blog.findOne({'title': req.params.title}).populate('comments').exec(function(err, foundBlog) {
         if(err || !foundBlog) {
             console.log(err);
             req.flash('error', 'Sorry, that blog post doesn\'t exist!');
             res.redirect('/blog');
         } else {
             res.render('blogs/show', {blog: foundBlog});
+            console.log(foundBlog.comments);
         }
     });
 });
+
+//////////////////////////////
 // Edit and Update Blog Routes
+//////////////////////////////
 
 router.get('/blog/:title/edit', function(req, res) {
     Blog.findOne({'title': req.params.title}, function(err, foundBlog) {

@@ -8,16 +8,17 @@ var commentSchema = new mongoose.Schema({
         },
         username: String
     },
+    email: {type: String, required: true},
     content: {type: String, required: true},
     postDate: {type: Date},
     editDate: [{type: Date}],
     blogPost: {
         id: {
-            type: mongoose.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'Blog'
         },
         title: 'String'
     }
 });
 
-module.exports = mongoose.models('Comment', commentSchema);
+module.exports = mongoose.model('Comment', commentSchema);
