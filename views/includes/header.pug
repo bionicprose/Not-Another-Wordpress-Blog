@@ -5,4 +5,10 @@ head
     meta(name='viweport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
     link(href="https://fonts.googleapis.com/css?family=Raleway:400,400i,700" rel="stylesheet")
     link(type='text/css' rel='stylesheet' href='../stylesheets/show.css')
-    
+
+if(error && error.length > 0)
+    div.message.message--error
+        #{error}
+if(success & success.length > 0)
+    div.message.message--success
+        #{success}

@@ -1,0 +1,21 @@
+//-- signup.pug
+
+include includes/header.pug
+html
+    body
+        h1 Signup to BionicProse
+        
+        
+
+        div.signup
+            form(action='/signup', method='POST').signup__form
+                label Email:
+                input(type='email' name='email')
+                label Password
+                input(type='password' name='password')
+                button.signup__btn Signup!
+
+    p Already have an account? 
+    a(href='/login') Login
+
+include includes/footer.pug

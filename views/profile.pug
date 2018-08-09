@@ -1,0 +1,66 @@
+//- profile.pug
+
+include includes/header.pug
+html
+    body
+        if(error && error.length > 0)
+            div.message.message--error
+                #{error}
+        if(success & success.length > 0)
+            div.message.message--success
+                #{success}
+        h1 Profile Page for 
+        p some more stuff will go here eventually, including forms to customize the user
+        
+        if !user.local.email
+            a(href='/connect/local') Create a local sign in
+        
+        div.profile__display
+            p Display name: #{user.local.displayName}
+            p First name: #{user.local.fName}
+            p Last name: #{user.local.lName}
+            p Website:
+            p email address:  #{user.local.email}
+            p Profile picture:
+            p: a(href='profile/edit'): button.profile__btn  Edit your profile
+
+        div.profile__display__social-media
+
+            if(user.facebook.id)
+                div.profile__display--facebook
+                    p:strong id: #{user.facebook.id}
+                    p:strong token: #{user.facebook.token}
+                    p:strong email: #{user.facebook.email}
+                    p:strong name: #{user.facebook.name}
+                    p: a(href='/unlink/facebook'): button.profile__btn__facebook--unlink Unlink Facebook Account
+        
+            if user.twitter.id
+                div.profile__display--twitter
+                    p:strong ID: #{user.twitter.id}
+                    p:strong Username: #{user.twitter.username}
+                    p:strong Display Name: #{user.twitter.displayName}
+                    p: a(href='/unlink/twitter'): button.profile__btn__twitter--unlink Unlink Twitter Account
+
+            if user.google.id
+                div.profile__display--google
+                    p:strong id: #{user.google.id}
+                    p:strong token: #{user.google.token}
+                    p:strong email: #{user.google.email}
+                    p:strong name: #{user.google.name}
+                    p: a(href='/unlink/google'): button.profile__btn__google--unlink Unlink Google Account
+
+            if !user.facebook.id
+                p: a(href='/connect/facebook'): button.profile__btn__facebook--connect Connect Your Facebook Account
+            if !user.twitter.id
+                p: a(href='/connect/twitter'): button.profile__btn__twitter--connect Connect Your Twitter Account
+            if !user.google.id
+                p: a(href='/connect/google'): button.profile__btn__google--connect Connect Your Google Account
+        
+        a(href='/logout') Logout
+
+        div.profile__blog-posts
+            p coming soon
+
+        div.profile__blog-comments
+            p comming soon
+include includes/footer.pug

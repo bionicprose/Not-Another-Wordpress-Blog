@@ -24,9 +24,9 @@ html
                     each val in blog.comments
                         div.blog.blog__comment__entries
                             div.blog.blog__comment__entries--author
-                                p !{val.username} test
+                                p !{val.username}
                             div.blog.blog__comment__entries--comment
-                                p !{val.content} test
+                                p !{val.content}
                             div.blog.blog__comment__entries--postDate
                                 p posted on !{val.postDate}
                             if val.editDate

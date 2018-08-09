@@ -1,0 +1,20 @@
+//- views/local-connect.pug
+
+include includes/header.pug
+html
+body
+    if(message.length > 0)
+        #{message}
+
+    
+    h1 Create a local sign-in
+
+    div.signup
+      form(action='/connect/local', method='POST').signup__form
+                label Email:
+                input(type='email' name='email')
+                label Password
+                input(type='password' name='password')
+                button.signup__btn Signup!
+
+include includes/footer.pug

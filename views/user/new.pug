@@ -1,0 +1,18 @@
+//- user new.pug
+
+include ../includes/header.pug
+html   
+    body
+        h1 Sign up to BionicProse
+
+        div.user__registration
+            form(method='POST' action='/user').user__registration__form
+                p Username:
+                input(type='text' name='user[username]')
+                p Email address"
+                input(type='email' name='user[email]')
+                p Password
+                input(type='password' name='user[password]')
+                button.user__registration__btn--register Register!
+
+include ../includes/footer.pug
