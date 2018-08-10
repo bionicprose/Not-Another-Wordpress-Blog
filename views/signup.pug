@@ -9,11 +9,11 @@ html
 
         div.signup
             form(action='/signup', method='POST').signup__form
-                p: label Username:
+                p: label Username (this is how you'll be identified on this site):
                 input(type='text' name='username')
                 p: label Email:
                 input(type='email' name='email')
-                p: label Password
+                p: label Create a Password
                 input(type='password' name='password')
                 p: button.signup__btn Signup!
 

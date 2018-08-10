@@ -34,76 +34,123 @@ console.log('passport is being used');
     passport.use('local-signup', new LocalStrategy({
         //changing default from username to email
         // on profile page, user will be able to set a display name
-        usernameField: 'email',
+        // had to change node_modules/passport-local/lib/strategy.js to get this to work
+        // see: https://github.com/jaredhanson/passport/issues/421
+
+        usernameField: 'username',
+        emailField:     'email',
         passwordField: 'password',
         passReqToCallback: true
     },
-    function(req, email, password, done) {
+    function(req, username, password, email, done) {
 
-    
+    console.log('password:' + password);
         process.nextTick(function() {
 
         
-            User.findOne({'local.email':req.body.email}, function(err, user) {
+            User.findOne({'local.email':email}, function(err, user) {
               
                 if(err) {
                   
                     return done(err);
                 } else if (user) {
                    
-                    return done(null, false, req.flash('error', 'That email is already taken.'));
+                    return done(null, false, req.flash('error', 'That email is already registered.'));
                 } else {
-
-                    // if no user with that email
-                    var newUser = new User();
-
-                    newUser.local.email = req.body.email;
-                    newUser.local.password = newUser.generateHash(req.body.password);
-                
-
-
-                    //setting local credentials
-                    newUser.save(function(err) {
+                    User.findOne({'local.username': username}, function(err, user) {
                         if(err) {
-                           
-                            throw err;
+                            return done(err);
+                        } else if (user){
+                            return done(null, false, req.flash('error', 'That username is already in use.'));
+
+
+                        } else if (!req.user) {
+                     // if no user with that email or username
+                            var newUser = new User();
+
+                            newUser.local.email = email;
+                            newUser.local.username  = username;
+                            newUser.local.password = newUser.generateHash(password);
+
+                            //setting local credentials
+                            newUser.save(function(err) {
+                                if(err) {
+                                   throw err;
+                                }
+                                return done(null, newUser);
+                            }); 
+
+                } else {
+                    var newUser = req.user;
+                    
+                    newUser.local.email = email;
+                    newUser.local.username = username;
+                    newUser.local.password = newUser.generateHash(password);
+                    
+                    newUser.save(function(err) {
+                               if(err) {
+                                   throw err;
+                                       }
+                                return done(null, newUser);
+                                    });
+                                
+                                }
+                            }); 
                         }
-                        return done(null, newUser);
-                    });
-                }
-                
-            });
-        });
-    
-    }));
+                        });  
+                        });
+                    }));
+                    
+              
+        
 
     //////////////////////////
     // Local Login Strat
     /////////////////////////
 
     passport.use('local-login', new LocalStrategy({
-        usernameField: 'email',
+        usernameField: 'username',
         passwordField: 'password',
+        emailField: 'email',
         passReqToCallback: true
     },
-    function(req, email, password, done) {
+    function(req, username, password, email, done) {
+        console.log(req.body.login);
 
-        
-      
-        User.findOne({ 'local.email': email }, function(err, user) {
-            if(err)
-                return done(err);
+        if(username.includes('@')) {
 
-            if(!user)
-                return done(null, false, req.flash('error', 'The username or password was incorrect.'));
+              
+            User.findOne({ 'local.email': username }, function(err, user) {
+                if(err)
+                    return done(err);
+
+                if(!user)
+                    return done(null, false, req.flash('error', 'The username or password was incorrect.'));
             
-            if(!user.validPassword(password))
-                return done(null, false, req.flash('error', 'The password was incorrect.'));
+                if(!user.validPassword(password))
+                    return done(null, false, req.flash('error', 'The password was incorrect.'));
             
             
-            return done(null, user, req.flash('notify', 'You are now logged in!'));
+                return done(null, user, req.flash('notify', 'You are now logged in!'));
         
-        });
+                });
+            } else {
+                User.findOne({ 'local.username': username }, function(err, user) {
+                    if(err)
+                        return done(err);
+    
+                    if(!user)
+                        return done(null, false, req.flash('error', 'The username or password was incorrect.'));
+                
+                    if(!user.validPassword(password))
+                        return done(null, false, req.flash('error', 'The password was incorrect.'));
+                
+                
+                    return done(null, user, req.flash('notify', 'You are now logged in!'));
+            
+                    });
+                
+            }
     
     }));
 

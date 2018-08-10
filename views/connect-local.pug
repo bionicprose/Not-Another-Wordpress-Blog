@@ -7,12 +7,14 @@ body
     
     h1 Create a local sign-in
 
-    div.signup
-      form(action='/connect/local', method='POST').signup__form
-                label Email:
+     div.signup
+            form(action='/connect/local', method='POST').signup__form
+                p: label Username (this is how you'll be identified on this site):
+                input(type='text' name='username')
+                p: label Email:
                 input(type='email' name='email')
-                label Password
+                p: label Password
                 input(type='password' name='password')
-                button.signup__btn Signup!
+                p: button.signup__btn Signup!
 
 include includes/footer.pug
