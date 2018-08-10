@@ -22,7 +22,8 @@ app.get('/', function(req, res) {
 ////////////////////
 
 app.get('/login', function(req, res, next) {
-    res.render('login');
+    console.log(req.flash('loginMessage'));
+    res.render('login', {message: req.flash('loginMessage')});
 
 });
 
@@ -34,18 +35,18 @@ app.post('/login', passport.authenticate('local-login', {
      failureFlash: true
  }));
 
-//function(req, res, next) {
+// app.post('/login', function(req, res, next) {
 //     passport.authenticate('local-login', function(err, user, info) {
-//     if (err) {
-//         req.flash('error', 'You could not be logged in with those credentials');
-//         return res.back();
-//     } else if(!user) {
-//         req.flash('error', 'That account does not exist.');
-//         return res.back();
-//     }
+//     // if (err) {
+//     //     req.flash('error', 'You could not be logged in with those credentials');
+//     //     res.redirect('/login');
+//     // } else if(!user) {
+//     //     req.flash('error', 'That account does not exist.');
+//     //     return res.back();
+//     // }
 //     req.logIn(user, function(err) {
 //         if(err) {return next(err); }
-
+//         req.flash('success', 'You\'re now logged in!');
 //         return res.redirect('/profile');
 //     });
 // });
@@ -80,7 +81,7 @@ app.post('/login', passport.authenticate('local-login', {
 
 app.get('/signup', function(req, res) {
 
-    res.render('signup', { message: req.flash('message', 'signupMessage') });
+    res.render('signup', { message: req.flash('signupMessage')});
 });
 
 app.post('/signup', passport.authenticate('local-signup', {
@@ -88,6 +89,12 @@ app.post('/signup', passport.authenticate('local-signup', {
      failureRedirect: '/signup',
      failureFlash: true
 }));
+
+// app.get('/signup-part-2', isLoggedIn(), function(req, res) {
+//     res.render('signup2');
+// });
+
+
 
 ///////////////////////
 // Profile section
@@ -148,7 +155,7 @@ app.get('/auth/google/callback',
 
 app.get('/logout', function(req, res) {
     req.logout();
-    req.flash('success', 'You have logged out!');
+    req.flash('notify', 'You have logged out!');
     res.redirect('/');
 });
 
@@ -163,7 +170,7 @@ app.get('/logout', function(req, res) {
 /////////////
 
 app.get('/connect/local', function(req, res) {
-    res.render('connect-local', { message: req.flash('loginMessage')});
+    res.render('connect-local');
 });
 
 app.post('/connect/local', passport.authenticate('local-signup', {

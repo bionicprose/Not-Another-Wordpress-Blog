@@ -1,0 +1,13 @@
+//- signup2.pug
+
+include includes/header.pug
+
+html
+    body
+        h1 Signup Part 2
+
+        div.signup
+            form(action='/signup-part-2', method='POST').signup__form
+                p Display name (this is how you'll be identified by visitors to this site)
+                input(type='text' name='displayName')
+                p 

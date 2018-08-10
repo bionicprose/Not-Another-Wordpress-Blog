@@ -16,14 +16,13 @@ console.log('passport is being used');
     /////////
 
     passport.serializeUser(function(user, done) {
-        console.log(user + 'serializing...');
         done(null, user.id);
-        console.log('user is serialized');
+      
     });
 
     passport.deserializeUser(function(id, done) {
         User.findById(id, function(err, user) {
-            console.log(user);
+
             done(err, user);
         });
     });
@@ -41,17 +40,17 @@ console.log('passport is being used');
     },
     function(req, email, password, done) {
 
-        console.log('hello');
+    
         process.nextTick(function() {
 
-            console.log(req.body.email);
+        
             User.findOne({'local.email':req.body.email}, function(err, user) {
-                console.log('hello2'+ user);
+              
                 if(err) {
-                    console.log('findOne error?' + err);
+                  
                     return done(err);
                 } else if (user) {
-                    console.log('found email?');
+                   
                     return done(null, false, req.flash('error', 'That email is already taken.'));
                 } else {
 
@@ -60,13 +59,13 @@ console.log('passport is being used');
 
                     newUser.local.email = req.body.email;
                     newUser.local.password = newUser.generateHash(req.body.password);
-                    console.log(newUser.local.email);
+                
 
 
                     //setting local credentials
                     newUser.save(function(err) {
                         if(err) {
-                            console.log('something went wrong saving the user');
+                           
                             throw err;
                         }
                         return done(null, newUser);
@@ -90,7 +89,7 @@ console.log('passport is being used');
     function(req, email, password, done) {
 
         
-        console.log('inside authenticator strat');
+      
         User.findOne({ 'local.email': email }, function(err, user) {
             if(err)
                 return done(err);
@@ -99,10 +98,10 @@ console.log('passport is being used');
                 return done(null, false, req.flash('error', 'The username or password was incorrect.'));
             
             if(!user.validPassword(password))
-                return done(null, false, req.flash('error', 'The username or password was incorrect.'));
+                return done(null, false, req.flash('error', 'The password was incorrect.'));
             
             
-            return done(null, user);
+            return done(null, user, req.flash('notify', 'You are now logged in!'));
         
         });
     
@@ -121,7 +120,7 @@ passport.use(new FacebookStrategy({
     clientSecret        : configAuth.facebookAuth.clientSecret,
     callbackURL         : configAuth.facebookAuth.callbackURL,
     profileFields       : configAuth.facebookAuth.profileFields,
-    passReToCallback    : true
+    passReqToCallback    : true
 
 },
 
@@ -130,6 +129,7 @@ function(req, token, refreshToken, profile, done) {
     //asynchronous
 
     process.nextTick(function() {
+        
         if(!req.user){
 
         User.findOne({'facebook.id' : profile.id}, function(err, user) {
@@ -159,6 +159,16 @@ function(req, token, refreshToken, profile, done) {
     } else {
         // user already exists and logged in, now linking accounts
 
+        User.findOne({'facebook.id' : profile.id}, function(err, user) {
+            if(err)
+                return done(err);
+
+            console.log('facebook profile.id: ' + profile.id + ' and user: ' + user + ' and req.user: '+req.user);
+            if(user) {
+                console.log('logging into other account maybe?');
+                return done(null, req.flash('error', 'This Facebook account has already been linked to a user.'));
+            } else {
+
         var user            = req.user;
 
         user.facebook.id    = profile.id;
@@ -173,10 +183,12 @@ function(req, token, refreshToken, profile, done) {
                 throw err;
             return done(null, user);
         });
-
+    
     }
     });
-}));
+}
+}
+)}));
 
 /////////////////////////////
 //Twitter Strat
@@ -247,12 +259,13 @@ function(req, token, refreshToken, profile, done) {
         clientID            : configAuth.googleAuth.clientID,
         clientSecret        : configAuth.googleAuth.clientSecret,
         callbackURL         : configAuth.googleAuth.callbackURL,
+        passReqToCallback    : true
 
     },
-    function(token, refreshToken, profile, done) {
+    function(req, token, refreshToken, profile, done) {
 
         process.nextTick(function() {
-            if(!user) {
+            if(!req.user) {
             User.findOne({ 'google.id' : profile.id }, function(err, user) {
                 if(err)
                     return done(err);
@@ -277,6 +290,14 @@ function(req, token, refreshToken, profile, done) {
                 
             });
         } else {
+            User.findOne({ 'google.id' : profile.id }, function(err, user) {
+                if(err)
+                    return done(err);
+
+                if(user) {
+
+                    return done(null, req.flash('error', 'That Google account has already been linked to another user.'));
+                } else {
 
             var user                = req.user;
 
@@ -288,11 +309,11 @@ function(req, token, refreshToken, profile, done) {
             user.save(function(err) {
                 if(err)
                     throw err;
-                return done(null, newUser);
+                return done(null, user);
             });
         }
         });
-    
-    }));
+    }
+    })}));
 
 };

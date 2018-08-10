@@ -11,13 +11,8 @@ app.use(methodOverride('_method'));
 
 router.get('/blog', function(req, res) {
     Blog.find({}, function(err, blogs) {
-        if(err){
-            console.log(err);
-            req.flash('error', 'Sorry, no blogs were found. Be sure to check back soon!');
-            res.redirect('/');
-        } else {
-            res.render('blogs/index', {blogs: blogs});
-        }
+        res.render('blogs/index', {blogs: blogs});
+    
     });
 });
 

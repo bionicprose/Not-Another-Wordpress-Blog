@@ -7,8 +7,8 @@ var express         = require('express'),
     // Blog            = require('./models/blog.js'),
     passport        = require('passport'),
     morgan          = require('morgan'),
-    // cookieParser    = require('cookie-parser'),
-    flash           = require('connect-flash'),
+    cookieParser    = require('cookie-parser'),
+    flash           = require('express-flash-messages'),
     session         = require('express-session'),
     methodOverride  = require('method-override'),
     LocalStrategy   = require('passport-local'),
@@ -25,7 +25,7 @@ mongoose.connect('mongodb://localhost:27017/bionicprose', {useNewUrlParser: true
 require('./config/passport')(passport);
 
 app.use(morgan('dev'));
-// app.use(cookieParser());
+
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -35,11 +35,12 @@ app.use(methodOverride('_method'));
 
 // secrets should be set as an environment variable and not in the code
 // figure out how to do that.
+app.use(cookieParser(myAPIKey));
 app.use(session({
     secret:             myAPIKey,
     // cookie: {maxAge: 6000}, this line really fucked up sessions. need to figure out why and how to fix
     resave:             false,
-    saveUninitialized:  true
+    saveUninitialized:  false
 }));
 
 app.use(passport.initialize());
@@ -49,8 +50,9 @@ app.use(flash());
 
 app.use(function(req, res, next) {
     res.locals.currentUser  = req.user;
-    res.locals.error        = req.flash('error');
-    res.locals.success      = req.flash('success');
+    res.locals.messages     = req.flash();
+    // res.locals.error        = req.flash('error');
+    // res.locals.success      = req.flash('success');
     next();
 });
 
