@@ -4,11 +4,11 @@ var commentSchema = new mongoose.Schema({
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'User',
+            required: true
         },
         username: String
     },
-    email: {type: String, required: true},
     content: {type: String, required: true},
     postDate: {type: Date},
     editDate: [{type: Date}],

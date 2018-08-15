@@ -68,9 +68,11 @@ console.log('passport is being used');
                      // if no user with that email or username
                             var newUser = new User();
 
+                            newUser.role = 1;
                             newUser.local.email = email;
                             newUser.local.username  = username;
                             newUser.local.password = newUser.generateHash(password);
+                            newUser.pic.push('/img/profile-iris.svg');
 
                             //setting local credentials
                             newUser.save(function(err) {
@@ -86,6 +88,7 @@ console.log('passport is being used');
                     newUser.local.email = email;
                     newUser.local.username = username;
                     newUser.local.password = newUser.generateHash(password);
+                    newUser.pic.push('/img/profile-iris.svg');
                     
                     newUser.save(function(err) {
                                if(err) {
@@ -168,7 +171,7 @@ passport.use(new FacebookStrategy({
     callbackURL         : configAuth.facebookAuth.callbackURL,
     profileFields       : configAuth.facebookAuth.profileFields,
     passReqToCallback    : true
-
+   
 },
 
 function(req, token, refreshToken, profile, done) {
@@ -188,11 +191,12 @@ function(req, token, refreshToken, profile, done) {
             } else {
 
                 var newUser     = new User();
-
+                newUser.role = 1;
                 newUser.facebook.id     = profile.id;
                 newUser.facebook.token  = token;
-                newUser.facebook.name   = profile.name.givenName + ' ' + profile.name.familyName;
-                newUser.facebook.email  = profile.emails[0].value;
+                newUser.local.name   = profile.name.givenName + ' ' + profile.name.familyName;
+                newUser.local.email  = profile.emails[0].value;
+                newUser.pic.push('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200');
 
                 newUser.save(function(err) {
                     if(err)
@@ -220,9 +224,11 @@ function(req, token, refreshToken, profile, done) {
 
         user.facebook.id    = profile.id;
         user.facebook.token = token;
-        user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
-        user.facebook.email = profile.emails[0].value;
-
+        if(!req.user.local.email) {
+            user.local.name  = profile.name.givenName + ' ' + profile.name.familyName;
+            user.local.email = profile.emails[0].value;
+        }
+        user.pic.push('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200');
         // save the user
 
         user.save(function(err) {
@@ -322,11 +328,12 @@ function(req, token, refreshToken, profile, done) {
                     return done(null, user);
                 } else {
                     var newUser        = new User();
-
+                    
+                    newUser.role        = 1;
                     newUser.google.id   = profile.id;
                     newUser.google.token = token;
-                    newUser.google.name     = profile.displayName;
-                    newUser.google.email    = profile.emails[0].value; // pull the first email
+                    newUser.local.name     = profile.displayName;
+                    newUser.local.email    = profile.emails[0].value; // pull the first email
 
                     newUser.save(function(err) {
                         if(err)
@@ -350,9 +357,10 @@ function(req, token, refreshToken, profile, done) {
 
             user.google.id          = profile.id;
             user.google.token       = token;
-            user.google.name        = profile.displayName;
-            user.google.email       = profile.emails[0].value;
-
+            if(!req.user.local.email){
+                user.local.name        = profile.displayName;
+                user.local.email       = profile.emails[0].value;
+            }
             user.save(function(err) {
                 if(err)
                     throw err;

@@ -4,13 +4,15 @@ var express = require('express'),
     Blog    = require('../models/blog'),
     moment  = require('moment'),
     Comment = require('../models/comments'),
-    methodOverride = require('method-override');
+    methodOverride = require('method-override'),
+    middleware  = require('../middleware'),
+    User    = require('../models/user');
 
 
 
     // NEW Comment Routes
 
-router.get('/blog/:title/comments/new', function(req, res) {
+router.get('/blog/:title/comments/new', middleware.isLoggedIn, function(req, res) {
     console.log(req.params.title);
     Blog.findOne({'title': req.params.title}, function(err, foundBlog) {
         if(err || !foundBlog) {
@@ -24,7 +26,7 @@ router.get('/blog/:title/comments/new', function(req, res) {
    
 });
 
-router.post('/blog/:title/comments', function(req, res) {
+router.post('/blog/:title/comments', middleware.isLoggedIn, function(req, res) {
     Blog.findOne({'title': req.params.title}, function(err, foundBlog){
         if(err || !foundBlog) {
             console.log(err);
@@ -32,7 +34,13 @@ router.post('/blog/:title/comments', function(req, res) {
             res.redirect('/blogs/index');
         } else {
             var date = moment();
-            var newComment = {'username': req.body.name, 'content': req.body.content, 'email': req.body.email, 'blogPost': foundBlog._id, 'postDate': date};
+            if (req.user.local.username) {
+                var username = req.user.local.username;
+            } else {
+                var username = req.user.local.name;
+            }
+            console.log('req.user.local.name: ' + req.user.local.name);
+            var newComment = {'content': req.body.content, 'author': {'id': req.user._id}, 'author.username' : username, 'blogPost': {'id': foundBlog._id}, 'blogPost.title': req.params.title, 'postDate': date};
             Comment.create(newComment, function(err, comment) {
                 if(err) {
                     console.log(err);
@@ -53,7 +61,7 @@ router.post('/blog/:title/comments', function(req, res) {
 // Edit and Update Route
 /////////////////
 
-router.get('/blog/:title/comments/:comments_id/edit', function(req, res) {
+router.get('/blog/:title/comments/:comments_id/edit', middleware.isCommenter, function(req, res) {
     console.log(req.params.comments_id);
     Comment.findById(req.params.comments_id, function(err, foundComment) {
         if(err) {
@@ -80,7 +88,7 @@ router.get('/blog/:title/comments/:comments_id/edit', function(req, res) {
 //update
 ///
 
-router.put('/blog/:title/comments/:comments_id', function(req, res) {
+router.put('/blog/:title/comments/:comments_id', middleware.isCommenter, function(req, res) {
     req.body.comment.editDate = moment();
     Comment.findByIdAndUpdate(req.params.comments_id, req.body.comment, function(err, updatedComment) {
         if (err) {
@@ -100,7 +108,7 @@ router.put('/blog/:title/comments/:comments_id', function(req, res) {
 // DESTROY Route/
 ////////////////
 
-router.delete('/blog/:title/comments/:comments_id', function(req, res) {
+router.delete('/blog/:title/comments/:comments_id', middleware.isCommenter, function(req, res) {
     Comment.findByIdAndDelete(req.params.comments_id, function(err) {
         if(err) {
             console.log(err);

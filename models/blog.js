@@ -14,7 +14,12 @@ var blogSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Comment'
         }
-    ],    
+    ],
+    state   : {
+            type: String,
+            enum:['publish', 'draft'], 
+            default: 'publish'
+        },    
     postDate: {type: Date},
     editDate:[{type: Date}],
     content: {type: String, required: true},

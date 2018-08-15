@@ -1,0 +1,38 @@
+doctype html
+html
+    head
+        block head
+            title= title
+            meta(charset='utf-8')
+            meta(name='viweport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
+            link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous")
+            link(href="https://fonts.googleapis.com/css?family=Amatic+SC|Audiowide|Codystar|Cutive+Mono|Diplomata+SC|Hi+Melody|Megrim|Space+Mono|Text+Me+One" rel="stylesheet") 
+            link(type='text/css' rel='stylesheet' href='../../stylesheets/profile.css')
+
+- var messages = getMessages()
+
+    if messages.notify
+        each msg in messages.info
+            .info= msg
+    if messages.error
+        each msg in messages.error
+            .error= msg
+    body    
+        div.nav
+            div.nav__banner__wrapper
+                div.nav__banner
+                div.nav__caption
+            div.nav__logo
+                    //- div.nav__menu
+                    //-     div.nav__menu--item1
+                    //-         |Blog
+                    //-     div.nav__menu--item2
+                    //-         |Projects
+                    //-     div.nav__menu--item2
+                    //-         |About
+                    //-     div.nav__menu--item3
+                    //-         |Contact
+                    //-     div.nav__menu--item4
+                    //-         |Acknowledgements 
+        block content  
+        

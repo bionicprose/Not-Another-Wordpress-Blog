@@ -1,38 +1,36 @@
-//- includes/show.pug
-doctype html
-html
-    include ../includes/header.pug
-    body
-    div.blog
-        div.blog.blog__title
+extends ../includes/layout.pug
+
+block content
+    div.blog__wrapper
+        div.blog.blog__header
             h1= blog.title
-        div.blog.blog__date
-            p Posted #{blog.postDate}
+            p Posted by #{blog.author.username} on #{blog.postDate}
         div.blog.blog__body
             p !{blog.content}
         div.blog.blog__tags
             p=blog.tags
-        div.blog.blog__edit
-            a(href='/blog/'+blog.title+'/edit'): button.blog.blog__edit.blog__edit__btn--edit Edit post
+        div.blog__edit
+            a(href='/blog/'+blog.title+'/edit'): button.blog__edit__btn--edit Edit post
             form(method='POST' action='/blog/'+blog.title+'?_method=DELETE')
-                button.blog.blog__edit.blog__edit__btn--delete Delete post
+                 button.blog__edit__btn--delete Delete post
         
-            div.blog.blog__comment
-                h2 Reader Comments
-                a(href='/blog/'+blog.title+'/comments/new'): button.blog.blog__comment__btn--add Add a comment
-                if blog.comments
-                    each val in blog.comments
-                        div.blog.blog__comment__entries
-                            div.blog.blog__comment__entries--author
-                                p !{val.username}
-                            div.blog.blog__comment__entries--comment
+        div.comments
+            h2 Reader Comments
+            a(href='/blog/'+blog.title+'/comments/new'): button.blog__comment__btn--add Add a comment
+            if blog.comments
+                each val in blog.comments
+                    div.comments__entry
+                        div.comments__entry__author
+                            p Author: !{val.author.username}
+                            div.comments__entry__body
                                 p !{val.content}
-                            div.blog.blog__comment__entries--postDate
+                            div.comments__entry__postDate
                                 p posted on !{val.postDate}
                             if val.editDate
-                                div.blog.blog__comment_entries--editDate
+                                div.comments__entry__editDate
                                     p last edited on !{val.editDate}
-                            a(href='/blog/'+blog.title+'/comments/'+val._id+'/edit'): button.blog.blog__comment__btn--edit Edit comment
+                        div.comments__buttons    
+                            a(href='/blog/'+blog.title+'/comments/'+val._id+'/edit'): button.comments__btn__edit Edit
                             form(method='POST' action='/blog/'+blog.title+'/comments/'+val._id+'?_method=DELETE')
-                                button.blog.blog__comment__btn--delete Delete comment
+                                button.comments__btn__delete Delete
     include ../includes/footer.pug

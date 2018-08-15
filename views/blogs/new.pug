@@ -1,42 +1,57 @@
-//- index.pug
-doctype html
-html
-    include ../includes/header.pug
- 
-    body
-        h1 Create a new blog post
-        div.newBlog
-            div.newBlog__toolbar
-                select.newBlog__dropdown.newBlog__dropdown--style
-                    option(value='paragraph') Paragraph
-                    option(value='h1') h1
-                    option(value='h2') h2
-                    option(value='h3') h3
-                    option(value='h4') h4
-                    option(value='h6') h6
-                button.newBlog__button.newBlog__button--bold bold
-                button.newBlog__button.newBlog__button--italic italics
-                button.newBlog__button.newBlog__button--list list
-                button.newBlog__button.newBlog__button--numList numbered list
-                button.newBlog__button.newBlog__button--quote blockquote
-                button.newBlog__button.newBlog__button--lJustify left justify
-                button.newBlog__button.newBlog__button--cJustify center justify
-                button.newBlog__button.newBlog__button--rJustify right justify
-                button.newBlog__button.newBlog__button--link hyperlink
-                button.newBlog__button.newBlog__button--image image
+extends ../includes/layout.pug
 
-            form(action='/blog' method='POST' label='new blog form').newBlog__form
-                p title 
-                input(name='title' required='true')
-                p body
-                textarea(rows='10' cols='100' wrap='hard' name='content' required='true').newBlog__form.newBlog__form--content
-                p tags (seperate tags with a comma)
-                input(name='tags')
-                button.newBlog__button.newBlog__button--submit Submit
-            button.newBlog__button.newBlog__button--preview Preview
-            div.newBlog__preview
-                h2 preview.title
-                div.newBlog__preview--content
-                    p preview.content
 
-        include ../includes/newBlogFooter.pug
+    
+
+block content
+
+
+    
+
+
+    h1 Bionic Prose Editor
+
+    div.editor
+        div.editor__toolbar
+            a(href='#' data-command='h2') 
+                |h2
+            button.i.fa.fa-undo.fa-3x(onclick="document.execCommand('undo', false, null);")
+            button.i.fa.fa-align-left.fa-3x(onclick="document.execCommand('justifyLeft', false, null);")
+            button.i.fa.fa-align-right.fa-3x(onclick="document.execCommand('justifyRight', false, null);")
+            button.i.fa.fa-align-center.fa-3x(onclick="document.execCommand('justifyCenter', false, null);")
+            button.i.fa.fa-bold.fa-3x(onclick="document.execCommand('bold', false, '');")
+            button.i.fa.fa-italic.fa-3x(onclick="document.execCommand('italic', false, null);")
+            button.i.fa.fa-superscript.fa-3x(onclick="document.execCommand('superscript', false, null);")
+            button.i.fa.fa-picture-o.fa-3x(onclick="document.execCommand('insertImage', false, null);")
+            button.i.fa.fa-underline.fa-3x(onclick="document.execCommand('underline', false, null);")
+            button.i.fa.fa-strikethrough.fa-3x(onclick="document.execCommand('strikeThrough', false, null);")
+            button.i.fa.fa-redo.fa-3x(onclick="document.execCommand('redo', false, null);")
+            button.i.fa.fa-undo.fa-3x(onclick="document.execCommand('undo', false, null);")
+            button.i.fa.fa-indent.fa-3x(onclick="document.execCommand('indent', false, null);")
+            button.i.fa.fa-list.fa-3x(onclick="document.execCommand('insertUnorderedList', false, null);")
+            button.i.fa.fa-link.fa-3x(onclick="link()")
+
+            button.hiya(onclick='yo()') Hi!
+
+            button.ohyeah(onclick='yoyo()') yo!
+
+
+        form.editor(action='/blog' method='POST' onsubmit='return copyContent()')
+            div.editor__title
+                p Title
+                input(type='text' name='title')
+            textarea.editor__textarea--hidden(type='html' name='content')
+            div.editor__textarea(contenteditable='true')
+                p some content
+            div.editor__tags
+                p Tags
+                input.editor__tags--input(type='text' name='tags')
+            button.editor__button__publish(type='submit' name='state' value='publish') Publish
+            button.editor__button__save(type='submit' name='state' value='draft') Save
+    block append footer
+       
+        script(src='../../javascript/editor.js') 
+        //- script(type='text/javascript').
+        //-     $(function() {
+        //-         document.execCommand("defaultParagraphSeparator", false, "p");
+        //-     })
