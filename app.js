@@ -17,8 +17,9 @@ var express         = require('express'),
     myAPIKey        = process.env.MYAPIKEY;
 
 var commentRoutes   = require('./routes/commentRoutes'),
-    blogRoutes      = require('./routes/blogRoutes');
-    indexRoutes     = require('./routes/indexRoutes');
+    blogRoutes      = require('./routes/blogRoutes'),
+    indexRoutes     = require('./routes/indexRoutes'),
+    userRoutes      = require('./routes/userRoutes');
 
 mongoose.connect('mongodb://localhost:27017/bionicprose', {useNewUrlParser: true});
 
@@ -66,8 +67,24 @@ app.use(function(req, res, next) {
 app.use(blogRoutes);
 app.use(commentRoutes);
 app.use(indexRoutes);
+app.use(userRoutes);
 
-//// hash/salt test
+//// error handling
+
+app.use(function(req, res, next) {
+    const error = new Error('Not found');
+    error.status = 404;
+    next(error);
+});
+
+app.use(function(error, req, res, next){
+    res.status(error.status || 500);
+    res.json({
+        error: {
+            message: error.message
+        }
+    });
+});
 
 
 

@@ -125,7 +125,8 @@ router.delete('/blog/:title/comments/:comments_id', middleware.isCommenter, func
                     foundBlog.comments.splice(delId, delId+1);
                     foundBlog.save();
                     req.flash('success', 'You have deleted a comment for the blog post '+req.params.title+'.');
-                    res.redirect('/blog/'+req.params.title);
+                    // res.redirect('/blog/'+req.params.title);
+                    res.redirect('back');
         }
     });
 }

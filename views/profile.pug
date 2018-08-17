@@ -1,34 +1,80 @@
 extends includes/layout.pug
-        
+
+
+
 block content
-    h1 Profile Page for 
+    if user.username
+        h1 Profile Page for #{user.username}
+    else 
+        h1 Profile Page for #{user.local.name}
         
        
-    div.profile
-        div.profile-pic
+    div.control-panel
+        div.control-panel__sidebar
             img(src=user.pic[0]).profile-pic__img
             p: button.profile-pic__btn Choose Profile Picture
             
-        div.user-data
-            if(user.local.username)    
-                p.user-data__item #[strong Username:] !{user.local.username}
-            if(user.local.name)
-                p.user-data__item #[strong Name:] !{user.local.name}
-                p.user-data__item #[strong Email:] !{user.local.email}
-        div.utility
-            if(!user.local.username)
-                p:a(href='/local-connect'): button.user-data__button--local-connect Set a Username and Password
-            if !user.facebook.id
-                p: a(href='/connect/facebook'): button.utility__btn__facebook--connect Connect Your Facebook Account
-            if !user.twitter.id
-                p: a(href='/connect/twitter'): button.utility__btn__twitter--connect Connect Your Twitter Account
-            if !user.google.id
-                p: a(href='/connect/google'): button.utility__btn__google--connect Connect Your Google Account
-            a(href='/logout') Logout
+            div.utility
+                if(!user.local.username)
+                    p:a(href='/local-connect'): button.user-data__button--local-connect Set a Username and Password
+                if !user.facebook.id
+                    p: a(href='/connect/facebook'): button.utility__btn__facebook--connect Connect Your Facebook Account
+                if !user.twitter.id
+                    p: a(href='/connect/twitter'): button.utility__btn__twitter--connect Connect Your Twitter Account
+                if !user.google.id
+                    p: a(href='/connect/google'): button.utility__btn__google--connect Connect Your Google Account
+                a(href='/logout') Logout
 
-    div.profile__blog-posts
-        p coming soon
+        div.control-panel__main
+            div.blog-posts--show 
+                h2 Your Blog Posts 
+                    span(onclick='showPosts()').icon.fas.fa-plus
+            
 
-    div.profile__blog-comments
-        p comming soon
+            table.blog__table 
+                tr.table__header
+                    th Title
+                    th Tags
+                    th Status
+                    th Post Date
+                    th Edit Date
+                each val in blogs
+                    tr.table__entry
+                        td: a(href='/blog/'+val.title) #{val.title}
+                        td #{val.tags}
+                        td #{val.state}
+                        td #{val.postDate}
+                        td #{val.editDate}
+                        td: a(href='/blog/' + val.title + '/edit'): button Edit
+                            form(method='POST' action='/blog/'+val.title+'?_method=DELETE')
+                                button.blog__edit__btn--delete Delete
+                            if val.state == 'draft'
+                                form(method='POST' action='/blog/'+val.title+'?_method=PUT')
+                                    button.editor__button__publish(type='submit' name='state' value='publish-only') Publish
+            
+            div.comments--show 
+                h2 Your Comments
+                    span(onclick='showComments()').icon.fas.fa-plus
+            
+            
+            table.comment__table
+                tr.table__header
+                    th Your Comment
+                    th Blog Title
+                    th Post Date
+                    th Edit Date
+                each val in comments
+                    tr.table__entry
+                        td #{val.content}
+                        td: a(href='/blog/'+val.blogPost.title) #{val.blogPost.title}
+                        td #{val.postDate}
+                        td #{val.editDate}
+                        td: a(href='/blog/' + val.blogPost.title + '/comments/'+val._id+'/edit'): button Edit
+                            form(method='POST' action='/blog/'+val.blogPost.title+'/comments/'+val._id+'?_method=DELETE')
+                                button.blog__edit__btn--delete Delete
+                            
+
+       
+    script(src='../../javascript/controlPanel.js')
+     
     include includes/footer.pug

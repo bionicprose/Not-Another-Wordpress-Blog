@@ -2,7 +2,9 @@ var express = require('express'),
     app = express(),
     passport = require('passport'),
     router  = express.Router({mergeParams:true}),
-    User    = require('../models/user');
+    User    = require('../models/user'),
+    Blog    = require('../models/blog'),
+    Comment = require('../models/comments');
 
 // module.exports = function(app, passport) {
 
@@ -101,9 +103,14 @@ app.post('/signup', passport.authenticate('local-signup', {
 //////////////////////
 
 app.get('/profile', isLoggedIn, function(req, res) {
-    res.render('profile', {
-        user: req.user
-    });
+    Blog.find({'author.id': req.user._id}, function(err, foundBlogs) {
+        Comment.find({'author.id': req.user._id}, function(err, foundComments) {
+     
+        res.render('profile', {
+            user: req.user, blogs: foundBlogs, comments: foundComments
+        });
+});
+});
 });
 
 

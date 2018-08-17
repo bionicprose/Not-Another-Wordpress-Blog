@@ -1,7 +1,27 @@
 var express = require('express'),
     router  = express.Router({mergeParams:true}),
-    User    = require('../models/user');
+    User    = require('../models/user'),
+    middleware  = require('../middleware'),
+    Blog    = require('../models/blog'),
+    Comment = require('../models/comments');
 
+
+
+
+////////////////////////
+// admin route need to add isAdmin middleware to routes
+///////////////////////
+router.get('/admin', function(req, res) {
+    Blog.find({}, function(err, foundBlog) {
+        User.find({}, function(err, foundUser) {
+            Comment.find({}, function(err, foundComment) {
+                res.render('admin/admin', {blogs: foundBlog, users: foundUser, comments: foundComment});
+
+            });
+        });
+
+        });
+    });
 
 //////////////////////////////
 //Index Route /writers only
@@ -40,7 +60,14 @@ router.get('/user/:user/edit', function(req, res) {
 });
 
 router.put('/user/:user', function(req, res) {
-    res.redirect('/user/show');
+    User.findByIdAndUpdate(req.params.user, req.body.user, function(err, updatedUser){
+        if(err || !updatedUser) {
+            req.flash('error', 'Sorry, that user could not be updated.');
+        } else {
+            req.flash('notify', 'You have updated ' + updatedUser.name + '.');
+            res.redirect('/admin');
+        }
+    });
 });
 
 

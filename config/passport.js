@@ -197,7 +197,8 @@ function(req, token, refreshToken, profile, done) {
                 newUser.local.name   = profile.name.givenName + ' ' + profile.name.familyName;
                 newUser.local.email  = profile.emails[0].value;
                 newUser.pic.push('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200');
-
+                newUser.facebook.name   = profile.name.givenName + ' ' + profile.name.familyName;
+                newUser.facebook.email  = profile.emails[0].value;
                 newUser.save(function(err) {
                     if(err)
                         throw err;
@@ -228,6 +229,8 @@ function(req, token, refreshToken, profile, done) {
             user.local.name  = profile.name.givenName + ' ' + profile.name.familyName;
             user.local.email = profile.emails[0].value;
         }
+        user.facebook.name   = profile.name.givenName + ' ' + profile.name.familyName;
+        user.facebook.email  = profile.emails[0].value;
         user.pic.push('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200');
         // save the user
 
@@ -332,9 +335,10 @@ function(req, token, refreshToken, profile, done) {
                     newUser.role        = 1;
                     newUser.google.id   = profile.id;
                     newUser.google.token = token;
+                    newUser.google.name    = profile.displayName;
                     newUser.local.name     = profile.displayName;
                     newUser.local.email    = profile.emails[0].value; // pull the first email
-
+                    newUser.google.email   = profile.emails[0].value;
                     newUser.save(function(err) {
                         if(err)
                             throw err;
@@ -361,6 +365,8 @@ function(req, token, refreshToken, profile, done) {
                 user.local.name        = profile.displayName;
                 user.local.email       = profile.emails[0].value;
             }
+            user.google.name           = profile.displayName;
+            user.google.email          = profile.emails[0].value;
             user.save(function(err) {
                 if(err)
                     throw err;

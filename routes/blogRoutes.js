@@ -11,7 +11,7 @@ app.use(methodOverride('_method'));
 ////////////////////////New Blog Route
 
 
-router.get('/blog/new', function(req, res) {
+router.get('/blog/new', middleware.isBlogger, function(req, res) {
     res.render('blogs/new', {title: 'New Blog Post on Bionic Prose'});
 });
 
@@ -24,7 +24,7 @@ router.post('/blog', middleware.isBlogger, function(req, res) {
         tags = req.body.tags.split(','),
         content = req.body.content,
         state = req.body.state,
-        date = moment(),
+        date = moment().format('MMM Do YYYY'),
         author = {
             id: req.user._id
         };
@@ -139,25 +139,48 @@ router.get('/blog/:title/edit', middleware.isOwner, function(req, res) {
 });
 
 router.put('/blog/:title', middleware.isOwner, function(req, res) {
+      if(req.body.state === 'publish-only') {
+            var postDate = moment().format('MMM Do YYYY');
+            Blog.find({'title': req.params.title}, function(err, foundBlog) {
+                if(err) {
+                    console.log('finding the blog by title' + err + foundBlog);
+                    req.flash('error', 'Sorry, that blog post doesn\'t exist.');
+
+                } else {
+                    
+                   Blog.findByIdAndUpdate(foundBlog, { state: 'publish', postDate : postDate}, function(err, updatedBlog) {
+                        if(err || !updatedBlog) {
+                            console.log('finding and updating the blog' + err + foundBlog);
+                            req.flash('error', 'Sorry, that blog post doesn\'t exist.');
+                        } else {
+                            req.flash('success', 'You have updated '+foundBlog.title+'.');
+                            res.redirect('/profile');
+                        }
+                    });
+                }
+            }); 
+    } else {
         req.body.blog.tags = req.body.blog.tags.split(',');
-        req.body.blog.editDate = moment();
-    Blog.find({'title': req.params.title}, function(err, foundBlog) {
-        if(err) {
-            console.log('finding the blog by title' + err + foundBlog);
-            req.flash('error', 'Sorry, that blog post doesn\'t exist.');
+        req.body.blog.editDate = moment().format('MMM Do YYYY');
+        Blog.find({'title': req.params.title}, function(err, foundBlog) {
+            if(err) {
+                console.log('finding the blog by title' + err + foundBlog);
+                req.flash('error', 'Sorry, that blog post doesn\'t exist.');
+
         } else {
             
             Blog.findByIdAndUpdate(foundBlog, req.body.blog, function(err, updatedBlog) {
                 if(err || !updatedBlog) {
-                console.log('finding and updating the blog' + err + foundBlog);
-                req.flash('error', 'Sorry, that blog post doesn\'t exist.');
-        } else {
-            req.flash('success', 'You have updated '+foundBlog.title+'.');
-            res.redirect('/blog/' + updatedBlog.title);
+                    console.log('finding and updating the blog' + err + foundBlog);
+                    req.flash('error', 'Sorry, that blog post doesn\'t exist.');
+                } else {
+                    req.flash('notify', 'You have updated '+foundBlog.title+'.');
+                    res.redirect('/blog/' + updatedBlog.title);
         }
     });
     }
 });
+    }
 });
 
 // Destroy route!!!

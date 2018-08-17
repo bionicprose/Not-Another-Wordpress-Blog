@@ -20,8 +20,8 @@ var blogSchema = new mongoose.Schema({
             enum:['publish', 'draft'], 
             default: 'publish'
         },    
-    postDate: {type: Date},
-    editDate:[{type: Date}],
+    postDate: {type: String},
+    editDate:[{type: String}],
     content: {type: String, required: true},
     tags: [{type: String}]
 });
