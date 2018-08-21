@@ -1,8 +1,8 @@
 extends ../includes/layout.pug
 
 block content
-        h1 Edit !{blog.title}
-        div.editor
+    h1 Edit !{blog.title}
+    div.editor
         div.editor__toolbar
             a(href='#' data-command='h2') 
                 |h2
@@ -23,19 +23,22 @@ block content
             button.i.fa.fa-link.fa-3x(onclick="link()")
 
 
-        form.editor(action='/blog/'+blog.title+'?_method=PUT' method='POST' onsubmit='return copyContent()')
+        form.editor(action='/blog/'+blog.url+'?_method=PUT' method='POST' enctype='multipart/form-data' onsubmit='return copyContent()')
+            div.blog__header__img
+                img(src='../' + blog.headerImg)
+                p Upload a new header image
+                input(type='file' name='image') 
             div.editor__title
-                p Title
-                input(type='text' name='body[title]' value=blog.title)
-            textarea.editor__textarea--hidden(type='html' name='body[content]') 
+                input(type='text' name='blog[title]' value=blog.title)
+            textarea.editor__textarea--hidden(type='html' name='blog[content]') 
             div.editor__textarea(contenteditable='true')
                 p !{blog.content}
             div.editor__tags
-                p Tags
+                p Tags 
                 input.editor__tags--input(type='text' name='blog[tags]' value=blog.tags)
             button.editor__button__publish(type='submit' name='state' value='publish') Publish
             button.editor__button__save(type='submit' name='state' value='draft') Save
-block append footer
-       
-    script(src='../../javascript/editor.js') 
-    include ../includes/newBlogFooter.pug
+    
+    block append footer
+    
+        script(src='../../javascript/editor.js') 

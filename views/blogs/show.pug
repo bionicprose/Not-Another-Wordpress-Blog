@@ -3,34 +3,39 @@ extends ../includes/layout.pug
 block content
     div.blog__wrapper
         div.blog.blog__header
-            h1= blog.title
+            if blog.headerImg
+                div.blog__header__img
+                    img(src=blog.headerImg)
+                    h1= blog.title
+            else
+                h1= blog.title
             p Posted by #{blog.author.username} on #{blog.postDate}
         div.blog.blog__body
             p !{blog.content}
         div.blog.blog__tags
             p=blog.tags
         div.blog__edit
-            a(href='/blog/'+blog.title+'/edit'): button.blog__edit__btn--edit Edit post
-            form(method='POST' action='/blog/'+blog.title+'?_method=DELETE')
+            a(href='/blog/'+blog.url+'/edit'): button.blog__edit__btn--edit Edit post
+            form(method='POST' action='/blog/'+blog.url+'?_method=DELETE')
                  button.blog__edit__btn--delete Delete post
         
         div.comments
             h2 Reader Comments
-            a(href='/blog/'+blog.title+'/comments/new'): button.blog__comment__btn--add Add a comment
+            a(href='/blog/'+blog.url+'/comments/new'): button.blog__comment__btn--add Add a comment
             if blog.comments
                 each val in blog.comments
                     div.comments__entry
                         div.comments__entry__author
-                            p Author: !{val.author.username}
+                            p Author: #{val.author.username}
                             div.comments__entry__body
-                                p !{val.content}
+                                p #{val.content}
                             div.comments__entry__postDate
                                 p posted on !{val.postDate}
                             if val.editDate
                                 div.comments__entry__editDate
                                     p last edited on !{val.editDate}
                         div.comments__buttons    
-                            a(href='/blog/'+blog.title+'/comments/'+val._id+'/edit'): button.comments__btn__edit Edit
-                            form(method='POST' action='/blog/'+blog.title+'/comments/'+val._id+'?_method=DELETE')
+                            a(href='/blog/'+blog.url+'/comments/'+val._id+'/edit'): button.comments__btn__edit Edit
+                            form(method='POST' action='/blog/'+blog.url+'/comments/'+val._id+'?_method=DELETE')
                                 button.comments__btn__delete Delete
     include ../includes/footer.pug

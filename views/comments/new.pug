@@ -1,14 +1,10 @@
-//- new.pug for comments
-doctype html
-html
-    include ../includes/header.pug
-    body
-       h1 Add a comment for !{blog.title}
-       div.comment
-            form(method='POST' action='/blog/'+blog.title+'/comments').comment.comment__form
-                p Comment
-                textarea(rows='10' cols='50' name='content' required='true')
-                button.comment.comment__form__btn--submit Submit
+extends ../includes/layout.pug
+block content
+    h1 Add a comment for !{blog.title}
+    div.comment
+        form(method='POST' action='/blog/'+blog.url+'/comments').comment.comment__form
+            p Comment
+            textarea(rows='10' cols='50' name='content' required='true')
+            button.comment.comment__form__btn--submit Submit
             
 
-include ../includes/footer.pug

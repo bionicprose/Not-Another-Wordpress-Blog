@@ -5,7 +5,7 @@ html
     body
        h1 Edit your comment for !{blog.title}
        div.comment
-            form(method='POST' action='/blog/'+blog.title+'/comments/'+comment._id+'?_method=PUT').comment.comment__form
+            form(method='POST' action='/blog/'+blog.url+'/comments/'+comment._id+'?_method=PUT').comment.comment__form
                 p Comment
                 textarea(rows='10' cols='50' name='comment[content]' required='true') #{comment.content}
                 button.comment.comment__form__btn--submit Submit

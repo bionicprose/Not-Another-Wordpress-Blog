@@ -1,28 +1,15 @@
-//- index.pug
+extends includes/layout.pug
 
-include includes/header.pug
-html
-    body
+block content
+
+
     
-        h1 Welcome to Bionic Prose
-        if(!currentUser)
-            p Login or Register with:
-            a(href='/login') Local Login
-            p: a(href='signup') Local Signup
-            p: a(href='/auth/facebook'): button.login__button--facebook Login with Facebook
-            p: a(href='/auth/twitter'): button.login__button--twitter Login with Twitter
-            p: a(href='/auth/google'): button.login__button--google Login with Google
-        if(currentUser)
-            div.navbar
-                div.navbar__profile
-                    a(href='/profile') Profile
-                div.navbar__blog
-                    a(href='/blog') Blog
-                div.navbar__projects
-                    a(href='/projects') Projects
-                div.navbar_about
-                    a(href='about') About Bionic Prose
-                div.navbar_contact
-                    a(href='contact') Contact
-        
-include includes/footer
+    div.main
+      
+        div.main__content
+            div.faster Faster
+            div.stronger Stronger
+            div.better Better
+            p Writing for the 21st Century
+    
+    include includes/footer

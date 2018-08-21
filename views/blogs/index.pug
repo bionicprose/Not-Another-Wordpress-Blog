@@ -7,7 +7,7 @@ block content
 
         dl
             each val in blogs
-                li: a(href='/blog/'+val.title) !{val.title}</a>
+                li: a(href='/blog/'+val.url) #{val.title}</a>
                         dt=val.postDate
 
 

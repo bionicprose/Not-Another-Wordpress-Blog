@@ -35,19 +35,39 @@ block content
 
             button.ohyeah(onclick='yoyo()') yo!
 
+        if blog
+            form.editor(action='/blog' method='POST' enctype='multipart/form-data' onsubmit='return copyContent()')
+                div.editor__title
+                    p Title
+                    input(type='text' name='title' value=blog.title)
+                div.editor__img
+                    p Header Image
+                    input(type='file' name='image')
+                textarea.editor__textarea--hidden(type='html' name='content') 
+                div.editor__textarea(contenteditable='true')
+                    p !{blog.content}
+                div.editor__tags
+                    p Tags
+                    input.editor__tags--input(type='text' name='tags' value=blog.tags)
+                button.editor__button__publish(type='submit' name='state' value='publish') Publish
+                button.editor__button__save(type='submit' name='state' value='draft') Save
+        else
+            form.editor(action='/blog' method='POST' enctype='multipart/form-data' onsubmit='return copyContent()')
+                div.editor__title
+                    p Title
+                    input(type='text' name='title')
+                div.editor__img
+                    p Header Image
+                    input(type='file' name='image')
+                textarea.editor__textarea--hidden(type='html' name='content') 
+                div.editor__textarea(contenteditable='true')
+                    p some content
+                div.editor__tags
+                    p Tags
+                    input.editor__tags--input(type='text' name='tags')
+                button.editor__button__publish(type='submit' name='state' value='publish') Publish
+                button.editor__button__save(type='submit' name='state' value='draft') Save
 
-        form.editor(action='/blog' method='POST' onsubmit='return copyContent()')
-            div.editor__title
-                p Title
-                input(type='text' name='title')
-            textarea.editor__textarea--hidden(type='html' name='content') 
-            div.editor__textarea(contenteditable='true')
-                p some content
-            div.editor__tags
-                p Tags
-                input.editor__tags--input(type='text' name='tags')
-            button.editor__button__publish(type='submit' name='state' value='publish') Publish
-            button.editor__button__save(type='submit' name='state' value='draft') Save
     block append footer
        
         script(src='../../javascript/editor.js') 

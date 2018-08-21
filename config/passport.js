@@ -8,6 +8,7 @@ var GoogleStrategy      = require('passport-google-oauth').OAuth2Strategy;
 var User = require('../models/user');
 
 var configAuth = require('./auth');
+var shell = require('shelljs');
 
 module.exports = function(passport) {
 console.log('passport is being used');
@@ -73,7 +74,7 @@ console.log('passport is being used');
                             newUser.local.username  = username;
                             newUser.local.password = newUser.generateHash(password);
                             newUser.pic.push('/img/profile-iris.svg');
-
+                            shell.mkdir('-p', '/home/zac/webdev/bionicprose/bionicUser/' + newUser.id);
                             //setting local credentials
                             newUser.save(function(err) {
                                 if(err) {
@@ -94,6 +95,7 @@ console.log('passport is being used');
                                if(err) {
                                    throw err;
                                        }
+                                
                                 return done(null, newUser);
                                     });
                                 
@@ -199,6 +201,7 @@ function(req, token, refreshToken, profile, done) {
                 newUser.pic.push('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200');
                 newUser.facebook.name   = profile.name.givenName + ' ' + profile.name.familyName;
                 newUser.facebook.email  = profile.emails[0].value;
+                shell.mkdir('-p', '/home/zac/webdev/bionicprose/bionicUser/' + newUser.id);
                 newUser.save(function(err) {
                     if(err)
                         throw err;
@@ -339,6 +342,7 @@ function(req, token, refreshToken, profile, done) {
                     newUser.local.name     = profile.displayName;
                     newUser.local.email    = profile.emails[0].value; // pull the first email
                     newUser.google.email   = profile.emails[0].value;
+                    shell.mkdir('-p', '/home/zac/webdev/bionicprose/public/bionicUser/' + newUser.id);
                     newUser.save(function(err) {
                         if(err)
                             throw err;

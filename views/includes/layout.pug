@@ -11,28 +11,29 @@ html
 
 - var messages = getMessages()
 
-    if messages.notify
-        each msg in messages.info
-            .info= msg
-    if messages.error
-        each msg in messages.error
-            .error= msg
+    //- if messages.notify
+    //-     each msg in messages.info
+    //-         .info= msg
+    //- if messages.uError
+    //-     each msg in messages.uError
+    //-         .uError= msg
     body    
         div.nav
             div.nav__banner__wrapper
                 div.nav__banner
                 div.nav__caption
             div.nav__logo
-                    //- div.nav__menu
-                    //-     div.nav__menu--item1
-                    //-         |Blog
-                    //-     div.nav__menu--item2
-                    //-         |Projects
-                    //-     div.nav__menu--item2
-                    //-         |About
-                    //-     div.nav__menu--item3
-                    //-         |Contact
-                    //-     div.nav__menu--item4
-                    //-         |Acknowledgements 
-        block content  
-    block footer
+        div.sidebar
+            div.sidebar__item
+                a(href='/blog') Blog
+            div.sidebar__item
+                a(href='projects') Projects
+            div.sidebar__item
+                a(href='about') About
+            div.sidebar__item
+                a(href='contact') Contact
+         
+
+    block content  
+    block foot
+        

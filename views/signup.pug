@@ -1,23 +1,59 @@
-//-- signup.pug
+extends includes/layout.pug
 
-include includes/header.pug
-html
-    body
-        h1 Signup to BionicProse
+block content
+    h1 Signup to BionicProse
         
         
 
-        div.signup
+    div.signup
+        if signin
             form(action='/signup', method='POST').signup__form
                 p: label Username (this is how you'll be identified on this site):
-                input(type='text' name='username')
+                input(type='text' name='username' value=signin.username) 
+                if messages.usernameError
+                    each msg in messages.usernameError
+                        .error= msg
+                p: label Email:
+                input(type='email' name='email' value=signin.email)
+                if messages.emailError
+                    each msg in messages.emailError
+                        .error= msg
+                p: label Create a Password (6-14 characters long)
+                input(type='password' name='password' value=signin.password)
+                if messages.passwordError
+                    each msg in messages.passwordError
+                        .error= msg
+                p: label Confirm your password
+                input(type='password' name='confirmPass' value=signin.confirmPass)
+                if messages.confirmError
+                    each msg in messages.confirmError
+                        .error= msg
+                p: button.signup__btn Signup!
+        else
+            form(action='/signup', method='POST').signup__form
+                p: label Username (this is how you'll be identified on this site):
+                input(type='text' name='username') 
+                if messages.usernameError
+                    each msg in messages.usernameError
+                        .error= msg
                 p: label Email:
                 input(type='email' name='email')
-                p: label Create a Password
+                if messages.emailError
+                    each msg in messages.emailError
+                        .error= msg
+                p: label Create a Password (6-14 characters long)
                 input(type='password' name='password')
+                if messages.passwordError
+                    each msg in messages.passwordError
+                        .error= msg
+                p: label Confirm your password
+                input(type='password' name='confirmPass')
+                if messages.confirmError
+                    each msg in messages.confirmError
+                        .error= msg
                 p: button.signup__btn Signup!
 
     p Already have an account? 
     a(href='/login') Login
 
-include includes/footer.pug
+    include includes/footer.pug

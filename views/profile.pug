@@ -23,6 +23,8 @@ block content
                     p: a(href='/connect/twitter'): button.utility__btn__twitter--connect Connect Your Twitter Account
                 if !user.google.id
                     p: a(href='/connect/google'): button.utility__btn__google--connect Connect Your Google Account
+                p Write a Blog Post
+                    a(href='/blog/new'): span.icon.fas.fa-plus
                 a(href='/logout') Logout
 
         div.control-panel__main
@@ -40,16 +42,16 @@ block content
                     th Edit Date
                 each val in blogs
                     tr.table__entry
-                        td: a(href='/blog/'+val.title) #{val.title}
+                        td: a(href='/blog/'+val.url) #{val.title}
                         td #{val.tags}
                         td #{val.state}
                         td #{val.postDate}
                         td #{val.editDate}
-                        td: a(href='/blog/' + val.title + '/edit'): button Edit
-                            form(method='POST' action='/blog/'+val.title+'?_method=DELETE')
+                        td: a(href='/blog/' + val.url + '/edit'): button Edit
+                            form(method='POST' action='/blog/'+val.url+'?_method=DELETE')
                                 button.blog__edit__btn--delete Delete
                             if val.state == 'draft'
-                                form(method='POST' action='/blog/'+val.title+'?_method=PUT')
+                                form(method='POST' action='/blog/'+val.url+'?_method=PUT')
                                     button.editor__button__publish(type='submit' name='state' value='publish-only') Publish
             
             div.comments--show 
@@ -66,11 +68,11 @@ block content
                 each val in comments
                     tr.table__entry
                         td #{val.content}
-                        td: a(href='/blog/'+val.blogPost.title) #{val.blogPost.title}
+                        td: a(href='/blog/'+val.blogPost.url) #{val.blogPost.title}
                         td #{val.postDate}
                         td #{val.editDate}
-                        td: a(href='/blog/' + val.blogPost.title + '/comments/'+val._id+'/edit'): button Edit
-                            form(method='POST' action='/blog/'+val.blogPost.title+'/comments/'+val._id+'?_method=DELETE')
+                        td: a(href='/blog/' + val.blogPost.url + '/comments/'+val._id+'/edit'): button Edit
+                            form(method='POST' action='/blog/'+val.blogPost.url+'/comments/'+val._id+'?_method=DELETE')
                                 button.blog__edit__btn--delete Delete
                             
 

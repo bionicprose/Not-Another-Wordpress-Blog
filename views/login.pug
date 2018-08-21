@@ -1,20 +1,27 @@
-//-- login form login.pug
+extends includes/layout.pug
 
-include includes/header.pug
-html
-    body
-    
-        h1 Login to BionicProse
+block content
+    h1 Login to BionicProse
 
+    if(!currentUser)
+        p Login or Register with:
         div.signup
             form(action='/login', method='POST').signup__form
                 label Email
                 input(type='text', name='username')
                 label Password
                 input(type='password' name='password')
-                button.signup__btn
+                button.signup__btna(href='/login') Local Login
 
-        p Need an account?
-        a(href='/signup') Signup
 
-include includes/footer.pug
+            
+        p: a(href='/auth/facebook'): button.login__button--facebook Login with Facebook
+        p: a(href='/auth/twitter'): button.login__button--twitter Login with Twitter
+        p: a(href='/auth/google'): button.login__button--google Login with Google
+
+      
+
+    p Need an account?
+    a(href='/signup') Signup
+
+    include includes/footer.pug
