@@ -1,6 +1,8 @@
 extends ../includes/layout.pug
 
 block content
+    div(class='imageVar' data-imageVariable = images)
+    div(class='userVar' data-userVariable = user.id)
     h1 Edit !{blog.title}
     div.editor
         div.editor__toolbar
@@ -24,10 +26,11 @@ block content
 
 
         form.editor(action='/blog/'+blog.url+'?_method=PUT' method='POST' enctype='multipart/form-data' onsubmit='return copyContent()')
-            div.blog__header__img
-                img(src='../' + blog.headerImg)
-                p Upload a new header image
-                input(type='file' name='image') 
+            div.blog__hero__img
+                img(src='../' + blog.heroImg)
+                p Upload a new hero image
+                input(type='file' name='image')
+                span(onclick='imageSelector("edit")').editor__button__image-selector Select/Upload an Image 
             div.editor__title
                 input(type='text' name='blog[title]' value=blog.title)
             textarea.editor__textarea--hidden(type='html' name='blog[content]') 

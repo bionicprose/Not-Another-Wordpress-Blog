@@ -265,9 +265,10 @@ h2 {
     display: grid;
     /* grid-template-columns: 1fr; */
     grid-row-gap: 10px;
+    overflow: hidden;
 
 }
-.blog {
+.blog__body {
     
     padding-left: 10px;
     background-color: #8dbec3;
@@ -276,19 +277,19 @@ h2 {
     border-left: 1px solid white;
     border-top: 1px solid white;
     box-shadow: -1px 1px 5px 1px #205a93;
+    font-size: 20px;
 }
 
 .blog__header {
     padding-top: 0px;
 }
 
+.blog__hero-img img{
+    width: 100%;
 
-
-.blog__body {
-    
-    font-size: 20px;
- 
 }
+
+
 
 
 .comments__entry {
@@ -379,6 +380,17 @@ h2 {
     display: none;
 }
 
+.editor__button__image-selector {
+    border: 1px solid white;
+}
+
+.image--selection {
+    height:50px;
+}
+
+.editor__button__image-selector {
+    display: block;
+}
 /******main ************************************/
 
 .main {

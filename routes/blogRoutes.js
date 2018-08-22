@@ -5,7 +5,8 @@ var express = require('express'),
     moment  = require('moment'),
     methodOverride = require('method-override'),
     middleware = require('../middleware'),
-    multer      = require('multer');
+    multer      = require('multer'),
+    shell       = require('shelljs');
     // upload      = multer({ dest: '../public/uploads'},
     //                      {name: 'avatar', maxCount: 1});
 // config from Jesse Lewis @ https://medium.com/@Moonstrasse/how-to-make-a-basic-html-form-file-upload-using-multer-in-an-express-node-js-app-16dac2476610
@@ -46,7 +47,9 @@ app.use(methodOverride('_method'));
 
 
 router.get('/blog/new', middleware.isBlogger, function(req, res) {
-    res.render('blogs/new', {title: 'New Blog Post on Bionic Prose'});
+    // get images in users directory for use in picking blog header and or inserting into content
+    let images = shell.ls('/home/zac/webdev/bionicprose/public/bionicUser/' + req.user.id);
+    res.render('blogs/new', {title: 'New Blog Post on Bionic Prose', images: images, user: req.user});
 });
 
 
@@ -70,9 +73,13 @@ router.post('/blog', middleware.isBlogger, multer(multerConfig).single('image'),
         } else {
             var username = req.user.local.name;
         }
-        
-    var newBlog = {title: title, tags: tags, content: content, postDate: date, author : author, 'author.username': username, state: state, url: url, headerImg: '../bionicUser/'+ req.user.id + '/' + res.req.file.filename};
-    console.log(newBlog);
+        if(res.req.file) { // checks for an uploaded image
+    var newBlog = {title: title, tags: tags, content: content, postDate: date, author : author, 'author.username': username, state: state, url: url, heroImg: '../bionicUser/'+ req.user.id + '/' + res.req.file.filename};
+        } else if (req.body.pickedImage) { // checks for a selected image alraedy uploaded
+    var newBlog = {title: title, tags: tags, content: content, postDate: date, author : author, 'author.username': username, state: state, url: url, heroImg: req.body.pickedImage};     
+         } else {  // skips headerImg if nothing was uploaded or selected.
+            var newBlog = {title: title, tags: tags, content: content, postDate: date, author : author, 'author.username': username, state: state, url: url};
+         } console.log(newBlog);
     // create new blog post with data
     Blog.create(newBlog, function(err, blog){
         if(err) {
@@ -162,6 +169,7 @@ router.get('/blog/:url', function(req, res) {
 //////////////////////////////
 
 router.get('/blog/:url/edit', middleware.isOwner, function(req, res) {
+    let images = shell.ls('/home/zac/webdev/bionicprose/public/bionicUser/' + req.user.id);
     Blog.findOne({'url': req.params.url}, function(err, foundBlog) {
         if(err || !foundBlog) {
             console.log('req.params.url ' + req.params.url);
@@ -169,7 +177,7 @@ router.get('/blog/:url/edit', middleware.isOwner, function(req, res) {
             res.redirect('/blog');
     } else {
         console.log('hello?');
-        res.render('blogs/edit', {blog: foundBlog});
+        res.render('blogs/edit', {blog: foundBlog, user: req.user, images: images});
     }
         });
 });
@@ -200,7 +208,9 @@ router.put('/blog/:url', middleware.isOwner, multer(multerConfig).single('image'
        
         if(res.req.file) {
             console.log('image got uploaded?' + res.req.file.filename);
-            req.body.blog.headerImg = '../bionicUser/' + req.user.id + '/' + res.req.file.filename;
+            req.body.blog.heroImg = '../bionicUser/' + req.user.id + '/' + res.req.file.filename;
+        } else if(req.body.blog.pickedImage) {
+            req.body.blog.heroImg = req.body.blog.pickedImage;
         }
         req.body.blog.tags = req.body.blog.tags.split(',');
         req.body.blog.url = url = req.body.blog.title.replace(/[^\w\s]/g, '').replace(/[\s]/g, '-'),

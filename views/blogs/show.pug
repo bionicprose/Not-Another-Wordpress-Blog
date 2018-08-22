@@ -2,17 +2,17 @@ extends ../includes/layout.pug
 
 block content
     div.blog__wrapper
-        div.blog.blog__header
-            if blog.headerImg
-                div.blog__header__img
-                    img(src=blog.headerImg)
+        div.blog__header
+            if blog.heroImg
+                div.blog__hero-img
+                    img(src=blog.heroImg)
                     h1= blog.title
             else
                 h1= blog.title
             p Posted by #{blog.author.username} on #{blog.postDate}
-        div.blog.blog__body
+        div.blog__body
             p !{blog.content}
-        div.blog.blog__tags
+        div.blog__tags
             p=blog.tags
         div.blog__edit
             a(href='/blog/'+blog.url+'/edit'): button.blog__edit__btn--edit Edit post

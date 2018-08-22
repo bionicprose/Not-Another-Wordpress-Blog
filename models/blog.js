@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var blogSchema = new mongoose.Schema({
     title: {type: String, required: true},
     url: {type: String},
-    headerImg: { type: String},
+    heroImg: { type: String},
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,

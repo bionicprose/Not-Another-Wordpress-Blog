@@ -5,7 +5,8 @@ extends ../includes/layout.pug
 
 block content
 
-
+    div(class='imageVar' data-imageVariable = images)
+    div(class='userVar' data-userVariable = user.id)
     
 
 
@@ -31,9 +32,7 @@ block content
             button.i.fa.fa-list.fa-3x(onclick="document.execCommand('insertUnorderedList', false, null);")
             button.i.fa.fa-link.fa-3x(onclick="link()")
 
-            button.hiya(onclick='yo()') Hi!
-
-            button.ohyeah(onclick='yoyo()') yo!
+       
 
         if blog
             form.editor(action='/blog' method='POST' enctype='multipart/form-data' onsubmit='return copyContent()')
@@ -41,7 +40,8 @@ block content
                     p Title
                     input(type='text' name='title' value=blog.title)
                 div.editor__img
-                    p Header Image
+                    p Hero Image
+                    span(onclick='imageSelector()').editor__button__image-selector Select/Upload an Image
                     input(type='file' name='image')
                 textarea.editor__textarea--hidden(type='html' name='content') 
                 div.editor__textarea(contenteditable='true')
@@ -57,7 +57,8 @@ block content
                     p Title
                     input(type='text' name='title')
                 div.editor__img
-                    p Header Image
+                    p Hero Image
+                    span(onclick='imageSelector()').editor__button__image-selector Select/Upload an Image
                     input(type='file' name='image')
                 textarea.editor__textarea--hidden(type='html' name='content') 
                 div.editor__textarea(contenteditable='true')
@@ -67,7 +68,7 @@ block content
                     input.editor__tags--input(type='text' name='tags')
                 button.editor__button__publish(type='submit' name='state' value='publish') Publish
                 button.editor__button__save(type='submit' name='state' value='draft') Save
-
+  
     block append footer
        
         script(src='../../javascript/editor.js') 
