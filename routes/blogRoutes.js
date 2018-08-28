@@ -11,6 +11,7 @@ var express = require('express'),
     //                      {name: 'avatar', maxCount: 1});
 // config from Jesse Lewis @ https://medium.com/@Moonstrasse/how-to-make-a-basic-html-form-file-upload-using-multer-in-an-express-node-js-app-16dac2476610
     const multerConfig = {
+        limites: { fieldSize: 25 * 1024 * 1024},
         storage: multer.diskStorage({
 
             destination: function(req, file, next) {
@@ -59,6 +60,16 @@ router.post('/blog', middleware.isBlogger, multer(multerConfig).single('image'),
     console.log(req.body.content);
     
     var title = req.body.title,
+        titleSettings = {
+            fontSize : req.body.fontSize,
+            fontLeft : req.body.fontLeft,
+            fontTop  : req.body.fontTop,
+            fontColor : req.body.color
+        },
+        heroSettings = { 
+            size :req.body.size,
+            position : req.body.position,
+            gradient: req.body.gradient },
         tags = req.body.tags.split(','),
         content = req.body.content,
         state = req.body.state,
@@ -74,11 +85,13 @@ router.post('/blog', middleware.isBlogger, multer(multerConfig).single('image'),
             var username = req.user.local.name;
         }
         if(res.req.file) { // checks for an uploaded image
-    var newBlog = {title: title, tags: tags, content: content, postDate: date, author : author, 'author.username': username, state: state, url: url, heroImg: '../bionicUser/'+ req.user.id + '/' + res.req.file.filename};
+            heroSettings.heroImg = '../bionicUser/'+ req.user.id + '/' + res.req.file.filename;
+    var newBlog = {title: title, tags: tags, content: content, postDate: date, author : author, 'author.username': username, state: state, url: url, heroSettings: heroSettings, titleSettings: titleSettings };
         } else if (req.body.pickedImage) { // checks for a selected image alraedy uploaded
-    var newBlog = {title: title, tags: tags, content: content, postDate: date, author : author, 'author.username': username, state: state, url: url, heroImg: req.body.pickedImage};     
-         } else {  // skips headerImg if nothing was uploaded or selected.
-            var newBlog = {title: title, tags: tags, content: content, postDate: date, author : author, 'author.username': username, state: state, url: url};
+            heroSettings.heroImg = req.body.pickedImage;
+    var newBlog = {title: title, tags: tags, content: content, postDate: date, author : author, 'author.username': username, state: state, url: url, heroSettings: heroSettings, titleSettings: titleSettings };     
+         } else {  // skips headerImg if nothing was uploaded or selected. Still adds title settings
+            var newBlog = {title: title, tags: tags, content: content, postDate: date, author : author, 'author.username': username, state: state, url: url, titleSettings: titleSettings };
          } console.log(newBlog);
     // create new blog post with data
     Blog.create(newBlog, function(err, blog){
@@ -183,7 +196,7 @@ router.get('/blog/:url/edit', middleware.isOwner, function(req, res) {
 });
 
 router.put('/blog/:url', middleware.isOwner, multer(multerConfig).single('image'),  function(req, res) {
-    console.log(req.body.blog);
+    
       if(req.body.state === 'publish-only') {
             var postDate = moment().format('MMM Do YYYY');
             Blog.find({'url': req.params.url}, function(err, foundBlog) {
@@ -206,23 +219,46 @@ router.put('/blog/:url', middleware.isOwner, multer(multerConfig).single('image'
             }); 
     } else {
        
-        if(res.req.file) {
-            console.log('image got uploaded?' + res.req.file.filename);
-            req.body.blog.heroImg = '../bionicUser/' + req.user.id + '/' + res.req.file.filename;
-        } else if(req.body.blog.pickedImage) {
-            req.body.blog.heroImg = req.body.blog.pickedImage;
-        }
-        req.body.blog.tags = req.body.blog.tags.split(',');
-        req.body.blog.url = url = req.body.blog.title.replace(/[^\w\s]/g, '').replace(/[\s]/g, '-'),
-        req.body.blog.editDate = moment().format('MMM Do YYYY');
         Blog.find({'url': req.params.url}, function(err, foundBlog) {
             if(err) {
                 console.log('finding the blog by title' + err + foundBlog);
                 req.flash('error', 'Sorry, that blog post doesn\'t exist.');
 
-        } else {
+            } else {
+                console.log('finding the blog by title' + err + foundBlog);
+                var newBlog = foundBlog;
+               
+        if(res.req.file) { //checking for uploaded image
+            console.log('image got uploaded?' + res.req.file.filename);
+            var heroImg = '../bionicUser/' + req.user.id + '/' + res.req.file.filename;
+        } else if(req.body.pickedImage) { //checking for selected image
+            console.log('picked image was picked');
+            var  heroImg = req.body.pickedImage;
+        } else { // if neither, use old image
+            console.log('no picked image');
+             var heroImg = req.body.currentImage;
+        }
+        newBlog = {
+         titleSettings : {
+            fontSize : req.body.fontSize,
+            fontLeft : req.body.fontLeft,
+            fontTop  : req.body.fontTop,
+            fontColor : req.body.fontColor
+        },
+        heroSettings : { 
+            heroImg : heroImg,
+            size :req.body.size,
+            position : req.body.position,
+            gradient: req.body.gradient },
             
-            Blog.findByIdAndUpdate(foundBlog, req.body.blog, function(err, updatedBlog) {
+            content : req.body.content,
+            title : req.body.title,
+            tags : req.body.tags.split(','),
+            url : req.body.title.replace(/[^\w\s]/g, '').replace(/[\s]/g, '-'),
+            editDate : moment().format('MMM Do YYYY')
+         }; 
+            console.log('this is the supposedly new blog: ' + newBlog);
+            Blog.findByIdAndUpdate(foundBlog, newBlog, function(err, updatedBlog) {
                 if(err || !updatedBlog) {
                     console.log('finding and updating the blog' + err + foundBlog);
                     req.flash('error', 'Sorry, that blog post doesn\'t exist.');

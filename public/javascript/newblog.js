@@ -1,13 +1,10 @@
-var heroSettings = document.querySelector('.heroSettings');
-var currentImage = heroSettings.dataset.image;
-var gradient = heroSettings.dataset.gradient;
-
-var titleSettings = document.querySelector('.titleSettings');
+var currentImage;
+var gradient = false;
 var titleStyle = {
-    fontSize: titleSettings.dataset.fontsize,
-    top: titleSettings.dataset.fonttop,
-    left: titleSettings.dataset.fontleft,
-    color: titleSettings.dataset.fontcolor
+    fontSize: 5,
+    top: 50,
+    left: 50,
+    color: "white"
 };
 var currentStyle = {
     url: currentImage,
@@ -27,8 +24,7 @@ function copyContent() {
     document.querySelector('.blog__hero-img__fontLeft--hidden').value = titleStyle.left;
     document.querySelector('.blog__hero-img__fontColor--hidden').value = titleStyle.color;
     document.querySelector('.blog__hero-img__fontSize--hidden').value = titleStyle.fontSize;
-    document.querySelector('.blog__hero-img__currentImage--hidden').value = currentImage;
-    console.log
+    
      if(!document.querySelector('.editor__textarea--hidden').value) {
          return false;
     } else {
@@ -36,9 +32,12 @@ function copyContent() {
         return true;
     }
 }
+// var imgBtn = document.querySelector('.editor__button__image-selector');
+// imgBtn.addEventListener('click', imageSelector());
 
 
-function imageSelector() {
+
+function imageSelector(mode) {
     console.log('clicked!');
     
     var images = document.querySelector('.imageVar').getAttribute('data-imageVariable');
@@ -54,13 +53,17 @@ function imageSelector() {
     imageDiv.style.display = 'grid';
     imageDiv.style.gridTemplateColumns = '1fr 1fr 1fr 1fr';
 
+  
+
     for(let i = 0; i < imageArray.length; i++) {
         var imageGrid = document.createElement('div');
         imageGrid.setAttribute('style', 'height: 50px', 'width: 50px');
 
-        
+        if(mode === 'new'){
+            var imageSelection = '../bionicUser/' + user +'/'+ imageArray[i];
+        } else {
             var imageSelection = '../../bionicUser/' + user +'/'+ imageArray[i];
-        
+        }
             let img = new Image();
             // let hero = new Image();
             // hero.src = imageSelection;
@@ -71,27 +74,56 @@ function imageSelector() {
             var imageInput = document.createElement('input');
             // var fileDisplayArea = document.querySelector('.editor__hero__image--preview');
             imageInput.setAttribute('type', 'radio');
-           
+            if(mode ==='edit') {
+            imageInput.setAttribute('name', 'blog[pickedImage]');
+            } else {
             imageInput.setAttribute('name', 'pickedImage');
+            }
             imageInput.setAttribute('value',  imageSelection);
             imageInput.classList.add('image--selection');
-            
 
             // sets selection as background iamge for div
             imageInput.addEventListener('change', function(e) {
                 document.querySelector('.editor__img__upload').value = '';
                 var styles = document.getElementById('bpStyles');
-                // console.log(styles.sheet);
+                console.log(styles.sheet);
                 styles.sheet.insertRule('.blog__hero-img { background-image: url('+this.value+')}', styles.sheet.cssRules.length);
             currentImage = this.value;
             });
             
+            // function(e) {
+                
+                // let heroDiv = document.querySelector('.blog__hero-img');
+                // heroDiv.style.backgroundImage = 'url('+this.value+')';
+                // heroDiv.style.backgroundSize = 'cover';
+                // heroDiv.style.backgroundRepeat = 'no-repeat';
+
+
+
+                // clears upload in favor of radio selection
+                // let upload = document.querySelector('.editor__img__upload');
+                // upload.value = '';
+
+                // if(fileDisplayArea.firstChild) 
+                // fileDisplayArea.removeChild(fileDisplayArea.firstChild);
+
+                // fileDisplayArea.appendChild(hero);
+                // });
             imageGrid.appendChild(img);
             imageGrid.appendChild(imageInput);
             
+            // .innerHTML += '<img src='+imageSelection+' height=50px width=50px><input type="radio" name="pickedImage" value='+imageSelection+' class="image--selection">';
+            
+        // } else {
+            
+        //     imageGrid.innerHTML += '<img src='+imageSelection+' height=50px width=50px><input type="radio" name="blog[pickedImage]" value='+imageSelection+' class="image--selection">';
+        // }
         imageDiv.appendChild(imageGrid);
     }
     
+    // var submitBtn = document.createElement('button').setAttribute('value', 'submit');
+    // imageForm.innerHTML += submitBtn;
+    // imageDiv.appendChild(imageForm);
 
     var editorImg = document.querySelector('.editor__img');
     editorImg.insertAdjacentElement('afterend', imageDiv);
@@ -130,10 +162,15 @@ var fileDisplayArea = document.querySelector('.editor__hero__image--preview');
 
                     
                         var styles = document.getElementById('bpStyles');
-                        // console.log(styles.sheet);
+                        console.log(styles.sheet);
                         styles.sheet.insertRule('.blog__hero-img { background-image: url('+img.src+')}', styles.sheet.cssRules.length);
                     currentImage = img.src;
-               
+                    // let heroDiv = document.querySelector('.blog__hero-img');
+                    // heroDiv.style.backgroundImage = 'url('+img.src+')';
+                    // heroDiv.style.backgroundSize = 'cover';
+                    // heroDiv.style.backgroundRepeat = 'no-repeat';
+
+					// fileDisplayArea.appendChild(img);
 				}
 
 				reader.readAsDataURL(file);	
@@ -159,7 +196,7 @@ var fileDisplayArea = document.querySelector('.editor__hero__image--preview');
                 gradient = false;
             }
 }
-////// change image position
+
 function move(dir) {
     var bgImage = currentImage;
     console.log('move' + dir);
@@ -182,7 +219,7 @@ function move(dir) {
     console.log(currentStyle.backgroundPositionX + ' and ' + currentStyle.backgroundPositionY);
     styles.sheet.insertRule('.blog__hero-img { background-position: '+currentStyle.backgroundPositionX+'px '+currentStyle.backgroundPositionY+'px}', styles.sheet.cssRules.length);
 }
-/// change image size
+
 function size(dir) {
     var styles = document.getElementById('bpStyles');
     switch(dir) {
@@ -197,7 +234,7 @@ function size(dir) {
 
     }
     //////////////// hero image styling /////////////////////
-    //// not implemented
+
     function heroEditor () {
         turnRight = document.querySelector('.turnRight');
         turnRight.addEventListener('onclick', function() {
@@ -207,9 +244,13 @@ function size(dir) {
 
     }
 
+    // function rotate(dir) {
+    //     var heroDiv = document.querySelector('.blog__hero-img');
+    //     heroDiv.classList.add('rotate45');
+    // }
+
     //////////////////title manipulation///////////////
 
-    //// change title position relative to the image
     function moveT(dir) {
         var title = document.querySelector('.blog__hero-text');
         var styles = document.getElementById('bpStyles');
@@ -231,12 +272,11 @@ function size(dir) {
         styles.sheet.insertRule('.blog__hero-text { top: '+titleStyle.top+'%}', styles.sheet.cssRules.length);
         styles.sheet.insertRule('.blog__hero-text { left: '+titleStyle.left+'%}', styles.sheet.cssRules.length);
     }
-    //////// change title font size
+
     function fontManip(effect) {
         var styles = document.getElementById('bpStyles');
         switch(effect) {
             case 'up':
-            console.log('text up');
                 titleStyle.fontSize++;
                 break;
             case 'down':
@@ -245,81 +285,81 @@ function size(dir) {
             }
             styles.sheet.insertRule('.blog__hero-text { font-size: '+titleStyle.fontSize+'em}', styles.sheet.cssRules.length);
     }
-    ////// change font color
+
     var colorPicker = document.querySelector('.font__color');
     colorPicker.addEventListener('input', function(e) {
         styles = document.getElementById('bpStyles');
         titleStyle.color = this.value;
         styles.sheet.insertRule('.blog__hero-text { color: '+titleStyle.color+'}', styles.sheet.cssRules.length);
     });
-// preview title
+
+    // preview title
 var title = document.querySelector('.title');
 title.addEventListener('keyup', function(e) {
     document.querySelector('.blog__hero-text').innerHTML = this.value;
 });
 
-    /// text editor button functions
+////////////////////////text editor
 
-    function edit(command) {
-        textarea = document.querySelector('.editor__textarea');
-        switch(command) {
-            case('bold'):
-            document.execCommand('bold', false, null);
-            break;
-    
-            case('italic'):
-            document.execCommand('italic', false, null);
-            break;
-    
-            case('undo'):
-            document.execCommand('undo', false, null);
-            break;
-    
-            case('justifyLeft'):
-            document.execCommand('justifyLeft', false, null);
-            break;
-    
-            case('justifyRight'):
-            document.execCommand('justifyRight', false, null);
-            break;
-    
-            case('justifyCenter'):
-            document.execCommand('justifyCenter', false, null);
-            break;
-    
-            case('superscript'):
-            document.execCommand('superscript', false, null);
-            break;
-    
-            case('insertImage'):
-            document.execCommand('insertImage', false, null);
-            break;
-    
-            case('underline'):
-            document.execCommand('underline', false, null);
-            break;
-    
-            case('strikeThrough'):
-            document.execCommand('strikeThrough', false, null);
-            break;
-    
-            case('redo'):
-            document.execCommand('redo', false, null);
-            break;
-    
-            case('indent'):
-            document.execCommand('indent', false, null);
-            break;
-    
-            case('insertUnorderedList'):
-            document.execCommand('insertUnorderedList', false, null);
-            break;
-    
-            case('insertOrderedList'):
-            document.execCommand('insertOrderedList', false, null);
-            break;
-           
-        }
-            textarea.focus();
-        }
-    
+function edit(command) {
+    textarea = document.querySelector('.editor__textarea');
+    switch(command) {
+        case('bold'):
+        document.execCommand('bold', false, null);
+        break;
+
+        case('italic'):
+        document.execCommand('italic', false, null);
+        break;
+
+        case('undo'):
+        document.execCommand('undo', false, null);
+        break;
+
+        case('justifyLeft'):
+        document.execCommand('justifyLeft', false, null);
+        break;
+
+        case('justifyRight'):
+        document.execCommand('justifyRight', false, null);
+        break;
+
+        case('justifyCenter'):
+        document.execCommand('justifyCenter', false, null);
+        break;
+
+        case('superscript'):
+        document.execCommand('superscript', false, null);
+        break;
+
+        case('insertImage'):
+        document.execCommand('insertImage', false, null);
+        break;
+
+        case('underline'):
+        document.execCommand('underline', false, null);
+        break;
+
+        case('strikeThrough'):
+        document.execCommand('strikeThrough', false, null);
+        break;
+
+        case('redo'):
+        document.execCommand('redo', false, null);
+        break;
+
+        case('indent'):
+        document.execCommand('indent', false, null);
+        break;
+
+        case('insertUnorderedList'):
+        document.execCommand('insertUnorderedList', false, null);
+        break;
+
+        case('insertOrderedList'):
+        document.execCommand('insertOrderedList', false, null);
+        break;
+       
+    }
+        textarea.focus();
+    }

@@ -13,65 +13,88 @@ block content
     h1 Bionic Prose Editor
 
     div.editor
-        div.editor__toolbar
-            a(href='#' data-command='h2') 
-                |h2
-            button.i.fa.fa-undo.fa-3x(onclick="document.execCommand('undo', false, null);")
-            button.i.fa.fa-align-left.fa-3x(onclick="document.execCommand('justifyLeft', false, null);")
-            button.i.fa.fa-align-right.fa-3x(onclick="document.execCommand('justifyRight', false, null);")
-            button.i.fa.fa-align-center.fa-3x(onclick="document.execCommand('justifyCenter', false, null);")
-            button.i.fa.fa-bold.fa-3x(onclick="document.execCommand('bold', false, '');")
-            button.i.fa.fa-italic.fa-3x(onclick="document.execCommand('italic', false, null);")
-            button.i.fa.fa-superscript.fa-3x(onclick="document.execCommand('superscript', false, null);")
-            button.i.fa.fa-picture-o.fa-3x(onclick="document.execCommand('insertImage', false, null);")
-            button.i.fa.fa-underline.fa-3x(onclick="document.execCommand('underline', false, null);")
-            button.i.fa.fa-strikethrough.fa-3x(onclick="document.execCommand('strikeThrough', false, null);")
-            button.i.fa.fa-redo.fa-3x(onclick="document.execCommand('redo', false, null);")
-            button.i.fa.fa-undo.fa-3x(onclick="document.execCommand('undo', false, null);")
-            button.i.fa.fa-indent.fa-3x(onclick="document.execCommand('indent', false, null);")
-            button.i.fa.fa-list.fa-3x(onclick="document.execCommand('insertUnorderedList', false, null);")
-            button.i.fa.fa-link.fa-3x(onclick="link()")
-
        
 
-        if blog
-            form.editor(action='/blog' method='POST' enctype='multipart/form-data' onsubmit='return copyContent()')
-                div.editor__title
-                    p Title
-                    input(type='text' name='title' value=blog.title)
-                div.editor__img
-                    p Hero Image
-                    span(onclick='imageSelector()').editor__button__image-selector Select/Upload an Image
-                    input(type='file' name='image')
-                textarea.editor__textarea--hidden(type='html' name='content') 
-                div.editor__textarea(contenteditable='true')
-                    p !{blog.content}
-                div.editor__tags
-                    p Tags
-                    input.editor__tags--input(type='text' name='tags' value=blog.tags)
-                button.editor__button__publish(type='submit' name='state' value='publish') Publish
-                button.editor__button__save(type='submit' name='state' value='draft') Save
-        else
-            form.editor(action='/blog' method='POST' enctype='multipart/form-data' onsubmit='return copyContent()')
-                div.editor__title
-                    p Title
-                    input(type='text' name='title')
-                div.editor__img
-                    p Hero Image
-                    span(onclick='imageSelector()').editor__button__image-selector Select/Upload an Image
-                    input(type='file' name='image')
-                textarea.editor__textarea--hidden(type='html' name='content') 
-                div.editor__textarea(contenteditable='true')
-                    p some content
-                div.editor__tags
-                    p Tags
-                    input.editor__tags--input(type='text' name='tags')
-                button.editor__button__publish(type='submit' name='state' value='publish') Publish
-                button.editor__button__save(type='submit' name='state' value='draft') Save
+        form.editor(action='/blog' method='POST' enctype='multipart/form-data' onsubmit='return copyContent()')
+            div.blog__hero-img
+                div.blog__hero-text
+                    |Your title
+                    input(type='text' name='position').hidden.blog__hero-img__position--hidden
+                    input(type='text' name='size').hidden.blog__hero-img__size--hidden
+                    input(type='text' name='gradient').hidden.blog__hero-img__gradient--hidden
+                    input(type='text' name='fontSize').hidden.blog__hero-img__fontSize--hidden
+                    input(type='text' name='fontLeft').hidden.blog__hero-img__fontLeft--hidden
+                    input(type='text' name='fontTop').hidden.blog__hero-img__fontTop--hidden
+                    input(type='text' name='fontColor').hidden.blog__hero-img__fontColor--hidden
+                    
+            div.editor__img__toolbar
+                div.img__mover
+                    div.move Move Image
+                    div(onclick='move("up")').move--up: i.fas.fa-chevron-up
+                    div(onclick='move("left")').move--left: i.fas.fa-chevron-left
+                    div(onclick='move("right")').move--right: i.fas.fa-chevron-right
+                    div(onclick='move("down")').move--down: i.fas.fa-chevron-down
+                div.img__manip
+                    div.tint(onclick='tinter()') Add/Remove Tint
+                    div(onclick='size("up")').size--up Increase Image Size
+                        i.fas.fa-plus
+                    div(onclick='size("down")').size--down Decrease Image Size
+                        i.fas.fa-minus
+                     
+                div.text__manip
+                    |Font Color:
+                    input(type='color' name='color' value='#ffffff' class='font__color')
+        
+                    div(onclick='fontManip("up")').size--up Font Size
+                        i.fas.fa-plus
+                    div(onclick='fontManip("down")').size--down Font Size
+                        i.fas.fa-minus
+                div.title__mover
+                    div.move Move Title
+                    div(onclick='moveT("up")').move--up: i.fas.fa-chevron-up
+                    div(onclick='moveT("left")').move--left: i.fas.fa-chevron-left
+                    div(onclick='moveT("right")').move--righ: i.fas.fa-chevron-right
+                    div(onclick='moveT("down")').move--down: i.fas.fa-chevron-down
+
+
+            div.editor__img
+                h3 Select or Upload a Hero Image
+                
+                span.editor__button__image-selector(onclick='imageSelector("new")') Select/Upload an Image
+                input.editor__img__upload(type='file' name='image')
+            div.editor__title
+                h3 Title
+                input(type='text' name='title').title
+            div.editor__toolbar
+                a(href='#' data-command='h2') 
+                    |h2
+                i.fa.fa-undo.fa-2x(onclick='edit("undo")')
+                i.fa.fa-redo.fa-2x(onclick='edit("redo")')
+                i.fa.fa-align-left.fa-2x(onclick='edit("justifyLeft")')
+                i.fa.fa-align-right.fa-2x(onclick='edit("justifyRight")')
+                i.fa.fa-align-center.fa-2x(onclick='edit("justifyCenter")')
+                i.fa.fa-bold.fa-2x(onclick='edit("bold")')
+                i.fa.fa-italic.fa-2x(onclick='edit("italic")')
+                i.fa.fa-superscript.fa-2x(onclick='edit("superscript")')
+                i.fa.fa-picture-o.fa-2x(onclick='edit("insertImage")')
+                i.fa.fa-underline.fa-2x(onclick='edit("underline")')
+                i.fa.fa-strikethrough.fa-2x(onclick='edit("strikeThrough")')
+                i.fa.fa-indent.fa-2x(onclick='edit("indent")')
+                i.fa.fa-list.fa-2x(onclick='edit("insertUnorderedList")')
+                i.fa.fa-list-ol.fa-2x(onclick='edit("insertOrderedList")')
+                i.fa.fa-link.fa-2x(onclick="link()")
+            textarea.editor__textarea--hidden(type='html' name='content') 
+            div.editor__textarea(contenteditable='true')
+                | some content
+            div.editor__tags
+                p Tags
+            input.editor__tags--input(type='text' name='tags')
+            button.editor__button__publish(type='submit' name='state' value='publish') Publish
+            button.editor__button__save(type='submit' name='state' value='draft') Save
   
     block append footer
        
-        script(src='../../javascript/editor.js') 
+        script(src='../../javascript/newblog.js') 
         //- script(type='text/javascript').
         //-     $(function() {
         //-         document.execCommand("defaultParagraphSeparator", false, "p");

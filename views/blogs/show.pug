@@ -1,12 +1,16 @@
 extends ../includes/layout.pug
 
+//- block append head
+    
+                
 block content
     div.blog__wrapper
         div.blog__header
-            if blog.heroImg
+            if blog.heroSettings.heroImg
                 div.blog__hero-img
-                    img(src=blog.heroImg)
-                    h1= blog.title
+                    div.blog__hero-text
+                        p=blog.title
+                    
             else
                 h1= blog.title
             p Posted by #{blog.author.username} on #{blog.postDate}
@@ -38,4 +42,18 @@ block content
                             a(href='/blog/'+blog.url+'/comments/'+val._id+'/edit'): button.comments__btn__edit Edit
                             form(method='POST' action='/blog/'+blog.url+'/comments/'+val._id+'?_method=DELETE')
                                 button.comments__btn__delete Delete
-    include ../includes/footer.pug
+    //- div(class='imageVar' data-imageVariable = blog.heroImg)
+    div(class='heroSettings' data-image = blog.heroSettings.heroImg
+                             data-size = blog.heroSettings.size
+                             data-gradient = blog.heroSettings.gradient
+                             data-position = blog.heroSettings.position)
+    div(class='titleSettings' data-fontsize = blog.titleSettings.fontSize
+                              data-fontcolor = blog.titleSettings.fontColor
+                              data-fonttop   = blog.titleSettings.fontTop
+                              data-fontleft = blog.titleSettings.fontLeft)
+    
+
+    //- div(class='userVar' data-userVariable = user.id)
+    block append footer
+       
+        script(src='../../javascript/show.js')
