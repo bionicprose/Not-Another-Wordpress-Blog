@@ -20,22 +20,23 @@ var blogSchema = new mongoose.Schema({
             type: String,
             enum:['publish', 'draft'], 
             default: 'publish'
-        },    
+        }, 
+    createDate: {type: Date, 'default': Date.now},   
     postDate: {type: String},
     editDate:[{type: String}],
     content: {type: String, required: true},
     tags: [{type: String}],
     heroSettings: {
         heroImg: {type: String},
-        size: {type: String},
-        positionX: {type: String},
-        positionY: {type: String},
+        size: {type: Number},
+        positionX: {type: Number},
+        positionY: {type: Number},
         gradient: {type: String}
     },
     titleSettings: {
-        fontSize: {type: String},
-        fontTop: {type: String},
-        fontLeft: {type: String},
+        fontSize: {type: Number},
+        fontTop: {type: Number},
+        fontLeft: {type: Number},
         fontColor: {type: String}
     }
     });

@@ -1,52 +1,87 @@
-extends ../includes/layout.pug
+extends ../includes/layout-show.pug
 
 //- block append head
     
                 
 block content
-    div.blog__wrapper
-        div.blog__header
-            if blog.heroSettings.heroImg
-                div.blog__hero-img
-                    div.blog__hero-text
-                        p=blog.title
+    include ../includes/mixins.pug
+    div.blog__index__post--first
+        if blog.heroSettings.heroImg
+            div.blog__hero-img
+                div.blog__hero-text
+                    |#{blog.title}
                     
-            else
-                h1= blog.title
-            p Posted by #{blog.author.username} on #{blog.postDate}
+        else
+            h1= blog.title
+        p Posted by #{blog.author.username} on #{blog.postDate}
         div.blog__body
             p !{blog.content}
         div.blog__tags
-            p=blog.tags
+            div.blog__tags--text Tags:
+            - var z = 0
+            each tag in blog.tags
+                if z < (blog.tags.length - 1)
+                    div.blog__tags--box: a(href='/blog/tag/'+tag) #{tag}
+
+                else 
+                    div.blog__tags--box: a(href='/blog/tag/'+tag) #{tag}
+            - z++
         div.blog__edit
-            a(href='/blog/'+blog.url+'/edit'): button.blog__edit__btn--edit Edit post
-            form(method='POST' action='/blog/'+blog.url+'?_method=DELETE')
-                 button.blog__edit__btn--delete Delete post
+            if(currentUser && blog.author.id == currentUser.id)
+                a(href='/blog/'+blog.url+'/edit'): button.blog__edit__btn--edit Edit post
+                form(method='POST' action='/blog/'+blog.url+'?_method=DELETE')
+                    button.blog__edit__btn--delete Delete post
         
         div.comments
             h2 Reader Comments
-            a(href='/blog/'+blog.url+'/comments/new'): button.blog__comment__btn--add Add a comment
-            if blog.comments
-                each val in blog.comments
-                    div.comments__entry
-                        div.comments__entry__author
-                            p Author: #{val.author.username}
-                            div.comments__entry__body
-                                p #{val.content}
-                            div.comments__entry__postDate
-                                p posted on !{val.postDate}
-                            if val.editDate
-                                div.comments__entry__editDate
-                                    p last edited on !{val.editDate}
-                        div.comments__buttons    
-                            a(href='/blog/'+blog.url+'/comments/'+val._id+'/edit'): button.comments__btn__edit Edit
-                            form(method='POST' action='/blog/'+blog.url+'/comments/'+val._id+'?_method=DELETE')
-                                button.comments__btn__delete Delete
-    //- div(class='imageVar' data-imageVariable = blog.heroImg)
+            button.blog__comment__btn--add(onclick='reply(null, \''+blog.url+'\')') Add Comment
+            //- if(!currentUser)
+            //-     button.blog_comment__btn--add(onclick='login()') Add Comment
+            //-     div.login
+            //-         p: a(href='/auth/facebook'): button.login__button--facebook Login with Facebook
+            //-         p: a(href='/auth/twitter'): button.login__button--twitter Login with Twitter
+            //-         p: a(href='/auth/google'): button.login__button--google Login with Google
+            //- else 
+            //-     div.comment
+            //-         form(method='POST' action='/blog/'+blog.url+'/comments').comment.comment__form
+            //-             p Add a comment
+            //-             textarea(rows='10' cols='50' name='content' required='true')
+            //-             button.comment.comment__form__btn--submit Submit
+                //- a(href='/blog/'+blog.url+'/comments/new'): button.blog__comment__btn--add Add a comment
+            if comments
+                each val in comments
+                    if(!val.originalPost)
+                        div.comments__grid(id=val._id)
+                            div.comments__entry
+                                div.comments__entry__author
+                                    p Author: #{val.author.username}
+                                div.comments__entry__body
+                                    p #{val.content}
+                                div.comments__entry__postDate
+                                    p posted on !{val.postDate}
+                                if val.editDate
+                                    div.comments__entry__editDate
+                                        p last edited on !{val.editDate}
+                            div.comments__buttons
+                                if(currentUser && val.author.id == currentUser.id && val.editable === true)   
+                                    a(href='/blog/'+blog.url+'/comments/'+val._id+'/edit'): button.comments__btn__edit Edit
+                                    form(method='POST' action='/blog/'+blog.url+'/comments/'+val._id+'?_method=DELETE')
+                                        button.comments__btn__delete Delete
+                                if(val.editable === true)
+                                    button(onclick='reply(\''+ val._id+'\', \''+blog.url+'\')').blog__comment__btn--add Reply 
+                                    //- a(href='/blog/'+blog.url+'/comments/'+val._id+'/reply'): button.blog__comment__btn--add Reply
+                        if val.replies
+                            
+                            //- != console.log(comments)
+
+                            +printReplies(val)                 
+                        //- +printReplies(reply, comments)
+                  
     div(class='heroSettings' data-image = blog.heroSettings.heroImg
                              data-size = blog.heroSettings.size
                              data-gradient = blog.heroSettings.gradient
-                             data-position = blog.heroSettings.position)
+                             data-positionx = blog.heroSettings.positionX
+                             data-positiony = blog.heroSettings.positionY)
     div(class='titleSettings' data-fontsize = blog.titleSettings.fontSize
                               data-fontcolor = blog.titleSettings.fontColor
                               data-fonttop   = blog.titleSettings.fontTop

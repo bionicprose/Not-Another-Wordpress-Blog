@@ -1,22 +1,22 @@
-extends ../includes/layout.pug
+extends ../includes/layout-edit.pug
+
+
+
 
 block content
     
     h1 Edit !{blog.title}
     div.editor
         form.editor(action='/blog/'+blog.url+'?_method=PUT' method='POST' enctype='multipart/form-data' onsubmit='return copyContent()')
+            div.editor__img
+                p Upload a new hero image
+                input.editor__img__upload(type='file' name='image')
+                span(onclick='imageSelector()').editor__button__image-selector Select/Upload an Image 
+
             div.blog__hero-img
                 div.blog__hero-text
                     |#{blog.title}
-                    input(type='text' name='positionX').hidden.blog__hero-img__positionX--hidden
-                    input(type='text' name='positionY').hidden.blog__hero-img__positionY--hidden
-                    input(type='text' name='size').hidden.blog__hero-img__size--hidden
-                    input(type='text' name='gradient').hidden.blog__hero-img__gradient--hidden
-                    input(type='text' name='fontSize').hidden.blog__hero-img__fontSize--hidden
-                    input(type='text' name='fontLeft').hidden.blog__hero-img__fontLeft--hidden
-                    input(type='text' name='fontTop').hidden.blog__hero-img__fontTop--hidden
-                    input(type='text' name='fontColor').hidden.blog__hero-img__fontColor--hidden
-                    input(type='text' name='currentImage').hidden.blog__hero-img__currentImage--hidden
+                    
                     
             div.editor__img__toolbar
                 div.img__mover
@@ -45,10 +45,7 @@ block content
                     div(onclick='moveT("left")').move--left: i.fas.fa-chevron-left
                     div(onclick='moveT("right")').move--righ: i.fas.fa-chevron-right
                     div(onclick='moveT("down")').move--down: i.fas.fa-chevron-down
-            div.editor__img
-                p Upload a new hero image
-                input.editor__img__upload(type='file' name='image')
-                span(onclick='imageSelector()').editor__button__image-selector Select/Upload an Image 
+         
             div.editor__title
                 p Title
                 input(type='text' name='title' value=blog.title).title
@@ -75,7 +72,17 @@ block content
                 p !{blog.content}
             div.editor__tags
                 p Tags 
-                input.editor__tags--input(type='text' name='tags' value=blog.tags)
+                input.editor__tags--input(type='text' name='tags' value=tags) 
+                     
+            input(type='text' name='positionX').hidden.blog__hero-img__positionX--hidden
+            input(type='text' name='positionY').hidden.blog__hero-img__positionY--hidden
+            input(type='text' name='size').hidden.blog__hero-img__size--hidden
+            input(type='text' name='gradient').hidden.blog__hero-img__gradient--hidden
+            input(type='text' name='fontSize').hidden.blog__hero-img__fontSize--hidden
+            input(type='text' name='fontLeft').hidden.blog__hero-img__fontLeft--hidden
+            input(type='text' name='fontTop').hidden.blog__hero-img__fontTop--hidden
+            input(type='text' name='fontColor').hidden.blog__hero-img__fontColor--hidden
+            input(type='text' name='currentImage').hidden.blog__hero-img__currentImage--hidden
             button.editor__button__publish(type='submit' name='state' value='publish') Publish
             button.editor__button__save(type='submit' name='state' value='draft') Save
     

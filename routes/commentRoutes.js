@@ -40,7 +40,7 @@ router.post('/blog/:url/comments', middleware.isLoggedIn, function(req, res) {
                 var username = req.user.local.name;
             }
             console.log('req.user.local.name: ' + req.user.local.name);
-            var newComment = {'content': req.body.content, 'author': {'id': req.user._id}, 'author.username' : username, 'blogPost': {'id': foundBlog._id}, 'blogPost.url': req.params.url, 'postDate': date};
+            var newComment = {'content': req.body.content, 'author': {'id': req.user._id}, 'author.username' : username, 'blogPost': {'id': foundBlog._id}, 'blogPost.title': foundBlog.title, 'postDate': date};
             Comment.create(newComment, function(err, comment) {
                 if(err) {
                     console.log(err);
@@ -56,6 +56,75 @@ router.post('/blog/:url/comments', middleware.isLoggedIn, function(req, res) {
         }
     });
 });
+
+//////////////////////////////
+// new reply
+/////////////////////////////
+
+router.get('/blog/:url/comments/:comment/reply', middleware.isLoggedIn, function(req, res) {
+    console.log(req.params.title);
+    Blog.findOne({'url': req.params.url}, function(err, foundBlog) {
+        if(err || !foundBlog) {
+            console.log(err);
+            req.flash('error', 'Sorry, that blog does not exist!');
+            res.redirect('back');
+        } else {
+            Comment.findById(req.params.comment, function(err, foundComment) {
+                if(err || !foundComment) {
+                    req.flash('error', 'Sorry, that comment does not exist!');
+                    res.redirect('back');
+                } else {
+            
+            console.log(foundBlog);
+            res.render('comments/reply', {blog: foundBlog, comment: foundComment});
+        }
+    });
+}
+    });
+});
+
+router.post('/blog/:url/comments/:comment', middleware.isLoggedIn, function(req, res) {
+    Blog.findOne({'url': req.params.url}, function(err, foundBlog) { 
+        if(err || !foundBlog) {
+            console.log(err);
+            req.flash('error', 'Sorry, that blog does not exist!');
+            res.redirect('/blogs/:url');
+        } else {
+        Comment.findById(req.params.comment, function(err, foundComment){
+            if(err || !foundComment) {
+                console.log(err);
+                req.flash('error', 'Sorry, that comment does not exist!');
+                res.redirect('/blogs/:url');
+            } else {
+                var date = moment();
+                if (req.user.local.username) {
+                    var username = req.user.local.username;
+                } else {
+                    var username = req.user.local.name;
+                }
+                
+                console.log('req.user.local.name: ' + req.user.local.name);
+                var newReply = {'originalPost' : { 'id': foundComment._id}, 'originalPost.author' : username, 'content': req.body.content, 'author': {'id': req.user._id}, 'author.username' : username,'blogPost': {'id': foundBlog._id}, 'blogPost.title': foundBlog.title, 'postDate': date};
+                Comment.create(newReply, function(err, reply) {
+                    if(err) {
+                        console.log(err);
+                        req.flash('error', 'Sorry, your comment could not be created!');
+                    } else {
+                        console.log(reply);
+                        reply.save();
+                        foundBlog.comments.push(reply);
+                        foundBlog.save();
+                        foundComment.replies.push(reply);
+                        foundComment.save();
+                        res.redirect('/blog/'+req.params.url);
+                    }
+                } );
+            }
+        });
+    }
+});
+});
+
 
 //////////////////
 // Edit and Update Route
@@ -109,28 +178,71 @@ router.put('/blog/:url/comments/:comments_id', middleware.isCommenter, function(
 ////////////////
 
 router.delete('/blog/:url/comments/:comments_id', middleware.isCommenter, function(req, res) {
-    Comment.findByIdAndDelete(req.params.comments_id, function(err) {
-        if(err) {
+    var deletedComment = {
+        editDate: moment(),
+        'author.username': 'Deleted',
+        content: 'Deleted by Author',
+        editable: false 
+    };
+    Comment.findByIdAndUpdate(req.params.comments_id, deletedComment, function(err, updatedComment) {
+        if (err) {
             console.log(err);
-            req.flash('error', 'Sorry, there was a problem deleting this comment.');
+            req.flash('error', 'Sorry, that comment could not be updated.');
             res.back();
         } else {
-            Blog.findOne({'url': req.params.url}, function(err, foundBlog) {
-                if(err) {
-                    console.log(err);
-                    req.flash('error', 'Sorry, that blog post could not be found.');
-                    res.back();
-                } else {
-                    var delId = foundBlog.comments.indexOf(req.params.comments_id);
-                    foundBlog.comments.splice(delId, delId+1);
-                    foundBlog.save();
-                    req.flash('success', 'You have deleted a comment for the blog post '+req.params.title+'.');
-                    // res.redirect('/blog/'+req.params.title);
-                    res.redirect('back');
+            req.flash('success', 'You updated your comment for the post ' +req.params.title+'.');
+            res.redirect('/blog/'+req.params.url);
         }
+
     });
-}
+//     Comment.findByIdAndDelete(req.params.comments_id, function(err) {
+//         if(err) {
+//             console.log(err);
+//             req.flash('error', 'Sorry, there was a problem deleting this comment.');
+//             res.back();
+//         } else {
+//             Blog.findOne({'url': req.params.url}, function(err, foundBlog) {
+//                 if(err) {
+//                     console.log(err);
+//                     req.flash('error', 'Sorry, that blog post could not be found.');
+//                     res.back();
+//                 } else {
+//                     var delId = foundBlog.comments.indexOf(req.params.comments_id);
+//                     foundBlog.comments.splice(delId, delId+1);
+//                     foundBlog.save();
+//                     req.flash('success', 'You have deleted a comment for the blog post '+req.params.title+'.');
+//                     // res.redirect('/blog/'+req.params.title);
+//                     res.redirect('back');
+//         }
+//     });
+// }
+// });
 });
+
+////
+//update
+///
+
+router.put('/blog/:url/comments/:comments_id', middleware.isCommenter, function(req, res) {
+    // req.body.comment.editDate = moment();
+    var deletedComment = {
+        editDate: moment(),
+        author: {
+            username: 'Deleted'
+        },
+        content: 'Deleted by Author' 
+    };
+    Comment.findByIdAndUpdate(req.params.comments_id, deletedComment, function(err, updatedComment) {
+        if (err) {
+            console.log(err);
+            req.flash('error', 'Sorry, that comment could not be updated.');
+            res.back();
+        } else {
+            req.flash('success', 'You updated your comment for the post ' +req.params.title+'.');
+            res.redirect('/blog/'+req.params.url);
+        }
+
+    });
 });
 
 module.exports = router;

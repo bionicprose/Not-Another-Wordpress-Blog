@@ -26,9 +26,11 @@ function copyContent() {
     document.querySelector('.blog__hero-img__fontSize--hidden').value = titleStyle.fontSize;
     
      if(!document.querySelector('.editor__textarea--hidden').value) {
+         console.log('return false');
          return false;
     } else {
         console.log('submitting');
+        console.log('\n currentStyles:' + currentStyle.backgroundPositionX + '\n' + currentStyle.backgroundPositionY +'\n text styles: ' + titleStyle.fontSize);
         return true;
     }
 }

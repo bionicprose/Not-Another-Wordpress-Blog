@@ -5,7 +5,8 @@ var express = require('express'),
     User    = require('../models/user'),
     Blog    = require('../models/blog'),
     Comment = require('../models/comments'),
-    middleware = require('../middleware');
+    middleware = require('../middleware'),
+    request     = require('request');
 
 // module.exports = function(app, passport) {
 
@@ -123,11 +124,39 @@ app.get('/auth/facebook', passport.authenticate('facebook', {
     scope : ['public_profile', 'email']
 }));
 
-app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', {
-        successRedirect: '/profile',
-        failureRedirect: '/'
-    }));
+app.get('/auth/facebook/callback', function(req, res, next) {
+    passport.authenticate('facebook', function(err, user, info) {
+        if (err) { return next(err); }
+    if (!user) { return res.redirect('/login'); }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      console.log(req.session.id);
+
+
+    //   var j = request.jar();
+    //   var cookie = request.cookie('connect.sid=req.session.id');
+    //   var formUri = 'http://localhost:3000/blog/'+req.session.url+'/comments/'+req.session.comment+'';
+    // //   j.setCookie(cookie, formUri);
+    //   request.post(formUri, {jar: j, form:{content: req.session.content}}).auth(null, null, true, 'bearerToken');
+    //   console.log('after login: ' + req.session.content);
+      return res.render('test', {session: req.session});
+    //   title: req.session.url, id: req.session.comment, content: req.session.content});
+    
+    });
+  })(req, res, next);
+    });
+
+    /////facebook add comment
+
+// app.get('/auth2/facebook', passport.authenticate('facebook', {
+//     scope : ['public_profile', 'email']
+// }));
+
+// app.get('/auth2/facebook/callback',
+//     passport.authenticate('facebook', {
+//         successRedirect: next,
+//         failureRedirect: '/'
+//     }));
 
 ////////////////////////
 // Twitter Routes

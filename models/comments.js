@@ -9,6 +9,7 @@ var commentSchema = new mongoose.Schema({
         },
         username: String
     },
+    editable: {type: Boolean, default: true},
     content: {type: String, required: true},
     postDate: {type: Date},
     editDate: [{type: Date}],
@@ -17,8 +18,30 @@ var commentSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Blog'
         },
-        title: 'String'
-    }
+        title: String
+    },
+    originalPost : {
+        id : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Commet'
+    },
+    author: String
+    },
+    replies: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Comment'
+        }
+    ]
 });
+
+var autoPopulateReplies = function(next) {
+    this.populate('replies');
+    next();
+}
+
+commentSchema.
+    pre('findOne', autoPopulateReplies).
+    pre('find', autoPopulateReplies);
 
 module.exports = mongoose.model('Comment', commentSchema);

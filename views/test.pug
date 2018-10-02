@@ -1,0 +1,6 @@
+div(data-title=session.url).blog 
+if session.comment
+    div(data-id=session.comment).comment
+div(data-content=session.content).content 
+block append footer
+    script(src='../../javascript/test.js')

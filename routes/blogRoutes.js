@@ -1,3 +1,4 @@
+
 var express = require('express'),
     app     = express(),
     router  = express.Router({mergeParams:true}),
@@ -6,7 +7,8 @@ var express = require('express'),
     methodOverride = require('method-override'),
     middleware = require('../middleware'),
     multer      = require('multer'),
-    shell       = require('shelljs');
+    shell       = require('shelljs'),
+    Comment     = require('../models/comments');
     // upload      = multer({ dest: '../public/uploads'},
     //                      {name: 'avatar', maxCount: 1});
 // config from Jesse Lewis @ https://medium.com/@Moonstrasse/how-to-make-a-basic-html-form-file-upload-using-multer-in-an-express-node-js-app-16dac2476610
@@ -57,7 +59,7 @@ router.get('/blog/new', middleware.isBlogger, function(req, res) {
 
 router.post('/blog', middleware.isBlogger, multer(multerConfig).single('image'), function(req, res) {
     // get data from form
-    console.log(req.body.content);
+    console.log(req.body.fontSize);
     
     var title = req.body.title,
         titleSettings = {
@@ -68,9 +70,9 @@ router.post('/blog', middleware.isBlogger, multer(multerConfig).single('image'),
         },
         heroSettings = { 
             size :req.body.size,
-            position : req.body.position,
+            positionX : req.body.positionX,
+            positionY: req.body.positionY,
             gradient: req.body.gradient },
-        tags = req.body.tags.split(','),
         content = req.body.content,
         state = req.body.state,
         url = title.replace(/[^\w\s]/g, '').replace(/[\s]/g, '-'),
@@ -78,6 +80,11 @@ router.post('/blog', middleware.isBlogger, multer(multerConfig).single('image'),
         author = {
             id: req.user._id
         };
+        if(req.body.tags) {
+            var tags = req.body.tags.split(',');
+        } else {
+            var tags = null;
+        }
         // need to make an array of tags
         if(req.user.local.username) {
             var username = req.user.local.username;
@@ -116,53 +123,26 @@ router.post('/blog', middleware.isBlogger, multer(multerConfig).single('image'),
 
 
 router.get('/blog', function(req, res) {
-    Blog.find({'state': 'publish'}, function(err, blogs) {
-        res.render('blogs/index', {blogs: blogs});
+   
+    Blog.find({'state': 'publish'}).sort({createDate: 'descending'}).exec(function(err, blogs) {
+     
+      res.render('blogs/index', {blogs: blogs});
     
     });
+   
+        
+    
+  
+
 });
 
 
-
-
-
-// router.post('/blog', middleware.isBlogger, function(req, res) {
-//         // get data from form
-//         var title = req.body.title,
-//             tags = req.body.tags.split(','),
-//             content = req.body.content.replace(/\r\n\r\n/gi, '<p>').replace(/\r\n/g, '').replace(/\n/g, '<p>');
-//             date = moment(),
-//             author = {
-//                 id: req.user._id
-//             };
-//             // need to make an array of tags
-//             if(req.user.local.username) {
-//                 var username = req.user.local.username;
-//             } else {
-//                 var username = req.user.local.name;
-//             }
-            
-//         var newBlog = {title: title, tags: tags, content: content, postDate: date, author : author, 'author.username': username};
-//         console.log(newBlog);
-//         // create new blog post with data
-//         Blog.create(newBlog, function(err, blog){
-//             if(err) {
-//                 console.log('something went wrong!');
-//                 console.log('err');
-//                 res.redirect('/blog/new');
-//             } else {
-//                 console.log('Blog added to the database!');
-//                 req.flash('success', 'You\'ve added a new blog!');
-//                 res.redirect('/blog/' + blog.title);
-//             }
-//         });
-//     });
 //////////////////////
 // //blog show route
 /////////////////////
 
 router.get('/blog/:url', function(req, res) {
-    Blog.findOne({'url': req.params.url}).populate('comments').exec(function(err, foundBlog) {
+    Blog.findOne({'url': req.params.url}).lean().populate('comments').exec(function(err, foundBlog) {
         if(err || !foundBlog) {
             console.log(err);
             req.flash('error', 'Sorry, that blog post doesn\'t exist!');
@@ -171,11 +151,33 @@ router.get('/blog/:url', function(req, res) {
             req.flash('error', 'Sorry, that blog has not been published yet.');
             res.redirect('/blog');
         } else {
-            res.render('blogs/show', {blog: foundBlog});
-            console.log(foundBlog.comments);
+            if(foundBlog.comments.length >0) {
+                Comment.find({'blogPost.id': foundBlog._id}).lean().exec(function(err, foundComments){
+                    if(err) {
+                        return Error('No comments found');
+                    } else {
+                        
+                             foundComments.forEach(function(comment) {
+                                    if(comment.editDate) {
+                                     console.log(comment.blogPost.title);
+                                    } else {
+                                     comment.replies.forEach(function(reply) {
+                                         console.log('repy loop ' + reply.replies.length);
+                                     });
+                                    }
+                             });
+                    res.render('blogs/show', {blog: foundBlog, comments: foundComments});
+                } });
+            } else {
+                res.render('blogs/show', {blog:foundBlog});
+            }
+            
+    
         }
     });
 });
+
+
 
 //////////////////////////////
 // Edit and Update Blog Routes
@@ -190,7 +192,18 @@ router.get('/blog/:url/edit', middleware.isOwner, function(req, res) {
             res.redirect('/blog');
     } else {
         console.log('hello?');
-        res.render('blogs/edit', {blog: foundBlog, user: req.user, images: images});
+        newTags = foundBlog.toObject();
+        console.log(newTags);
+        if(newTags.tags !== null) {
+        var tags = '';
+        for(let i = 0; i<newTags.tags.length; i++) {
+            
+            tags += newTags.tags[i] + ', ';
+            console.log(tags);
+        }
+    
+    }
+        res.render('blogs/edit', {blog: foundBlog, user: req.user, images: images, tags: tags});
     }
         });
 });
@@ -201,7 +214,7 @@ router.put('/blog/:url', middleware.isOwner, multer(multerConfig).single('image'
             var postDate = moment().format('MMM Do YYYY');
             Blog.find({'url': req.params.url}, function(err, foundBlog) {
                 if(err) {
-                    console.log('finding the blog by title' + err + foundBlog);
+                    console.log('******finding the blog by title' + err + foundBlog);
                     req.flash('error', 'Sorry, that blog post doesn\'t exist.');
 
                 } else {
@@ -221,18 +234,18 @@ router.put('/blog/:url', middleware.isOwner, multer(multerConfig).single('image'
        
         Blog.find({'url': req.params.url}, function(err, foundBlog) {
             if(err) {
-                console.log('finding the blog by title' + err + foundBlog);
+                console.log('finding the blog by url-title' + err + foundBlog);
                 req.flash('error', 'Sorry, that blog post doesn\'t exist.');
 
             } else {
-                console.log('finding the blog by title' + err + foundBlog);
+                console.log('finding the blog by title' + foundBlog);
                 var newBlog = foundBlog;
                
         if(res.req.file) { //checking for uploaded image
             console.log('image got uploaded?' + res.req.file.filename);
             var heroImg = '../bionicUser/' + req.user.id + '/' + res.req.file.filename;
         } else if(req.body.pickedImage) { //checking for selected image
-            console.log('picked image was picked');
+            console.log('picked image was picked ' + req.body.pickedImage);
             var  heroImg = req.body.pickedImage;
         } else { // if neither, use old image
             console.log('no picked image');
@@ -245,18 +258,23 @@ router.put('/blog/:url', middleware.isOwner, multer(multerConfig).single('image'
             fontTop  : req.body.fontTop,
             fontColor : req.body.fontColor
         },
-        heroSettings : { 
-            heroImg : heroImg,
-            size :req.body.size,
-            position : req.body.position,
-            gradient: req.body.gradient },
-            
             content : req.body.content,
             title : req.body.title,
-            tags : req.body.tags.split(','),
             url : req.body.title.replace(/[^\w\s]/g, '').replace(/[\s]/g, '-'),
-            editDate : moment().format('MMM Do YYYY')
-         }; 
+            editDate : moment().format('MMM Do YYYY'),
+       
+         heroSettings : { 
+                    heroImg : heroImg,
+                    size :req.body.size,
+                    positionX : req.body.positionX,
+                    positionY: req.body.positionY,
+                    gradient: req.body.gradient },
+         };
+
+        if (req.body.tags) {
+            newBlog.tags = req.body.tags.split(',');
+        
+        }
             console.log('this is the supposedly new blog: ' + newBlog);
             Blog.findByIdAndUpdate(foundBlog, newBlog, function(err, updatedBlog) {
                 if(err || !updatedBlog) {
@@ -271,8 +289,9 @@ router.put('/blog/:url', middleware.isOwner, multer(multerConfig).single('image'
 });
     }
 });
-
+/////////////////////////////////////////////////////
 // Destroy route!!!
+////////////////////////////////////////////////////////
 
 router.delete('/blog/:url', middleware.isOwner, function(req, res){
     Blog.find({'url': req.params.url}, function(err, foundBlog){
@@ -293,6 +312,18 @@ router.delete('/blog/:url', middleware.isOwner, function(req, res){
     }
     });
 });
+
+router.get('/blog/tag/:tag', function(req, res) {
+    Blog.find({'tags': req.params.tag}, function(err, foundBlog) {
+        if(err || !foundBlog) {
+            req.flash('error', 'Sorry, but there are no blog posts with those tags.');
+            res.redirect('back');
+        } else {
+            res.render('blogs/tags', {tag: req.params.tag, blogs: foundBlog});
+        }
+    });
+});
+
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated())
         return next();

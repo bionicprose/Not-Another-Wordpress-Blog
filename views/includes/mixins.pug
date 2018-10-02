@@ -1,0 +1,31 @@
+mixin printReplies(comment)
+    each reply in comment.replies
+        div.reply__grid(id=reply._id)
+            div.reply__entry
+                div.comments__replyTo
+                    p In Reply To: 
+                        a(href='#'+reply.originalPost.id) #{reply.originalPost.author}
+                div.comments__entry__author
+                        p Author: #{reply.author.username}
+                div.comments__entry__body
+                    p #{reply.content}
+                div.comments__entry__postDate
+                    p posted on !{reply.postDate}
+                if reply.editDate
+                    div.comments__entry__editDate
+                        p last edited on !{reply.editDate}
+            div.comments__buttons
+                if(currentUser && reply.author.id == currentUser.id && reply.editable === true)   
+                    a(href='/blog/'+blog.url+'/comments/'+reply._id+'/edit'): button.comments__btn__edit Edit
+                    form(method='POST' action='/blog/'+blog.url+'/comments/'+reply._id+'?_method=DELETE')
+                        button.comments__btn__delete Delete
+                if(reply.editable === true)
+                    button(onclick='reply(\''+ reply._id+'\', \''+blog.url+'\')').blog__comment__btn--add Reply 
+                    //- a(href='/blog/'+blog.url+'/comments/'+reply._id+'/reply'): button.blog__comment__btn--add Reply
+        if reply.replies
+            +printReplies(reply)
+                //- if val.replyTo === reply.replyTo
+                //-     +printReplies(val, comments)
+            //- if reply.replies
+            //-         return: +printReplies(reply.replies)        
+

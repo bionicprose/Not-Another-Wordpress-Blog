@@ -1,0 +1,99 @@
+html {
+    min-height: 100%;
+}
+body {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+     margin: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    
+}
+
+h1 {
+    font-family: 'Megrim', cursive;
+    font-size: 4em;
+}
+
+h2 {
+    font-family: 'Megrim', cursive;
+    font-size: 3em;
+}
+
+.nav {
+    top: 0;
+    
+    width:100%;
+   
+    margin: 0px;
+ 
+}
+
+.nav__banner {
+    
+    width:100%;
+  
+    z-index: 1;
+    
+}
+
+
+ 
+.nav__menu {
+   
+   
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+    width:30%;
+    margin: 0 auto;
+    font-family: 'Megrim', cursive;
+    font-size: 2em;
+    padding-bottom: 3em;
+    /* grid-gap: 1em; */
+   
+}
+
+.nav__menu  div {
+    
+   
+    /* margin-top: 1em;
+    padding-bottom: 2em; */
+    
+    text-align: center;
+    border-bottom: 2px solid white;
+    color: white;
+    
+}
+
+.nav__menu  a{
+    text-decoration: none;
+}
+.nav__menu__item--1 {
+    grid-column: 1/1;
+}
+.nav__menu__item--2 {
+    grid-column: 2/2;
+}
+
+.nav__menu__item--3 {
+    grid-column:3/3;
+}
+
+.nav__menu__item--4 {
+    grid-column:4/4;
+}
+
+
+.footer__links {
+    padding-top: 10em;
+    top:50em;
+    width: 400px;
+    margin: auto;
+    text-align: center;
+}
+.footer__links a {
+    
+    margin: 25px;
+}

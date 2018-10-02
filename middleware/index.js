@@ -129,12 +129,22 @@ middlewareObj.isCommenter = function(req, res, next) {
 
 
 middlewareObj.isLoggedIn = function(req, res, next) {
-    if (req.isAuthenticated()) {
+    console.log('in middleware: ' +req.session.id);
+    if (req.isAuthenticated()) { 
 
         return next();
     }
+    req.session.url = req.params.url;
+    console.log('this is req.params.comment: ' + req.params.comment);
+    if(req.params.comment) {
+        req.session.comment = req.params.comment;
+    }
+    console.log('this is req.session.comment: ' + req.session.comment);
+    req.session.content = req.body.content;
+    
+    console.log('in middleware2: ' +req.session.id);
     req.flash('error', 'You need to be logged in to do that.');
-    res.redirect('/blog/'+req.params.url);
+    res.redirect('/login');
 }
 
 

@@ -4,17 +4,32 @@ var gradient = heroSettings.dataset.gradient;
 
 var titleSettings = document.querySelector('.titleSettings');
 var titleStyle = {
-    fontSize: titleSettings.dataset.fontsize,
-    top: titleSettings.dataset.fonttop,
-    left: titleSettings.dataset.fontleft,
+    fontSize: Number(titleSettings.dataset.fontsize),
+    top: Number(titleSettings.dataset.fonttop),
+    left: Number(titleSettings.dataset.fontleft),
     color: titleSettings.dataset.fontcolor
 };
+
+if(heroSettings.dataset.positionx) {
+    console.log('not equal to nan');
 var currentStyle = {
     url: currentImage,
-    backgroundPositionX: 0,
-    backgroundPositionY: 0,
-    backgroundSize: 100
+    backgroundPositionX: Number(heroSettings.dataset.positionx),
+    backgroundPositionY: Number(heroSettings.dataset.positiony),
+    backgroundSize: Number(heroSettings.dataset.size),
+    gradient: heroSettings.dataset.gradient
 };
+} else {
+    console.log('equal to nan');
+    var currentStyle = {
+        
+        url: currentImage,
+        backgroundPositionX: Number(0),
+        backgroundPositionY: Number(0),
+        backgroundSize: Number(98),
+        gradient: false
+    };
+}
 
 function copyContent() {
     console.log('running copyContent');
@@ -28,11 +43,11 @@ function copyContent() {
     document.querySelector('.blog__hero-img__fontColor--hidden').value = titleStyle.color;
     document.querySelector('.blog__hero-img__fontSize--hidden').value = titleStyle.fontSize;
     document.querySelector('.blog__hero-img__currentImage--hidden').value = currentImage;
-    console.log
+    
      if(!document.querySelector('.editor__textarea--hidden').value) {
          return false;
     } else {
-        console.log('submitting');
+        console.log('submitting this hero image: ' +currentImage);
         return true;
     }
 }
@@ -84,6 +99,7 @@ function imageSelector() {
                 // console.log(styles.sheet);
                 styles.sheet.insertRule('.blog__hero-img { background-image: url('+this.value+')}', styles.sheet.cssRules.length);
             currentImage = this.value;
+     
             });
             
             imageGrid.appendChild(img);
@@ -167,7 +183,7 @@ function move(dir) {
     switch(dir) {
         case 'up':
         console.log('move' + dir);
-            currentStyle.backgroundPositionY -= 10;
+            currentStyle.backgroundPositionY  -= 10;
             break;
         case 'down':
             currentStyle.backgroundPositionY += 10;
@@ -228,6 +244,8 @@ function size(dir) {
                 titleStyle.left++;
                 break;
         }
+        console.log('this is the titleStyle settings for top and left: ' + titleStyle.top + titleStyle.left)
+        console.log('\n and this is the orignal setting of one: ' + titleSettings.dataset.fonttop);
         styles.sheet.insertRule('.blog__hero-text { top: '+titleStyle.top+'%}', styles.sheet.cssRules.length);
         styles.sheet.insertRule('.blog__hero-text { left: '+titleStyle.left+'%}', styles.sheet.cssRules.length);
     }
