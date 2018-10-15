@@ -19,27 +19,28 @@ html
     //-     each msg in messages.uError
     //-         .uError= msg
     body 
-        div.overlay
-            |Bionic Prose
-            div.overlay__x(onclick='menu("x")')
-                i.fas.fa-times.fa-3x
-            div.overlay__menu
-                div.overlay__menu__item--1
-                    button.overlay__menu__btn Home
-                div.overlay__menu__item--2
-                    a(href='/about'): button.overlay__menu__btn About
-                div.overlay__menu__item--3
-                    a(href='/projects'): button.overlay__menu__btn Projects
-                div.overlay__menu__item--4 
-                    a(href='/contact'): button.overlay__menu__btn Contact
-                div.overlay__menu__item--5 
-                    div.overlay__search
-                        form(action='/blog/search' method='POST').overlay__search__form
-                            input(type='text' name='search')
-                            button.overlay__menu__btn search
-                div.overlay__menu__item--6
-                    |Something else?
         div.nav
+            div.overlay
+                |Bionic Prose
+                div.overlay__x(onclick='menu("x")')
+                    i.fas.fa-times.fa-3x
+                div.overlay__menu
+                    div.overlay__menu__item--1
+                        button.overlay__menu__btn Home
+                    div.overlay__menu__item--2
+                        a(href='/about'): button.overlay__menu__btn About
+                    div.overlay__menu__item--3
+                        a(href='/projects'): button.overlay__menu__btn Projects
+                    div.overlay__menu__item--4 
+                        a(href='/contact'): button.overlay__menu__btn Contact
+                    div.overlay__search.overlay__menu__item--5 
+                        form(action='/blog/search' method='POST').overlay__search__form
+                            button.overlay__menu__btn search:
+                            input(type='text' name='search' onclick='showBionicWriter("-")' onblur=('showBionicWriter("+")')).overlay__search__input
+                            
+                    div.overlay__menu__item--6
+                        |Something else?
+       
             
             div.nav__banner
                 div.nav__menu--hamburger(onclick='menu("+")')

@@ -1,47 +1,52 @@
-html {
+html, body {
+    height: 100%;
     min-height: 100%;
 }
+
 body {
-    height: 100%;
+    position: relative;
     width: 100%;
-    /* background-image: url('/img/transparent.jpg'); */
-     margin: 0;
-    font-family: 'IBM Plex Mono', monospace;
+    margin: 0;
     font-size: 12px;
-    line-height: 1.5;
-    
+    line-height: 1.5em;
+    font-family: 'IBM Plex Mono', monospace;
 }
+
 button {
     min-height: 36px;
     min-width: 36px;
 }
-h1 {
-    font-family: 'Megrim', cursive;
-    font-size: 4em;
+button::-moz-focus-inner {
+    border: 0;
 }
-
-h2 {
+h1 {
     font-family: 'Megrim', cursive;
     font-size: 3em;
 }
 
+h2 {
+    font-family: 'Megrim', cursive;
+    font-size: 2em;
+}
 .nav {
     top: 0;
+    margin-bottom: 5%;
     
     width:100%;
    
-    margin: 0px;
+    
  
 }
 
+
 .nav__banner {
     position: relative;
-    height: 350px;
-    background-image: url(../img/bionicwriter-1900-c.png);
-    background-repeat: no-repeat;
-    background-size: cover;
+    height: 50px;
+    background-image: url(../img/bionicwriter-100px.png), url(../img/chaos-bar.png);
+    background-repeat: no-repeat, no-repeat;
+    background-size: contain, cover;
     width:100%;
-    background-position: center;
+    background-position: top left, center;
   
     z-index: 1;
     
@@ -49,13 +54,13 @@ h2 {
 
 
  .nav__menu--hamburger {
-     display: none;
-     font-size: 12px;
+     
+     font-size: 1em;
         font-family: 'Megrim', cursive;
         font-weight: bold;
         writing-mode: vertical-lr;
         text-orientation: upright;
-        color: 4d4d4d;
+        color: #4d4d4d;
         position:absolute;
         top: 0;
         right: 15px;
@@ -68,41 +73,58 @@ h2 {
     color: rgb(118, 222, 230);
 }
  .overlay {
-     position:fixed;
+     display: none;
+     min-height: 100%;
+     position: fixed;
      top: 0;
      left: 0;
      right: 0;
      bottom: 0;
-     display: none;
-     /* height: 100%;
-     width: 100%; */
+     /* display: none; */
      z-index: 2;
      background-image: url(../img/bionicwriter-mobile-3.png), url(../img/clouds-mobile-3.png);
      background-color: white;
      background-repeat: no-repeat, no-repeat;
      background-position: center bottom;
      background-size: auto, cover;
-     /* background-attachment: scroll, auto; */
-     /* opacity: 30%; */
- }
-.overlay__menu a{
+     /* background-attachment: fixed; */
     
-    color: black;
-    text-decoration: none;
-}
+ }
+ .overlay__menu > div {
+     margin-top: 2%;
+ }
+/* .overlayTwo {
+    z-index: 3;
+    background: transparent;
+} */
 .overlay__menu__btn {
     cursor: pointer;
-    font-weight: bold;
+    /* font-weight: bold; */
     border:none;
     background: transparent;
 }
-.overlay__menu__btn:active{
-    top: 5px;
+.overlay__menu__btn {
+    color:#4d4d4d;
     text-shadow:
-		-1px -1px 2px rgb(11, 185, 238),
-		1px -1px 2px rgb(11, 185, 238),
-		-1px 1px 2px rgb(11, 185, 238),
-		1px 1px 2px rgb(11, 185, 238)
+		-1px -1px 1px rgb(152, 213, 231),
+		1px -1px 1px rgb(152, 213, 231),
+		-1px 1px 1px rgb(152, 213, 231),
+		1px 1px 1px rgb(152, 213, 231)
+}
+.overlay__menu__btn:focus {
+    outline: none;
+}
+.overlay__menu__btn:active {
+   
+    text-decoration: none;
+    padding-top: 5px;
+    font-size: .8em;
+    /* border: 1px solid #4d4d4d; */
+    /* box-shadow: 4px 4px 4px #4d4d4d; */
+}
+.overlay__search__input {
+    width: 100px;
+    
 }
 
  .overlay__x {
@@ -123,17 +145,12 @@ h2 {
      font-family: 'Megrim', cursive;
      margin-left: 2%;
      margin-bottom: 5%;
+     color: rgb(18, 152, 175);
  }
 .nav__menu {
    
    
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-    width:30%;
-    margin: 0 auto;
-    font-family: 'Megrim', cursive;
-    font-size: 2em;
-    padding-bottom: 3em;
+  display: none;
     /* grid-gap: 1em; */
    
 }
