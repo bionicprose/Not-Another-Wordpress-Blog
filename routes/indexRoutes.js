@@ -131,39 +131,24 @@ app.get('/auth/facebook/callback', function(req, res, next) {
     req.logIn(user, function(err) {
       if (err) { return next(err); }
       console.log(req.session.id);
-
-
-    //   var j = request.jar();
-    //   var cookie = request.cookie('connect.sid=req.session.id');
-    //   var formUri = 'http://localhost:3000/blog/'+req.session.url+'/comments/'+req.session.comment+'';
-    // //   j.setCookie(cookie, formUri);
-    //   request.post(formUri, {jar: j, form:{content: req.session.content}}).auth(null, null, true, 'bearerToken');
-    //   console.log('after login: ' + req.session.content);
+    if(req.session.url) {
+        req.flash('info', 'You are now logged in!');
       return res.render('test', {session: req.session});
-    //   title: req.session.url, id: req.session.comment, content: req.session.content});
+    } else {
+        req.flash('info', 'You are now logged in !');
+       return res.redirect('/profile');
+    }
     
     });
   })(req, res, next);
     });
 
-    /////facebook add comment
+   
 
-// app.get('/auth2/facebook', passport.authenticate('facebook', {
-//     scope : ['public_profile', 'email']
-// }));
-
-// app.get('/auth2/facebook/callback',
-//     passport.authenticate('facebook', {
-//         successRedirect: next,
-//         failureRedirect: '/'
-//     }));
 
 ////////////////////////
 // Twitter Routes
 ///////////////////////
-
-
-
 
 // app.get('/auth/twitter', passport.authenticate('twitter'));
 
@@ -180,11 +165,24 @@ app.get('/auth/facebook/callback', function(req, res, next) {
 
 app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
 
-app.get('/auth/google/callback',
-    passport.authenticate('google', {
-        successRedirect: '/profile',
-        failureRedirect: '/'
-    }));
+app.get('/auth/google/callback', function(req, res, next) {
+    passport.authenticate('google', function(err, user, info) {
+        if (err) { return next(err); }
+    if (!user) { return res.redirect('/login'); }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      console.log(req.session.id);
+    if(req.session.url) {
+        req.flash('info', 'You are now logged in!');
+      return res.render('test', {session: req.session});
+    } else {
+        req.flash('info', 'You are now logged in!');
+       return res.redirect('/profile');
+    }
+    
+    });
+  })(req, res, next);
+    });
 
 ///////////////////////
 // Logout
@@ -192,7 +190,7 @@ app.get('/auth/google/callback',
 
 app.get('/logout', function(req, res) {
     req.logout();
-    req.flash('notify', 'You have logged out!');
+    req.flash('info', 'You have logged out!');
     res.redirect('/');
 });
 
@@ -251,7 +249,7 @@ app.get('/connect/google', passport.authorize('google', { scope : ['profile', 'e
 app.get('/connect/google/callback',
     passport.authorize('google', {
         successRedirect : '/profile',
-        failureRedirect : '/'
+        failureRedirect : 'back'
     }));
 /////////////////////
 // Unlink accounts

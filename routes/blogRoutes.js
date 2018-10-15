@@ -60,7 +60,7 @@ router.get('/blog/new', middleware.isBlogger, function(req, res) {
 router.post('/blog', middleware.isBlogger, multer(multerConfig).single('image'), function(req, res) {
     // get data from form
     console.log(req.body.fontSize);
-    
+    var date = new Date();
     var title = req.body.title,
         titleSettings = {
             fontSize : req.body.fontSize,
@@ -76,12 +76,14 @@ router.post('/blog', middleware.isBlogger, multer(multerConfig).single('image'),
         content = req.body.content,
         state = req.body.state,
         url = title.replace(/[^\w\s]/g, '').replace(/[\s]/g, '-'),
-        date = moment().format('MMM Do YYYY'),
+        date = date.toDateString(),
+        // date = moment().format('MMM Do YYYY'),
         author = {
             id: req.user._id
         };
         if(req.body.tags) {
-            var tags = req.body.tags.split(',');
+            var tags = req.body.tags.split(/[,' ']/g);
+            tags = tags.filter(Boolean);
         } else {
             var tags = null;
         }
@@ -108,9 +110,9 @@ router.post('/blog', middleware.isBlogger, multer(multerConfig).single('image'),
             res.redirect('/blog/new');
         } else {
             console.log('Blog added to the database!');
-            req.flash('success', 'You\'ve added a new blog!');
+            req.flash('info', 'You\'ve added a new blog!');
             if(newBlog.state === 'draft') {
-                req.flash('notify', 'That post has not been published yet.');
+                req.flash('info', 'That post has not been published yet.');
                 res.redirect('/profile');
             } else {
             res.redirect('/blog/' + blog.url);
@@ -125,7 +127,6 @@ router.post('/blog', middleware.isBlogger, multer(multerConfig).single('image'),
 router.get('/blog', function(req, res) {
    
     Blog.find({'state': 'publish'}).sort({createDate: 'descending'}).exec(function(err, blogs) {
-     
       res.render('blogs/index', {blogs: blogs});
     
     });
@@ -156,25 +157,27 @@ router.get('/blog/:url', function(req, res) {
                     if(err) {
                         return Error('No comments found');
                     } else {
-                        
-                             foundComments.forEach(function(comment) {
-                                    if(comment.editDate) {
-                                     console.log(comment.blogPost.title);
-                                    } else {
-                                     comment.replies.forEach(function(reply) {
-                                         console.log('repy loop ' + reply.replies.length);
-                                     });
-                                    }
-                             });
-                    res.render('blogs/show', {blog: foundBlog, comments: foundComments});
-                } });
-            } else {
-                res.render('blogs/show', {blog:foundBlog});
+                        Blog.find({'state': 'publish'}).sort({createDate: 'descending'}).exec(function(err, blogs) {
+                            if(err) {
+                                return Error('no blog posts found for calendar');
+                            } else {
+                              res.render('blogs/show', {blog: foundBlog, comments: foundComments, blogs: blogs});
+                            }
+                });
+             }
+            });
+         } else {
+            Blog.find({'state': 'publish'}).sort({createDate: 'descending'}).exec(function(err, blogs) {
+                if(err) {
+                    return Error('no blog posts found for calendar');
+                } else {
+                res.render('blogs/show', {blog:foundBlog, blogs: blogs});
             }
-            
+        });
     
         }
-    });
+    }
+});
 });
 
 
@@ -224,7 +227,7 @@ router.put('/blog/:url', middleware.isOwner, multer(multerConfig).single('image'
                             console.log('finding and updating the blog' + err + foundBlog);
                             req.flash('error', 'Sorry, that blog post doesn\'t exist.');
                         } else {
-                            req.flash('success', 'You have updated '+foundBlog.title+'.');
+                            req.flash('info', 'You have updated '+foundBlog.title+'.');
                             res.redirect('/profile');
                         }
                     });
@@ -272,7 +275,8 @@ router.put('/blog/:url', middleware.isOwner, multer(multerConfig).single('image'
          };
 
         if (req.body.tags) {
-            newBlog.tags = req.body.tags.split(',');
+            newBlog.tags = req.body.tags.split(/[,' ']/g);
+            newBlog.tags = newBlog.tags.filter(Boolean);
         
         }
             console.log('this is the supposedly new blog: ' + newBlog);
@@ -281,7 +285,7 @@ router.put('/blog/:url', middleware.isOwner, multer(multerConfig).single('image'
                     console.log('finding and updating the blog' + err + foundBlog);
                     req.flash('error', 'Sorry, that blog post doesn\'t exist.');
                 } else {
-                    req.flash('notify', 'You have updated '+foundBlog.title+'.');
+                    req.flash('info', 'You have updated '+updatedBlog.title+'.');
                     res.redirect('/blog/' + updatedBlog.url);
         }
     });
@@ -305,7 +309,7 @@ router.delete('/blog/:url', middleware.isOwner, function(req, res){
                     req.flash("error", "Sorry, something went wrong!");
                 } else {
                     console.log('success but not really?');
-                    req.flash('success', 'You\'ve deleted the post \''+req.params.title+'\'.');
+                    req.flash('info', 'You\'ve deleted the post \''+foundBlog.title+'\'.');
                     res.redirect('back');
                 }
             });
@@ -313,21 +317,82 @@ router.delete('/blog/:url', middleware.isOwner, function(req, res){
     });
 });
 
+// TAGS Route
+
 router.get('/blog/tag/:tag', function(req, res) {
-    Blog.find({'tags': req.params.tag}, function(err, foundBlog) {
-        if(err || !foundBlog) {
+    Blog.find({'tags': req.params.tag}, function(err, foundBlogs) {
+        if(err || !foundBlogs) {
             req.flash('error', 'Sorry, but there are no blog posts with those tags.');
             res.redirect('back');
         } else {
-            res.render('blogs/tags', {tag: req.params.tag, blogs: foundBlog});
+            Blog.find({'state': 'publish'}).sort({createDate: 'descending'}).exec(function(err, blogs) {
+                if(err) {
+                    console.log(err);
+                    req.flash('error', 'No published blogs found');
+                    res.redirect('back');
+                } else {
+            res.render('blogs/tags', {tag: req.params.tag, blogs: blogs, foundBlogs: foundBlogs});
         }
+    });
+}
+
     });
 });
 
+// Middleware that might need to be removed
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated())
         return next();
 
     res.redirect('/');
 }
+// Search Route
+router.get('/blog/search', function(req, res) {
+    res.render('/blog/search');
+});
+
+router.post('/blog/search', function(req, res) {
+    // console.log(req.body.search);
+    var searchArray = req.body.search.split(' ');
+    var regexp = searchArray.map(function(x) {
+        x = x.replace(/[^a-z0-9\-]/gi, '');
+        var temp = new RegExp(x, 'i');
+        return temp;
+
+    });
+    // var regexp = searchArray.map(function(x) {
+    //     var temp = new RegExp(x, 'i');
+    //     console.log(temp);
+    //     return temp;
+    // });
+    console.log(regexp[0]);
+    var testArray = ['Blecho', 'Titles'];
+   
+    console.log(regexp.length);
+    // Blog.find({$or:[{title: {$in: regexp}}, {'author.username': regexp}]}, function(err, foundBlogs) 
+    Blog.find({$or: [{title: {$in: regexp}}, {content: {$in: regexp}}, {tags: {$in: regexp}}, {'author.username': {$in: regexp}}]}, function(err, foundBlogs){
+        if(err) {
+            req.flash('error', 'Sorry, but your search did not find anything.');
+            res.redirect('back');
+        } else {
+            Blog.find({'state': 'publish'}).sort({createDate: 'descending'}).exec(function(err, blogs) {
+                if(err) {
+                    req.flash('error', 'No blogs found for calendar');
+                    return next;
+                } else {
+            console.log(foundBlogs.length + ' ' + blogs.length);
+            res.render('blogs/search', {blog: foundBlogs, blogs: blogs, searchTerms: searchArray});
+        }
+    });
+}
+});
+});
+
+
+
+// fetch route
+
+// router.get('/blog/:month', function(req, res) {
+//     Blog.find({'postDate' : req.params.month}, function(err, foundBlogs))
+// })
 module.exports = router;

@@ -8,7 +8,7 @@ var express         = require('express'),
     passport        = require('passport'),
     morgan          = require('morgan'),
     cookieParser    = require('cookie-parser'),
-    flash           = require('express-flash-messages'),
+    flash           = require('express-flash'),
     session         = require('express-session'),
     methodOverride  = require('method-override'),
     LocalStrategy   = require('passport-local'),
@@ -51,7 +51,7 @@ app.use(flash());
 
 app.use(function(req, res, next) {
     res.locals.currentUser  = req.user;
-    res.locals.messages     = req.flash();
+    // res.locals.messages     = req.flash();
     // res.locals.error        = req.flash('error');
     // res.locals.success      = req.flash('success');
     next();
@@ -72,7 +72,7 @@ app.use(userRoutes);
 //// error handling
 
 app.use(function(req, res, next) {
-    const error = new Error('Not found');
+    const error = new Error('Not found ' + req.params);
     error.status = 404;
     next(error);
 });

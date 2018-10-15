@@ -7,7 +7,7 @@ html
             meta(name='viweport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
             link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous")
             link(href="https://fonts.googleapis.com/css?family=Amatic+SC|Audiowide|Codystar|Cutive+Mono|Diplomata+SC|Hi+Melody|IBM+Plex+Mono|Megrim|Space+Mono|Text+Me+One" rel="stylesheet") 
-            link(id='bpStyles' type='text/css' rel='stylesheet' href='../../../stylesheets/main.css')
+            link(id='bpStyles' type='text/css' rel='stylesheet' href='../../../../stylesheets/main.css')
 
     //- var messages = getMessages()
 
@@ -20,17 +20,23 @@ html
     body    
         div.nav
             div.nav__banner
-                img(src='../../../img/bionicwriter-1900-c.png')
+                img(src='../../../../img/bionicwriter-1900-c.png')
             div.nav__menu
                 div.nav__menu__item--1
                     a(href='/blog') Home
                 div.nav__menu__item--2
                     a(href='/about') About
                 div.nav__menu__item--3
-                    a(href='/contact') Contact
+                    a(href='/projects') Projects
                 div.nav__menu__item--4
-                    a(href='/login') Login
-
+                    a(href='/contact') Contact
+                if messages
+                    if messages.error
+                        div.messages__error
+                            |#{messages.error}
+                    if messages.info
+                        div.messages__info
+                            |#{messages.info}
                 
 
 
@@ -39,4 +45,14 @@ html
 
     block content  
     block foot
+    
+        div.footer__links
+            a(href='/') Home
+            if currentUser
+                a(href='/profile') Profile Page
+                a(href='/logout') Logout
+            else
+                a(href='/login') Login
+            a(href='acknowledgements') Acknowledgements
+            p Copyright (c) BionicProse
         

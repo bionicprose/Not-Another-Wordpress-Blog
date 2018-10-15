@@ -11,7 +11,7 @@ var middlewareObj = {};
 
 middlewareObj.validTitle = function(req, res, next) {
     if(!validator.isAlphanumeric(req.body.title.slice(0,1))) {
-        req.flash('titleErr', 'Your title must begin with a letter or a number.');
+        req.flash('error', 'Your title must begin with a letter or a number.');
         res.render('blogs/new', {blog: req.body});
         return;
     }
@@ -19,20 +19,20 @@ middlewareObj.validTitle = function(req, res, next) {
 }
 middlewareObj.validify = function(req, res, next) {
     if(!validator.isAlphanumeric(req.body.username)) {
-        req.flash('usernameError', 'Usernames must only contain letters and numbers.');
+        req.flash('error', 'Usernames must only contain letters and numbers.');
         res.render('signup', {signin: req.body});
         return;
     } else if(!validator.isEmail(req.body.email)) {
-        req.flash('emailError', 'This is not an email address');
+        req.flash('error', 'This is not an email address');
         res.render('signup', {signin: req.body});
         return;
     } else if (!validator.isLength(req.body.password, {min:6, max: 14})) {
-        req.flash('passwordError', 'Passwords must be between 6 and 14 characters long');
+        req.flash('error', 'Passwords must be between 6 and 14 characters long');
         res.render('signup', {signin: req.body});
        return;
     }
     if(req.body.password !== req.body.confirmPass) {
-        req.flash('confirmError', 'Your confirmation password did not match.');
+        req.flash('error', 'Your confirmation password did not match.');
         res.render('signup', {signin: req.body});
         return;
     }
@@ -147,5 +147,28 @@ middlewareObj.isLoggedIn = function(req, res, next) {
     res.redirect('/login');
 }
 
+middlewareObj.isAdmin = function(req, res, next) {
+    if(!req.isAuthenticated()) {
+        req.flash('error', 'You must be logged in to do that!');
+        res.redirect('/login');
+    } else {
+        User.findById(req.user.id, function(err, foundUser) {
+            if(err || !foundUser) {
+                req.flash('error', 'Sorry, that request could not be completed.');
+                res.redirect('back');
+            } else if (foundUser.role >= 3) {
+                return next();
+            } else {
+                req.flash('error', 'Sorry, you do not have permission to do that.');
+                res.redirect('back');
+            }
 
+    //     } else {
+    //     console.log('no permission');
+    //     req.flash('error', 'You do not have permission to do that.');
+    //     res.back();
+    // }
+    });
+    }
+};
 module.exports = middlewareObj;

@@ -11,7 +11,7 @@ var express = require('express'),
 ////////////////////////
 // admin route need to add isAdmin middleware to routes
 ///////////////////////
-router.get('/admin', function(req, res) {
+router.get('/admin', middleware.isAdmin, function(req, res) {
     Blog.find({}, function(err, foundBlog) {
         User.find({}, function(err, foundUser) {
             Comment.find({}, function(err, foundComment) {
@@ -59,7 +59,7 @@ router.get('/user/:user/edit', function(req, res) {
     res.render('user/edit');
 });
 
-router.put('/user/:user', function(req, res) {
+router.put('/user/:user', middleware.isAdmin, function(req, res) {
     User.findByIdAndUpdate(req.params.user, req.body.user, function(err, updatedUser){
         if(err || !updatedUser) {
             req.flash('error', 'Sorry, that user could not be updated.');

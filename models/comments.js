@@ -7,7 +7,8 @@ var commentSchema = new mongoose.Schema({
             ref: 'User',
             required: true
         },
-        username: String
+        username: String,
+        pic: String
     },
     editable: {type: Boolean, default: true},
     content: {type: String, required: true},

@@ -1,26 +1,31 @@
 mixin printReplies(comment)
     each reply in comment.replies
-        div.reply__grid(id=reply._id)
-            div.reply__entry
-                div.comments__replyTo
-                    p In Reply To: 
-                        a(href='#'+reply.originalPost.id) #{reply.originalPost.author}
-                div.comments__entry__author
-                        p Author: #{reply.author.username}
-                div.comments__entry__body
-                    p #{reply.content}
+        div.reply__grid(id='comment'+reply._id)
+            
+            div.comments__entry__author
+                div.comments__entry__author--pic
+                    img(src=reply.author.pic)
+                div.comments__entry__author--name
+                    |#{reply.author.username}
                 div.comments__entry__postDate
                     p posted on !{reply.postDate}
                 if reply.editDate
                     div.comments__entry__editDate
                         p last edited on !{reply.editDate}
+            div.comments__entry__body
+                div.comments__replyTo
+                    |In Reply To: 
+                    a(href='#comment'+reply.originalPost.id) #{reply.originalPost.author}
+                div.comments__content
+                    p #{reply.content}
+            
             div.comments__buttons
                 if(currentUser && reply.author.id == currentUser.id && reply.editable === true)   
-                    a(href='/blog/'+blog.url+'/comments/'+reply._id+'/edit'): button.comments__btn__edit Edit
+                    a(href='/blog/'+blog.url+'/comments/'+reply._id+'/edit'): button.comments__btn Edit
                     form(method='POST' action='/blog/'+blog.url+'/comments/'+reply._id+'?_method=DELETE')
-                        button.comments__btn__delete Delete
+                        button.comments__btn Delete
                 if(reply.editable === true)
-                    button(onclick='reply(\''+ reply._id+'\', \''+blog.url+'\')').blog__comment__btn--add Reply 
+                    button(onclick='reply(\''+ reply._id+'\', \''+blog.url+'\')').comments__btn reply 
                     //- a(href='/blog/'+blog.url+'/comments/'+reply._id+'/reply'): button.blog__comment__btn--add Reply
         if reply.replies
             +printReplies(reply)
@@ -28,4 +33,31 @@ mixin printReplies(comment)
                 //-     +printReplies(val, comments)
             //- if reply.replies
             //-         return: +printReplies(reply.replies)        
+mixin sideBar
+    div.sidebar
+        +search
+        div.calendar
+            |Previous Blog Posts:
+            div.selector__year
+                button( onclick='changeDate("year", "sub")').calendar__btn.calendar__btn--left #{'<'}</button>
+                    span.year
+                    button( onclick='changeDate("year", "add")').calendar__btn.calendar__btn--right #{'>'}
+            div.selector__month
+                button( onclick='changeDate("month", "sub")').calendar__btn.calendar__btn--left #{'<'}</button>
+                    span.month
+                    button( onclick='changeDate("month", "add")').calendar__btn.calendar__btn--right #{'>'}
+            table.calendar__table
+                   
+                       
+                             
+                    
+        div.social   
+            |Follow Bionic Prose on these social media sites:  
+            a(href="https://twitter.com/bionicprose?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @bionicprose): script(async src="https://platform.twitter.com/widgets.js" charset="utf-8")           
+            div.fb-like(data-href="http://www.bionicprose.com/blog" data-width="100" data-layout="standard" data-action="like" data-size="large" data-show-faces="true" data-share="true")
 
+mixin search
+    div.search
+        form(action='/blog/search' method='POST').search__form
+            input(type='text' name='search')
+            button.search__btn search

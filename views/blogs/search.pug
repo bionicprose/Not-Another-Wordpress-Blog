@@ -1,13 +1,16 @@
-extends ../includes/layout-edit.pug
+extends ../includes/layout.pug
 
 block content
-    div.bionicProse(data-blogs=blogs)
+    
+    div.bionicProse(data-blogs=blogs) 
         div.search__terms
-            h1 Blog posts tagged with: #{tag}
-        div.searchResults   
-            each val in foundBlogs
+            h2 Search results for:        
+            each term in searchTerms
+                |#{term + ' '}
+        div.searchResults
+            each val in blog
                 div.blog__index__post 
-                    div.blog__image(style='background-image: url("../'+ val.heroSettings.heroImg +'");')
+                    div.blog__image(style='background-image: url('+ val.heroSettings.heroImg +');')
                         div.blog__text__title(style='color: '+ val.titleSettings.fontColor+';')
                             a(href='/blog/'+val.url) #{val.title}
                     p Posted by #{val.author.username} on #{val.postDate}
@@ -16,9 +19,7 @@ block content
                         div.blog__read-more
                             a(role='button' href='/blog/'+val.url): button.read-more__btn read more
         +sideBar
-
-    //- div(class='userVar' data-userVariable = user.id)
     block append footer
        
-        script(src='../../../../javascript/search.js')
-
+        script(src='../../javascript/search.js')
+            

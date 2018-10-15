@@ -74,7 +74,7 @@ console.log('passport is being used');
                             newUser.local.username  = username;
                             newUser.local.password = newUser.generateHash(password);
                             newUser.pic.push('/img/profile-iris.svg');
-                            shell.mkdir('-p', '/home/zac/webdev/bionicprose/bionicUser/' + newUser.id);
+                            shell.mkdir('-p', '/home/zac/webdev/bionicprose/public/bionicUser/' + newUser.id);
                             //setting local credentials
                             newUser.save(function(err) {
                                 if(err) {
@@ -183,7 +183,7 @@ function(req, token, refreshToken, profile, done) {
     process.nextTick(function() {
         
         if(!req.user){
-
+            console.log('no req.user');
         User.findOne({'facebook.id' : profile.id}, function(err, user) {
             if(err)
                 return done(err);
@@ -191,7 +191,7 @@ function(req, token, refreshToken, profile, done) {
             if(user) {
                 return done(null, user);
             } else {
-
+                console.log('no user found in mongo, so should create new folder');
                 var newUser     = new User();
                 newUser.role = 1;
                 newUser.facebook.id     = profile.id;
@@ -201,7 +201,7 @@ function(req, token, refreshToken, profile, done) {
                 newUser.pic.push('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200');
                 newUser.facebook.name   = profile.name.givenName + ' ' + profile.name.familyName;
                 newUser.facebook.email  = profile.emails[0].value;
-                shell.mkdir('-p', '/home/zac/webdev/bionicprose/bionicUser/' + newUser.id);
+                shell.mkdir('-p', '/home/zac/webdev/bionicprose/public/bionicUser/' + newUser.id);
                 newUser.save(function(err) {
                     if(err)
                         throw err;
@@ -357,7 +357,6 @@ function(req, token, refreshToken, profile, done) {
                     return done(err);
 
                 if(user) {
-
                     return done(null, req.flash('error', 'That Google account has already been linked to another user.'));
                 } else {
 

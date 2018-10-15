@@ -40,7 +40,7 @@ router.post('/blog/:url/comments', middleware.isLoggedIn, function(req, res) {
                 var username = req.user.local.name;
             }
             console.log('req.user.local.name: ' + req.user.local.name);
-            var newComment = {'content': req.body.content, 'author': {'id': req.user._id}, 'author.username' : username, 'blogPost': {'id': foundBlog._id}, 'blogPost.title': foundBlog.title, 'postDate': date};
+            var newComment = {'content': req.body.content, 'author': {'id': req.user._id}, 'author.username' : username, 'author.pic' : req.user.pic[0], 'blogPost': {'id': foundBlog._id}, 'blogPost.title': foundBlog.title, 'postDate': date};
             Comment.create(newComment, function(err, comment) {
                 if(err) {
                     console.log(err);
@@ -50,6 +50,7 @@ router.post('/blog/:url/comments', middleware.isLoggedIn, function(req, res) {
                     comment.save();
                     foundBlog.comments.push(comment);
                     foundBlog.save();
+                    req.flash('info', 'You have just added a new comment!');
                     res.redirect('/blog/'+req.params.url);
                 }
             } );
@@ -104,7 +105,7 @@ router.post('/blog/:url/comments/:comment', middleware.isLoggedIn, function(req,
                 }
                 
                 console.log('req.user.local.name: ' + req.user.local.name);
-                var newReply = {'originalPost' : { 'id': foundComment._id}, 'originalPost.author' : username, 'content': req.body.content, 'author': {'id': req.user._id}, 'author.username' : username,'blogPost': {'id': foundBlog._id}, 'blogPost.title': foundBlog.title, 'postDate': date};
+                var newReply = {'originalPost' : { 'id': foundComment._id}, 'originalPost.author' : foundComment.author.username, 'content': req.body.content, 'author': {'id': req.user._id}, 'author.username' : username, 'author.pic' : req.user.pic, 'blogPost': {'id': foundBlog._id}, 'blogPost.title': foundBlog.title, 'postDate': date};
                 Comment.create(newReply, function(err, reply) {
                     if(err) {
                         console.log(err);
@@ -116,6 +117,7 @@ router.post('/blog/:url/comments/:comment', middleware.isLoggedIn, function(req,
                         foundBlog.save();
                         foundComment.replies.push(reply);
                         foundComment.save();
+                        req.flash('info', 'You have just replied to a comment!');
                         res.redirect('/blog/'+req.params.url);
                     }
                 } );
@@ -142,11 +144,17 @@ router.get('/blog/:url/comments/:comments_id/edit', middleware.isCommenter, func
             Blog.findOne({'url': req.params.url}, function(err, foundBlog) {
                 if(err || !foundBlog) {
                     console.log(err)
-                    req.flash('error', 'Sorry, that blog does not exist!');
+                    req.flash('error', 'Sorry, that blog does not exist! Comment route');
                     res.redirect('/blog')
                 } else {
             console.log(foundBlog + 'blog');
-            res.render('comments/edit', {blog: foundBlog, comment: foundComment});
+            Blog.find({'state': 'publish'}).sort({createDate: 'descending'}).exec(function(err, blogs) {
+                if(err) {
+                    console.log(err);
+                } else {
+                    res.render('comments/edit', {blog: foundBlog, comment: foundComment, blogs: blogs});
+                }
+            });
         }
     });
 }
@@ -165,7 +173,7 @@ router.put('/blog/:url/comments/:comments_id', middleware.isCommenter, function(
             req.flash('error', 'Sorry, that comment could not be updated.');
             res.back();
         } else {
-            req.flash('success', 'You updated your comment for the post ' +req.params.title+'.');
+            req.flash('info', 'You updated your comment for the post ' +updatedComment.blogPost.title+'.');
             res.redirect('/blog/'+req.params.url);
         }
 
@@ -190,7 +198,7 @@ router.delete('/blog/:url/comments/:comments_id', middleware.isCommenter, functi
             req.flash('error', 'Sorry, that comment could not be updated.');
             res.back();
         } else {
-            req.flash('success', 'You updated your comment for the post ' +req.params.title+'.');
+            req.flash('info', 'You updated your comment for the post ' +req.params.title+'.');
             res.redirect('/blog/'+req.params.url);
         }
 
@@ -238,7 +246,7 @@ router.put('/blog/:url/comments/:comments_id', middleware.isCommenter, function(
             req.flash('error', 'Sorry, that comment could not be updated.');
             res.back();
         } else {
-            req.flash('success', 'You updated your comment for the post ' +req.params.title+'.');
+            req.flash('info', 'You updated your comment for the post ' +req.params.title+'.');
             res.redirect('/blog/'+req.params.url);
         }
 

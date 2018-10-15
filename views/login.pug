@@ -1,27 +1,22 @@
-extends includes/layout.pug
+extends includes/layout-login.pug
 
 block content
-    h1 Login to BionicProse
+    div.login
+        if(!currentUser)
+            p Login or Register with:
+            div.signup
+                form(action='/login', method='POST').signup__form
+                    label Email
+                        input(type='text', name='username')
+                    label Password
+                        input(type='password' name='password')
+                    button.signup__btna(href='/login') Local Login
 
-    if(!currentUser)
-        p Login or Register with:
-        div.signup
-            form(action='/login', method='POST').signup__form
-                label Email
-                input(type='text', name='username')
-                label Password
-                input(type='password' name='password')
-                button.signup__btna(href='/login') Local Login
-
-
+            | To leave a comment or reply, please login with your Facebook or Google account   
+            p: a(href='/auth/facebook'): button.login__btn.login__btn--facebook Login with Facebook
             
-        p: a(href='/auth/facebook'): button.login__button--facebook Login with Facebook
-        p: a(href='/auth/twitter'): button.login__button--twitter Login with Twitter
-        p: a(href='/auth/google'): button.login__button--google Login with Google
+            p: a(href='/auth/google'): button.login__btn.login__btn--google Login with Google
 
       
 
-    p Need an account?
-    a(href='/signup') Signup
 
-    include includes/footer.pug

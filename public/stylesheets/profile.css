@@ -9,34 +9,26 @@
     /* align-items: center; */
     padding-left: 20em;
     padding-right: 20em;
+    color: #4d4d4d;
     
     
 }
-.control-panel__main > h1{
-    color: white;
+.control-panel__main {
+    
 }
 
 .blog__table {
     display: none;
-    width: 400px;
-}
-.table {
-    
-    /* background-color: #8dbec3; */
-    border-left: 1px solid #6f94be;
-    border-bottom: 1px solid #5c73a5;
-    box-shadow: -1px 1px 5px 1px #205a93;
-    color: #1f9692;
-    font-size: 65px;
-    /* background: #eee; */
-    /* grid-column: 2/12;
-    grid-row: 1/4; */
+    /* border-right: 1px solid black; */
+    /* border-bottom: 1px solid-black; */
+    box-shadow: 1px 1px 1px 1px #4d4d4d;
 }
 
+
 .table__header > th {
-    color: darkslateblue;
-    border-bottom: 1px solid orchid;
-    border-right: 1px solid orchid;
+    color: #4d4d4d;
+    border-bottom: 1px solid #4d4d4d;
+    border-right: 1px solid #4d4d4d;
     font-family: 'Megrim', cursive;
     font-size: 20px;
     margin: 5px;
@@ -44,21 +36,20 @@
 }
 
 .table__entry > td {
-    font-family: 'Space Mono', monospace;
     font-size: 15px;
     padding: 10px;
 }
 .table__entry:nth-child(even) {
-    background-color: #8dbec3;
-    border-right: 1px solid #5c73a5;
+    background-color: #e3e5e8;
+    /* border-right: 1px solid #5c73a5; */
     
 }
 
 
 
 .table__entry:nth-child(odd) {
-    background-color: #5c73a5;
-    color: orchid;
+    background-color: rgb(183, 201, 204);;
+
 }
 
 .profile-pic__img {
@@ -68,6 +59,7 @@
 
 .comment__table {
     display: none;
+    box-shadow: 1px 1px 1px 1px #4d4d4d;
 }
 /* .user__table {
     display: none;
@@ -78,10 +70,38 @@
 .user__form--hidden {
     display: none
 }
+.user_table {
+    box-shadow: 1px 1px 1px 1px #4d4d4d;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+}
 .fa-plus, .fa-minus {
     float: right;
 }
+.table__user {
+    background-color: #e3e5e8;
+}
+table {
+padding-bottom: 25px;
+}
+.user__form {
+    /* padding-bottom: 25%; */
+    margin-bottom: 20px;
+}
+.user__btn {
+    margin: 10px;
+    padding: 10px;
+    display:inline-block;
+    background-color: #e3e5e8;
+    border: white;
+    box-shadow: 1px 1px 1px 1px #4d4d4d;
+    cursor: pointer;
+}
 
+.user__btn:active {
+    background-color: white;
+    border: 1px solid black;
+}
 
 .profile-pic {
     background-image: url('../img/blur-purp-2.png');

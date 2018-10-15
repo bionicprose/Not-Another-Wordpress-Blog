@@ -1,93 +1,94 @@
-extends ../includes/layout-show.pug
+extends ../includes/layout.pug
 
 //- block append head
     
                 
 block content
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.1&appId=1905109646218883&autoLogAppEvents=1'; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
     include ../includes/mixins.pug
-    div.blog__index__post--first
-        if blog.heroSettings.heroImg
-            div.blog__hero-img
-                div.blog__hero-text
-                    |#{blog.title}
-                    
-        else
-            h1= blog.title
-        p Posted by #{blog.author.username} on #{blog.postDate}
-        div.blog__body
-            p !{blog.content}
-        div.blog__tags
-            div.blog__tags--text Tags:
-            - var z = 0
-            each tag in blog.tags
-                if z < (blog.tags.length - 1)
-                    div.blog__tags--box: a(href='/blog/tag/'+tag) #{tag}
-
-                else 
-                    div.blog__tags--box: a(href='/blog/tag/'+tag) #{tag}
-            - z++
-        div.blog__edit
-            if(currentUser && blog.author.id == currentUser.id)
-                a(href='/blog/'+blog.url+'/edit'): button.blog__edit__btn--edit Edit post
-                form(method='POST' action='/blog/'+blog.url+'?_method=DELETE')
-                    button.blog__edit__btn--delete Delete post
-        
-        div.comments
-            h2 Reader Comments
-            button.blog__comment__btn--add(onclick='reply(null, \''+blog.url+'\')') Add Comment
-            //- if(!currentUser)
-            //-     button.blog_comment__btn--add(onclick='login()') Add Comment
-            //-     div.login
-            //-         p: a(href='/auth/facebook'): button.login__button--facebook Login with Facebook
-            //-         p: a(href='/auth/twitter'): button.login__button--twitter Login with Twitter
-            //-         p: a(href='/auth/google'): button.login__button--google Login with Google
-            //- else 
-            //-     div.comment
-            //-         form(method='POST' action='/blog/'+blog.url+'/comments').comment.comment__form
-            //-             p Add a comment
-            //-             textarea(rows='10' cols='50' name='content' required='true')
-            //-             button.comment.comment__form__btn--submit Submit
-                //- a(href='/blog/'+blog.url+'/comments/new'): button.blog__comment__btn--add Add a comment
-            if comments
-                each val in comments
-                    if(!val.originalPost)
-                        div.comments__grid(id=val._id)
-                            div.comments__entry
-                                div.comments__entry__author
-                                    p Author: #{val.author.username}
-                                div.comments__entry__body
-                                    p #{val.content}
-                                div.comments__entry__postDate
-                                    p posted on !{val.postDate}
-                                if val.editDate
-                                    div.comments__entry__editDate
-                                        p last edited on !{val.editDate}
-                            div.comments__buttons
-                                if(currentUser && val.author.id == currentUser.id && val.editable === true)   
-                                    a(href='/blog/'+blog.url+'/comments/'+val._id+'/edit'): button.comments__btn__edit Edit
-                                    form(method='POST' action='/blog/'+blog.url+'/comments/'+val._id+'?_method=DELETE')
-                                        button.comments__btn__delete Delete
-                                if(val.editable === true)
-                                    button(onclick='reply(\''+ val._id+'\', \''+blog.url+'\')').blog__comment__btn--add Reply 
-                                    //- a(href='/blog/'+blog.url+'/comments/'+val._id+'/reply'): button.blog__comment__btn--add Reply
-                        if val.replies
+    div.bionicProse(data-blogs=blogs)
+        div.sidebar--left
+        div.blog
+            div.blog__index__post--first
+                if blog.heroSettings
+                    div.blog__hero-img
+                        div.blog__hero-text
+                            |#{blog.title}
                             
-                            //- != console.log(comments)
+                else
+                    h1= blog.title
+                p Posted by #{blog.author.username} on #{blog.postDate}
+                div.blog__body
+                    p !{blog.content}
+                if blog.tags
+                    div.blog__tags
+                        div.blog__tags--text Tags:
+                        - var z = 0
+                        each tag in blog.tags
+                            if z < (blog.tags.length - 1)
+                                a(href='/blog/tag/'+tag): button.tags__btn  #{tag}
 
-                            +printReplies(val)                 
-                        //- +printReplies(reply, comments)
-                  
-    div(class='heroSettings' data-image = blog.heroSettings.heroImg
-                             data-size = blog.heroSettings.size
-                             data-gradient = blog.heroSettings.gradient
-                             data-positionx = blog.heroSettings.positionX
-                             data-positiony = blog.heroSettings.positionY)
-    div(class='titleSettings' data-fontsize = blog.titleSettings.fontSize
-                              data-fontcolor = blog.titleSettings.fontColor
-                              data-fonttop   = blog.titleSettings.fontTop
-                              data-fontleft = blog.titleSettings.fontLeft)
-    
+                            else 
+                                a(href='/blog/tag/'+tag): button.tags__btn  #{tag}
+                        - z++
+                div.social__buttons
+                    <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-size="large" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+                    a.twitter-share-button(href="https://twitter.com/intent/tweet" data-size="large") Share on Twitter</a>
+                    <script src="//platform.linkedin.com/in.js" type="text/javascript"> lang: en_US</script>
+                        <script type="IN/Share"></script>
+                    
+                div.blog__edit
+                    if(currentUser && blog.author.id == currentUser.id)
+                        a(href='/blog/'+blog.url+'/edit'): button.comments__btn Edit post
+                        form(method='POST' action='/blog/'+blog.url+'?_method=DELETE')
+                            button.comments__btn Delete post
+                
+                div.comments#comments
+                    h2 Reader Comments
+                    button.comments__btn.comments__btn--add(onclick='reply(null, \''+blog.url+'\')') Add Comment
+                    if comments
+                        each val in comments
+                            if(!val.originalPost)
+                                div.comments__grid(id='comment'+val._id)
+                                    div.comments__entry__author
+                                        div.comments__entry__author--pic
+                                            img(src=val.author.pic)
+                                        div.comments__entry__author--name
+                                            |#{val.author.username}
+                                        div.comments__entry__postDate
+                                            p posted on !{val.postDate}
+                                        if val.editDate
+                                            div.comments__entry__editDate
+                                                p last edited on !{val.editDate}
+                                    div.comments__entry__body
+                                        div.comments__content
+                                            p #{val.content}
+                                    div.comments__buttons
+                                        if(currentUser && val.author.id == currentUser.id && val.editable === true)   
+                                            a(href='/blog/'+blog.url+'/comments/'+val._id+'/edit'): button.comments__btn Edit
+                                            form(method='POST' action='/blog/'+blog.url+'/comments/'+val._id+'?_method=DELETE')
+                                                button.comments__btn Delete
+                                        if(val.editable === true)
+                                            button(onclick='reply(\''+ val._id+'\', \''+blog.url+'\')').comments__btn reply 
+                                            //- a(href='/blog/'+blog.url+'/comments/'+val._id+'/reply'): button.blog__comment__btn--add Reply
+                                if val.replies
+                                    
+                                    //- != console.log(comments)
 
+                                    +printReplies(val)                 
+                                //- +printReplies(reply, comments)
+            if(blog.heroSettings)            
+                div(class='heroSettings' data-image = blog.heroSettings.heroImg
+                                        data-size = blog.heroSettings.size
+                                        data-gradient = blog.heroSettings.gradient
+                                        data-positionx = blog.heroSettings.positionX
+                                        data-positiony = blog.heroSettings.positionY)
+            div(class='titleSettings' data-fontsize = blog.titleSettings.fontSize
+                                    data-fontcolor = blog.titleSettings.fontColor
+                                    data-fonttop   = blog.titleSettings.fontTop
+                                    data-fontleft = blog.titleSettings.fontLeft)
+        +sideBar
     //- div(class='userVar' data-userVariable = user.id)
     block append footer
        

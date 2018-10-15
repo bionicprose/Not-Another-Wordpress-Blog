@@ -33,17 +33,17 @@ block content
                         th Edit Date
                     each val in blogs
                         tr.table__entry
-                            td: a(href='/blog/'+val.title) #{val.title}
+                            td: a(href='/blog/'+val.url) #{val.title}
                             td #{val.author.username}
                             td #{val.tags}
                             td #{val.state}
                             td #{val.postDate}
                             td #{val.editDate}
-                            td: a(href='/blog/' + val.title + '/edit'): button Edit
-                                form(method='POST' action='/blog/'+val.title+'?_method=DELETE')
+                            td: a(href='/blog/' + val.url + '/edit'): button Edit
+                                form(method='POST' action='/blog/'+val.url+'?_method=DELETE')
                                     button.blog__edit__btn--delete Delete
                                 if val.state == 'draft'
-                                    form(method='POST' action='/blog/'+val.title+'?_method=PUT')
+                                    form(method='POST' action='/blog/'+val.url+'?_method=PUT')
                                         button.editor__button__publish(type='submit' name='state' value='publish-only') Publish
                 
             div.comments--show 
@@ -61,11 +61,11 @@ block content
                         tr.table__entry
                             td #{val.content}
                             td #{val.author.username}
-                            td: a(href='/blog/'+val.blogPost.title) #{val.blogPost.title}
+                            td: a(href='/blog/'+val.blogPost.url) #{val.blogPost.title}
                             td #{val.postDate}
                             td #{val.editDate}
-                            td: a(href='/blog/' + val.blogPost.title + '/comments/'+val._id+'/edit'): button Edit
-                                form(method='POST' action='/blog/'+val.blogPost.title+'/comments/'+val._id+'?_method=DELETE')
+                            td: a(href='/blog/' + val.blogPost.url + '/comments/'+val._id+'/edit'): button Edit
+                                form(method='POST' action='/blog/'+val.blogPost.url+'/comments/'+val._id+'?_method=DELETE')
                                     button.blog__edit__btn--delete Delete
             
             div.users--show 
@@ -76,8 +76,12 @@ block content
                 div.users
                     each val in users 
                         - y++
-                        form(action='/user/'+val._id+'?_method=PUT' method='POST')
-                            table( id ='user' + y).user__table  
+                        form(action='/user/'+val._id+'?_method=PUT' method='POST').user__form
+                            table( id ='user' + y).user__table
+                                div.table__user
+                                    |User #{val._id} 
+                                    span(data-userId=y).edit.user__btn Edit
+                                    button(data-userId=y type='submit').submit.user__btn Submit
                                 tr.table__header
                                     th Local Username
                                     th Local Email
@@ -134,8 +138,7 @@ block content
                                     input(type='text' name='user[id]')(id='id--hidden' + y).user__form--hidden
                                     td(id='role' + y) #{val.role}
                                     input(type='text' name='user[role]')(id='role--hidden' + y).user__form--hidden 
-                            span(data-userId=y).edit Edit
-                            button(data-userId=y type='submit').submit Submit
+                         
 
                                     
                         
