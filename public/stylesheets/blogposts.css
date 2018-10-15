@@ -729,7 +729,8 @@ margin: 5% 10%; */
 
 
 
-@media (max-width: 1000px) {
+@media only screen and (max-width: 1000px) {
+    
     .bionicProse {
         display:flex;
         flex-flow: column;;
@@ -774,7 +775,7 @@ margin: 5% 10%; */
 }
 
 
-@media (max-width: 800px) {
+@media only screen and (max-width: 800px) {
  
     .blog__hero-img {
         height:250px;
@@ -784,7 +785,7 @@ margin: 5% 10%; */
     }
 }
 
-@media (max-width: 600px) {
+@media (-webkit-device-pixel-ratio: 2), (min-resolution: 192dpi), (max-width: 600px) {
    
     body {
         font-size: 10px;
@@ -819,7 +820,7 @@ margin: 5% 10%; */
     }
 }
 
-@media (max-width: 400px) {
+@media only screen and (max-width: 400px) {
     .blog__hero-img {
         height:100px;
     }
