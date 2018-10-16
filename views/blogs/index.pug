@@ -10,20 +10,20 @@ block content
         - var count = 0    
         each val in blogs
             if count === 0
-                div(class='heroSettings' data-image = val.heroSettings.heroImg
-                                data-size = val.heroSettings.size
-                                data-gradient = val.heroSettings.gradient
-                                data-positionx = val.heroSettings.positionX
-                                data-positiony = val.heroSettings.positionY)
+                div(class='heroSettings' data-image = val.heroSettings.heroImg)
+                //-                 data-size = val.heroSettings.size
+                //-                 data-gradient = val.heroSettings.gradient
+                //-                 data-positionx = val.heroSettings.positionX
+                //-                 data-positiony = val.heroSettings.positionY)
                 div(class='titleSettings' data-fontsize = val.titleSettings.fontSize
                                 data-fontcolor = val.titleSettings.fontColor
                                 data-fonttop   = val.titleSettings.fontTop
                                 data-fontleft = val.titleSettings.fontLeft)
                 div.blog__index__post--first
-                    div.blog__hero-img
-                        div.blog__hero-text(style='color: '+ val.titleSettings.fontColor+';')
+                    div.blog__image(style='background-image: url('+ val.heroSettings.heroImg +');')
+                        div.blog__title(style='color: '+ val.titleSettings.fontColor+';')
                             a(href='/blog/'+val.url) #{val.title}
-                    div.blog__text__date
+                    div.blog__post-date
                         |Posted by #{val.author.username} on #{val.postDate}
                     div.blog__body
                         |!{val.content}
@@ -46,10 +46,15 @@ block content
             each val in blogs
                 if x > 0
                     div.blog__index__post 
+                        div(class='titleSettings' data-fontsize = val.titleSettings.fontSize
+                                data-fontcolor = val.titleSettings.fontColor
+                                data-fonttop   = val.titleSettings.fontTop
+                                data-fontleft = val.titleSettings.fontLeft)
                         div.blog__image(style='background-image: url('+ val.heroSettings.heroImg +');')
-                            div.blog__text__title(style='color: '+ val.titleSettings.fontColor+';')
+                            div.blog__title(style='color: '+ val.titleSettings.fontColor+';')
                                 a(href='/blog/'+val.url) #{val.title}
-                        p Posted by #{val.author.username} on #{val.postDate}
+                        div.blog__post-date
+                            |Posted by #{val.author.username} on #{val.postDate}
                         div.blog__body__preview
                             |!{val.content}
                             div.blog__read-more
@@ -67,7 +72,7 @@ block content
                             //-             - z++
                 - x++       
         +sideBar
-        
+
     block append footer
        
         script(src='../../javascript/index.js')

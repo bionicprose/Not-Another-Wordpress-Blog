@@ -10,6 +10,7 @@ body {
     font-size: 12px;
     line-height: 1.5em;
     font-family: 'IBM Plex Mono', monospace;
+    color: #4d4d4d;
 }
 
 button {
@@ -53,6 +54,17 @@ h2 {
 }
 
 
+.nav__title {
+    position: relative;
+    font-family: 'Megrim', cursive;
+    font-weight: bold;
+    font-size: 2em;
+    color: #4d4d4d;
+    left:10%;
+    top:65%;
+
+}
+
  .nav__menu--hamburger {
      
      font-size: 1em;
@@ -62,7 +74,7 @@ h2 {
         text-orientation: upright;
         color: #4d4d4d;
         position:absolute;
-        top: 0;
+        top: 15%;
         right: 15px;
         cursor: pointer;
  }
