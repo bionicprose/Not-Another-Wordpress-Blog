@@ -3,38 +3,31 @@ var currentImage = heroSettings.dataset.image;
 var gradient = heroSettings.dataset.gradient;
 
 
-// heroDiv.setAttribute('data-backgroundImage', image)
-
-// heroDiv.style.backgroundImage = 'url('+image+')';
-// heroDiv.style.backgroundPosition = 'center';
-// heroDiv.style.backgroundSize = 'cover';
-// heroDiv.style.backgroundRepeat = 'no-repeat';
-
-
 var heroSettings = document.querySelector('.heroSettings');
-var heroDiv = document.querySelector('.blog__hero-img');
-var heroTitle = document.querySelector('.blog__hero-text');
+var heroDiv = document.querySelector('.blog__header__image');
+var heroTitle = document.querySelector('.blog__title');
 var styles = document.getElementById('bpStyles');
 var titleSettings = document.querySelector('.titleSettings');
  console.log(heroSettings);
 
  if(heroSettings !== null) {
  if (heroSettings.dataset.gradient == 'true') {
-     styles.sheet.insertRule('.blog__hero-img { background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(' + heroSettings.dataset.image + ')}', styles.sheet.cssRules.length);
+     styles.sheet.insertRule('.blog__header__image { background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(' + heroSettings.dataset.image + ')}', styles.sheet.cssRules.length);
      console.log('should have gradient');
  } else {
      console.log('should not have gradient');
-     styles.sheet.insertRule('.blog__hero-img { background-image: url(' + heroSettings.dataset.image + ')}', styles.sheet.cssRules.length);
+     styles.sheet.insertRule('.blog__header__image { background-image: url(' + heroSettings.dataset.image + ')}', styles.sheet.cssRules.length);
 
  }
 console.log(titleSettings.dataset.fontcolor);
-styles.sheet.insertRule('.blog__hero-text { color: ' + titleSettings.dataset.fontcolor + '}', styles.sheet.cssRules.length);
-styles.sheet.insertRule('.blog__hero-text { font-size: ' + titleSettings.dataset.fontsize + 'em}', styles.sheet.cssRules.length);
-styles.sheet.insertRule('.blog__hero-text { top: ' + titleSettings.dataset.fonttop + '%}', styles.sheet.cssRules.length);
-styles.sheet.insertRule('.blog__hero-text { left: ' + titleSettings.dataset.fontleft + '%}', styles.sheet.cssRules.length);
-styles.sheet.insertRule('.blog__hero-img { background-size: ' + heroSettings.dataset.size + '%}', styles.sheet.cssRules.length);
-styles.sheet.insertRule('.blog__hero-img { background-position: ' + heroSettings.dataset.positionx + 'px ' + heroSettings.dataset.positiony + 'px}', styles.sheet.cssRules.length);
- }
+styles.sheet.insertRule('.blog__title { color: ' + titleSettings.dataset.fontcolor + '}', styles.sheet.cssRules.length);
+styles.sheet.insertRule('.blog__title { font-size: ' + titleSettings.dataset.fontsize + 'em}', styles.sheet.cssRules.length);
+styles.sheet.insertRule('.blog__title { top: ' + titleSettings.dataset.fonttop + '%}', styles.sheet.cssRules.length);
+styles.sheet.insertRule('.blog__title { left: ' + titleSettings.dataset.fontleft + '%}', styles.sheet.cssRules.length);
+styles.sheet.insertRule('.blog__header__image { background-size: ' + heroSettings.dataset.size + '%}', styles.sheet.cssRules.length);
+styles.sheet.insertRule('.blog__header__image { background-position: ' + heroSettings.dataset.positionx + 'px ' + heroSettings.dataset.positiony + 'px}', styles.sheet.cssRules.length);
+styles.sheet.insertRule('.blog__header__image {border: 1px solid grey; }',  styles.sheet.cssRules.length);
+}
 
 var titleSettings = document.querySelector('.titleSettings');
 var titleStyle = {
@@ -99,13 +92,13 @@ function imageSelector() {
 
     var imageDiv = document.createElement('div');
    
-    imageDiv.classList.add('image--selector');
+    imageDiv.classList.add('editor__image-selector');
     imageDiv.style.display = 'grid';
     imageDiv.style.gridTemplateColumns = '1fr 1fr 1fr 1fr';
 
     for(let i = 0; i < imageArray.length; i++) {
         var imageGrid = document.createElement('div');
-        imageGrid.setAttribute('style', 'height: 50px', 'width: 50px');
+        imageGrid.classList.add('editor__image--thumbnail')
 
         
             var imageSelection = '../../bionicUser/' + user +'/'+ imageArray[i];
@@ -115,23 +108,23 @@ function imageSelector() {
             // hero.src = imageSelection;
             // hero.style.maxWidth = '500px';
             img.src = imageSelection;
-            img.style.height = '50px';
-            img.style.width = '50px';
+            img.style.height = '90px';
+            img.style.width = '90px';
             var imageInput = document.createElement('input');
             // var fileDisplayArea = document.querySelector('.editor__hero__image--preview');
             imageInput.setAttribute('type', 'radio');
            
             imageInput.setAttribute('name', 'pickedImage');
             imageInput.setAttribute('value',  imageSelection);
-            imageInput.classList.add('image--selection');
+            imageInput.classList.add('editor__image__input--radio');
             
 
             // sets selection as background iamge for div
             imageInput.addEventListener('change', function(e) {
-                document.querySelector('.editor__img__upload').value = '';
+                document.querySelector('.editor__image__input--upload').value = '';
                 var styles = document.getElementById('bpStyles');
                 // console.log(styles.sheet);
-                styles.sheet.insertRule('.blog__hero-img { background-image: url('+this.value+')}', styles.sheet.cssRules.length);
+                styles.sheet.insertRule('.blog__header__image { background-image: url('+this.value+')}', styles.sheet.cssRules.length);
             currentImage = this.value;
      
             });
@@ -143,25 +136,21 @@ function imageSelector() {
     }
     
 
-    var editorImg = document.querySelector('.editor__img');
+    var editorImg = document.querySelector('.editor__image-selection-controls');
     editorImg.insertAdjacentElement('afterend', imageDiv);
 
-    /// toggle image-selector button
 
-    var x = document.querySelector('.editor__button__image-selector');
- 
-        x.style.display = 'none';
   
 }
 
 // preview uploaded image in hero image
 window.onload = function() {
-var fileInput = document.querySelector('.editor__img__upload');
-var fileDisplayArea = document.querySelector('.editor__hero__image--preview');
+var fileInput = document.querySelector('.editor__image__input--upload');
+var fileDisplayArea = document.querySelector('.blog__header__image');
 
 
 		fileInput.addEventListener('change', function(e) {
-           var radio = document.querySelectorAll('.image--selection');
+           var radio = document.querySelectorAll('.editor__image__input--radio');
            for(let i = 0; i < radio.length;i++) { //clears radio selction in favor of upload
                radio[i].checked = false;
            }
@@ -181,7 +170,7 @@ var fileDisplayArea = document.querySelector('.editor__hero__image--preview');
                     
                         var styles = document.getElementById('bpStyles');
                         // console.log(styles.sheet);
-                        styles.sheet.insertRule('.blog__hero-img { background-image: url('+img.src+')}', styles.sheet.cssRules.length);
+                        styles.sheet.insertRule('.blog__header__image { background-image: url('+img.src+')}', styles.sheet.cssRules.length);
                     currentImage = img.src;
                
 				}
@@ -202,10 +191,10 @@ var fileDisplayArea = document.querySelector('.editor__hero__image--preview');
     function tinter() {
             var styles = document.getElementById('bpStyles');
             if(gradient === false) {
-                styles.sheet.insertRule('.blog__hero-img { background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('+currentImage+')}', styles.sheet.cssRules.length);
+                styles.sheet.insertRule('.blog__header__image { background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('+currentImage+')}', styles.sheet.cssRules.length);
                 gradient = true;
             } else {
-                styles.sheet.insertRule('.blog__hero-img { background-image: url('+currentImage+')}', styles.sheet.cssRules.length);       
+                styles.sheet.insertRule('.blog__header__image { background-image: url('+currentImage+')}', styles.sheet.cssRules.length);       
                 gradient = false;
             }
 }
@@ -230,7 +219,7 @@ function move(dir) {
             break;
     }
     console.log(currentStyle.backgroundPositionX + ' and ' + currentStyle.backgroundPositionY);
-    styles.sheet.insertRule('.blog__hero-img { background-position: '+currentStyle.backgroundPositionX+'px '+currentStyle.backgroundPositionY+'px}', styles.sheet.cssRules.length);
+    styles.sheet.insertRule('.blog__header__image { background-position: '+currentStyle.backgroundPositionX+'px '+currentStyle.backgroundPositionY+'px}', styles.sheet.cssRules.length);
 }
 /// change image size
 function size(dir) {
@@ -243,25 +232,16 @@ function size(dir) {
             currentStyle.backgroundSize -= 1;
             break;
         }
-        styles.sheet.insertRule('.blog__hero-img { background-size: '+currentStyle.backgroundSize+'%}', styles.sheet.cssRules.length);
+        styles.sheet.insertRule('.blog__header__image { background-size: '+currentStyle.backgroundSize+'%}', styles.sheet.cssRules.length);
 
     }
-    //////////////// hero image styling /////////////////////
-    //// not implemented
-    function heroEditor () {
-        turnRight = document.querySelector('.turnRight');
-        turnRight.addEventListener('onclick', function() {
-
-        });
-        turnLeft = document.querySelector('.turnLeft');
-
-    }
+  
 
     //////////////////title manipulation///////////////
 
     //// change title position relative to the image
     function moveT(dir) {
-        var title = document.querySelector('.blog__hero-text');
+        var title = document.querySelector('.blog__title');
         var styles = document.getElementById('bpStyles');
 
         switch(dir) {
@@ -280,8 +260,8 @@ function size(dir) {
         }
         console.log('this is the titleStyle settings for top and left: ' + titleStyle.top + titleStyle.left)
         console.log('\n and this is the orignal setting of one: ' + titleSettings.dataset.fonttop);
-        styles.sheet.insertRule('.blog__hero-text { top: '+titleStyle.top+'%}', styles.sheet.cssRules.length);
-        styles.sheet.insertRule('.blog__hero-text { left: '+titleStyle.left+'%}', styles.sheet.cssRules.length);
+        styles.sheet.insertRule('.blog__title { top: '+titleStyle.top+'%}', styles.sheet.cssRules.length);
+        styles.sheet.insertRule('.blog__title { left: '+titleStyle.left+'%}', styles.sheet.cssRules.length);
     }
     //////// change title font size
     function fontManip(effect) {
@@ -295,19 +275,19 @@ function size(dir) {
                 titleStyle.fontSize--;
                 break;
             }
-            styles.sheet.insertRule('.blog__hero-text { font-size: '+titleStyle.fontSize+'em}', styles.sheet.cssRules.length);
+            styles.sheet.insertRule('.blog__title { font-size: '+titleStyle.fontSize+'em}', styles.sheet.cssRules.length);
     }
     ////// change font color
     var colorPicker = document.querySelector('.font__color');
     colorPicker.addEventListener('input', function(e) {
         styles = document.getElementById('bpStyles');
         titleStyle.color = this.value;
-        styles.sheet.insertRule('.blog__hero-text { color: '+titleStyle.color+'}', styles.sheet.cssRules.length);
+        styles.sheet.insertRule('.blog__title { color: '+titleStyle.color+'}', styles.sheet.cssRules.length);
     });
 // preview title
-var title = document.querySelector('.title');
+var title = document.querySelector('.input__title');
 title.addEventListener('keyup', function(e) {
-    document.querySelector('.blog__hero-text').innerHTML = this.value;
+    document.querySelector('.blog__title').innerHTML = this.value;
 });
 
     /// text editor button functions

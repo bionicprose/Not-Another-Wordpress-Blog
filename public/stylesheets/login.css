@@ -1,8 +1,33 @@
 .login {
-    margin: 0 auto;
-    width:500px;
-    font-size: 1.5em;
+   display:flex;
+   flex-flow: column;
 }
+.local__signin {
+  display: grid;
+  grid-template-columns: 25% 75%;
+}
+
+.local__signin__email {
+  grid-column: 1;
+  grid-row:1;
+}
+.local__signing__email__input {
+  grid-column: 2;
+  grid-row: 1;
+  }
+
+  .local__signin__password {
+    grid-column: 1;
+    grid-row:2;
+  }
+  .local__signin__password__input {
+    grid-column: 2;
+    grid-row: 2;
+    }
+  .local__signin__submit {
+    grid-column: 2;
+    grid-row: 3;
+  }
 /* login buttons are from https://codepen.io/davidelrizzo/pen/vEYvyv */
 
 /* Shared */
@@ -40,6 +65,7 @@
   
   /* Facebook */
   .login__btn--facebook {
+    cursor: pointer;
     background-color: #4C69BA;
     background-image: linear-gradient(#4C69BA, #3B55A0);
     /*font-family: "Helvetica neue", Helvetica Neue, Helvetica, Arial, sans-serif;*/
@@ -58,6 +84,7 @@
   
   /* Google */
   .login__btn--google {
+    cursor: pointer;
     /*font-family: "Roboto", Roboto, arial, sans-serif;*/
     background: #DD4B39;
   }

@@ -41,38 +41,34 @@ for(var i = 0; i< submit.length; i++) {
 
 
 // hide/show tables
+/* show user linked accounts, posts, or comments based on what was clicked */
 
-
-function showPosts() {
-    var x = document.querySelector('.blog__table');
-    if(x.style.display === 'block') {
-        x.style.display = 'none';
-    } else {
-        x.style.display = 'block';
+function show(thing) {
+    console.log(thing);
+    switch(thing) {
+        case('id'):
+            document.querySelector('.accounts').classList.toggle('hidden');
+            break;
+        case('posts'):
+            document.querySelector('.blog-posts').classList.toggle('hidden');
+            break;
+        case('comments'):
+            document.querySelector('.comments').classList.toggle('hidden');
+            break;
+        case('users'):
+            document.querySelector('.users').classList.toggle('hidden');
+            break;
+        case('pic'):
+            document.querySelector('.profile-pic__form').classList.toggle('hidden');
+            document.querySelector('.profile__btn').classList.toggle('hidden');
+            break;
+        case('upload'):
+            document.querySelector('.profile-pic__btn--upload').classList.remove('hidden');
+            break;
     }
-    
 }
 
-function showComments() {
-    var x = document.querySelector('.comment__table ');
-    if(x.style.display === 'block') {
-        x.style.display = 'none';
-    } else {
-        x.style.display = 'block';
-    }
-    
-}
 
-
-function showUsers() {
-    var x = document.querySelector('.users');
-    if(x.style.display === 'block') {
-        x.style.display = 'none';
-    } else {
-        x.style.display = 'block';
-    }
-    
-}
 
 // change icons based on hide/show state of tables
 var icon = document.querySelectorAll('.icon');
@@ -85,3 +81,57 @@ for(var i = 0; i < icon.length; i++) {
       this.classList.toggle('fa-minus');
 });
 };
+
+/* this function allows users to pick their profile picture. It will overwrite
+    whatever the current profile pic is */
+
+    function picPicker() {
+        var form = document.createElement('form');
+    }
+
+/* Previews the selected profile picture for upload */
+
+    window.onload = function() {
+        var fileInput = document.querySelector('.pic__input');
+        var fileDisplayArea = document.querySelector('.profile-pic__img');
+        var filename = document.querySelector('.profile-pic__filename');
+        
+        
+                fileInput.addEventListener('change', function(e) {
+                   
+                    var file = fileInput.files[0];
+                    var imageType = /image.*/;
+        
+                    if (file.type.match(imageType)) {
+                        var reader = new FileReader();
+        
+                        reader.onload = function(e) {
+                            // fileDisplayArea.innerHTML = "";
+        
+                            var img = new Image();
+                            img.src = reader.result;
+                            // img.style.maxWidth = '500px';
+        
+                            fileDisplayArea.setAttribute('src', img.src);
+                            filename.innerText = 'file name: ' +file.name +'. file.size: ' + file.size+' bytes.';
+                            
+                            //     var styles = document.getElementById('bpStyles');
+                            //     console.log(styles.sheet);
+                            //     styles.sheet.insertRule('.blog__hero-img { background-image: url('+img.src+')}', styles.sheet.cssRules.length);
+                            // currentImage = img.src;
+                            // let heroDiv = document.querySelector('.blog__hero-img');
+                            // heroDiv.style.backgroundImage = 'url('+img.src+')';
+                            // heroDiv.style.backgroundSize = 'cover';
+                            // heroDiv.style.backgroundRepeat = 'no-repeat';
+        
+                            // fileDisplayArea.appendChild(img);
+                        }
+        
+                        reader.readAsDataURL(file);	
+                    } else {
+                        fileDisplayArea.innerHTML = "File not supported!"
+                    }
+                });
+        
+        
+            }

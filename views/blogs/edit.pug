@@ -4,77 +4,88 @@ extends ../includes/layout-edit.pug
 
 
 block content
-    
-    h1 Edit !{blog.title}
-    div.editor
-        form.editor(action='/blog/'+blog.url+'?_method=PUT' method='POST' enctype='multipart/form-data' onsubmit='return copyContent()')
-            div.editor__img
-                p Upload a new hero image
-                input.editor__img__upload(type='file' name='image')
-                span(onclick='imageSelector()').editor__button__image-selector Select/Upload an Image 
 
-            div.blog__hero-img
-                div.blog__hero-text
-                    |#{blog.title}
-                    
-                    
-            div.editor__img__toolbar
-                div.img__mover
-                    div.move Move Image
-                    div(onclick='move("up")').move--up: i.fas.fa-chevron-up
-                    div(onclick='move("left")').move--left: i.fas.fa-chevron-left
-                    div(onclick='move("right")').move--right: i.fas.fa-chevron-right
-                    div(onclick='move("down")').move--down: i.fas.fa-chevron-down
-                div.img__manip
-                    div.tint(onclick='tinter()') Add/Remove Tint
-                    div(onclick='size("up")').size--up Increase Image Size
-                        i.fas.fa-plus
-                    div(onclick='size("down")').size--down Decrease Image Size
-                        i.fas.fa-minus
-                div.text__manip
-                    |Font Color:
-                    input(type='color' name='color' value='#ffffff' class='font__color')
-        
-                    div(onclick='fontManip("up")').size--up Font Size
-                        i.fas.fa-plus
-                    div(onclick='fontManip("down")').size--down Font Size
-                        i.fas.fa-minus
-                div.title__mover
-                    div.move Move Title
-                    div(onclick='moveT("up")').move--up: i.fas.fa-chevron-up
-                    div(onclick='moveT("left")').move--left: i.fas.fa-chevron-left
-                    div(onclick='moveT("right")').move--righ: i.fas.fa-chevron-right
-                    div(onclick='moveT("down")').move--down: i.fas.fa-chevron-down
-         
+    div.editor
+        h1 Edit !{blog.title}
+        form.editor(action='/blog/'+blog.url+'?_method=PUT' method='POST' enctype='multipart/form-data' onsubmit='return copyContent()')
             div.editor__title
-                p Title
-                input(type='text' name='title' value=blog.title).title
+                h3:label(for='title') Title:
+                input(type='text' id='title' name='title' value=blog.title).input__title
+            div.editor__content
+                h3:label(for='body') Body:
+                 
+                div.editor__textarea(contenteditable='true' id='body' onclick="document.execCommand('defaultParagraphSeparator', false, 'p');")
+                    | !{blog.content}
             div.editor__toolbar
-                a(href='#' data-command='h2') 
-                    |h2
-                i.fa.fa-undo.fa-2x(onclick='edit("undo")')
-                i.fa.fa-redo.fa-2x(onclick='edit("redo")')
-                i.fa.fa-align-left.fa-2x(onclick='edit("justifyLeft")')
-                i.fa.fa-align-right.fa-2x(onclick='edit("justifyRight")')
-                i.fa.fa-align-center.fa-2x(onclick='edit("justifyCenter")')
-                i.fa.fa-bold.fa-2x(onclick='edit("bold")')
-                i.fa.fa-italic.fa-2x(onclick='edit("italic")')
-                i.fa.fa-superscript.fa-2x(onclick='edit("superscript")')
-                i.fa.fa-picture-o.fa-2x(onclick='edit("insertImage")')
-                i.fa.fa-underline.fa-2x(onclick='edit("underline")')
-                i.fa.fa-strikethrough.fa-2x(onclick='edit("strikeThrough")')
-                i.fa.fa-indent.fa-2x(onclick='edit("indent")')
-                i.fa.fa-list.fa-2x(onclick='edit("insertUnorderedList")')
-                i.fa.fa-list-ol.fa-2x(onclick='edit("insertOrderedList")')
-                i.fa.fa-link.fa-2x(onclick="link()")
-            textarea.editor__textarea--hidden(type='html' name='content') 
-            div.editor__textarea(contenteditable='true')
-                p !{blog.content}
+                
+                button.btn--controls.btn--h2(type='button' onclick='bolder()') h2
+                i.fa.fa-undo.fa-3x(onclick='edit("undo")')
+                i.fa.fa-redo.fa-3x(onclick='edit("redo")')
+                i.fa.fa-align-left.fa-3x(onclick='edit("justifyLeft")')
+                i.fa.fa-align-right.fa-3x(onclick='edit("justifyRight")')
+                i.fa.fa-align-center.fa-3x(onclick='edit("justifyCenter")')
+                button:i.fa.fa-bold.fa-3x(onclick='edit("bold")')
+                i.fa.fa-italic.fa-3x(onclick='edit("italic")')
+                i.fa.fa-superscript.fa-3x(onclick='edit("superscript")')
+                i.fa.fa-picture-o.fa-3x(onclick='edit("insertImage")')
+                i.fa.fa-underline.fa-3x(onclick='edit("underline")')
+                i.fa.fa-strikethrough.fa-3x(onclick='edit("strikeThrough")')
+                i.fa.fa-indent.fa-3x(onclick='edit("indent")')
+                i.fa.fa-list.fa-3x(onclick='edit("insertUnorderedList")')
+                i.fa.fa-list-ol.fa-3x(onclick='edit("insertOrderedList")')
+                i.fa.fa-link.fa-3x(onclick="link()")
+            
             div.editor__tags
-                p Tags 
-                input.editor__tags--input(type='text' name='tags' value=tags) 
-                     
-            input(type='text' name='positionX').hidden.blog__hero-img__positionX--hidden
+                label(for='tags') Tags:
+                input.editor__tags--input(id='tags' type='text' name='tags')
+
+
+
+            div.editor__image-selection-controls
+                h3 Select or Upload a Header Image
+                button.btn--controls.btn__image-selector(type='button' onclick='imageSelector("new")') Select Image
+                label.btn--controls.btn__image--upload(for='upload') Upload
+                input.editor__image__input--upload.hidden(type='file' id='upload' name='image')
+                
+            div.blog__header__image
+                div.blog__title
+                    |#{blog.title}        
+            div.editor__image__toolbar
+                
+                div.image__mover
+                    div.mover--header Move Image
+                    button(type='button' onclick='move("up")').move--up.btn--controls: i.fas.fa-chevron-up
+                    button(type='button' onclick='move("left")').move--left.btn--controls: i.fas.fa-chevron-left
+                    button(type='button' onclick='move("right")').move--right.btn--controls: i.fas.fa-chevron-right
+                    button(type='button' onclick='move("down")').move--down.btn--controls: i.fas.fa-chevron-down
+                
+                div.title__mover
+                    div.mover--header Move Title
+                    button(type='button' onclick='moveT("up")').move--up.btn--controls: i.fas.fa-chevron-up
+                    button(type='button' onclick='moveT("left")').move--left.btn--controls: i.fas.fa-chevron-left
+                    button(type='button' onclick='moveT("right")').move--righ.btn--controls: i.fas.fa-chevron-right
+                    button(type='button' onclick='moveT("down")').move--down.btn--controls: i.fas.fa-chevron-down
+                
+                div.image__manip
+                    button.tint.btn--controls(type='button' onclick='tinter()') Tint
+                    div.image-size
+                        div.image-size--up Image Size
+                            i(type='button' onclick='size("up")').icon--controls.size--up.fas.fa-plus
+                        div.image-size--down Image Size
+                            i(type='button' onclick='size("down")').icon--controls.size--down.fas.fa-minus
+                        
+                div.text__manip
+                    div(label for='color') Font Color
+                        input(id='color' type='color' name='color' value=blog.titleSettings.fontColor class='font__color')
+                    div.font-size
+                        div.font-size--up Font Size
+                            i(type='button' onclick='fontManip("up")').icon--controls.size--up.fas.fa-plus
+                        div.font-size--down Font Size
+                            i(type='button' onclick='fontManip("down")').icon--controls.size--down.fas.fa-minus
+                
+
+            textarea.editor__textarea--hidden(type='html' name='content')
+            input.hidden(type='text' name='positionX' class='blog__hero-img__positionX--hidden')
             input(type='text' name='positionY').hidden.blog__hero-img__positionY--hidden
             input(type='text' name='size').hidden.blog__hero-img__size--hidden
             input(type='text' name='gradient').hidden.blog__hero-img__gradient--hidden
@@ -83,8 +94,9 @@ block content
             input(type='text' name='fontTop').hidden.blog__hero-img__fontTop--hidden
             input(type='text' name='fontColor').hidden.blog__hero-img__fontColor--hidden
             input(type='text' name='currentImage').hidden.blog__hero-img__currentImage--hidden
-            button.editor__button__publish(type='submit' name='state' value='publish') Publish
-            button.editor__button__save(type='submit' name='state' value='draft') Save
+            button.btn--general(type='submit' name='state' value='publish') Publish
+            button.btn--general(type='submit' name='state' value='draft') Save
+
     
     //- these are from the blog post itself
     div(class='heroSettings' data-image = blog.heroSettings.heroImg
@@ -103,4 +115,4 @@ block content
     block append footer
     
         script(src='../../javascript/editor.js') 
-        //- script(src='../../javascript/show.js')
+        script(src='../../javascript/global-edit.js')

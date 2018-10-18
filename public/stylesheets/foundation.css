@@ -12,7 +12,9 @@ body {
     font-family: 'IBM Plex Mono', monospace;
     color: #4d4d4d;
 }
-
+.hidden {
+    display: none;
+}
 button {
     min-height: 36px;
     min-width: 36px;
@@ -22,16 +24,22 @@ button::-moz-focus-inner {
 }
 h1 {
     font-family: 'Megrim', cursive;
-    font-size: 3em;
+    font-size: 2em;
+    line-height: 1em;
 }
 
 h2 {
     font-family: 'Megrim', cursive;
-    font-size: 2em;
+    font-size: 1.5em;
+}
+
+h3 {
+    font-family: 'Megrim', cursive;
+    font-size: 1.25em;
 }
 .nav {
     top: 0;
-    margin-bottom: 5%;
+    margin-bottom: 1%;
     
     width:100%;
    
@@ -54,7 +62,7 @@ h2 {
 }
 
 
-.nav__title {
+.nav__title--mini {
     position: relative;
     font-family: 'Megrim', cursive;
     font-weight: bold;
@@ -64,7 +72,26 @@ h2 {
     top:65%;
 
 }
+.nav__title--macro, .nav__subtitle {
+    display: none;
+    /* font-size: 2vw; */
+    position: absolute;
+    
+}
+.nav__title--macro {
+    left: 30%;
+    top:10%;
+    font-size: 2vw
+}
 
+.nav__subtitle {
+    text-align: right;
+    font-size: 1.75vw;
+    line-height: 1em;
+    width: 250px;
+    left: 57%;
+    top: 50%;
+}
  .nav__menu--hamburger {
      
      font-size: 1em;
@@ -78,9 +105,9 @@ h2 {
         right: 15px;
         cursor: pointer;
  }
- .nav__menu--hamburger:hover {
+ /* .nav__menu--hamburger:hover {
      color: rgb(37, 171, 180);
- }
+ } */
 .nav__menu--hamburger:active {
     color: rgb(118, 222, 230);
 }
@@ -161,7 +188,14 @@ h2 {
  }
 .nav__menu {
    
-   
+    font-family: 'megrim', cursive;
+    font-weight: bold;
+    font-size: 1vw;
+    /* display: flex; */
+    flex-flow: row;
+    margin: 1% auto;
+    width: 700px;
+    justify-content: space-between;
   display: none;
     /* grid-gap: 1em; */
    
@@ -207,12 +241,15 @@ h2 {
 }
 .footer__links a {
     
-    margin: 25px;
+    margin: 1%;
 }
 
 .messages__error {
     grid-column: 1/5;
     grid-row: 2;
+    font-family: 'Megrim', cursive;
+    font-weight:bold;
+    margin: 0 auto;
     /* margin: 0 auto; */
     /* width: 400px;
     height: 50px; */
@@ -221,11 +258,100 @@ h2 {
 }
 
 .messages__info {
+    font-family: 'Megrim', cursive;
+    font-weight:bold;
     grid-column: 1/5;
     grid-row: 2;
+    margin:0 auto;
     /* margin: 0 auto; */
     /* width: 400px;
     height: 50px; */
     background-color: rgba(20, 187, 209, 0.973);
     color: rgb(10, 7, 201);
+}
+
+/**** buttons *****/
+
+.btn--general {
+    background-image: linear-gradient(to bottom, white, #bac9d1);
+    font-family: 'Megrim', cursive;
+    font-weight: bold;
+    font-size: 1.35em;
+    cursor: pointer;
+    display: inline-block;
+    
+}
+
+.btn--general:hover {
+    border: 1px solid rgb(37, 171, 180);
+}
+
+.btn--general:active {
+    background-image: linear-gradient(to top, white, #bac9d1);
+    font-size: 1.5em;
+    font-weight: normal;
+}
+
+.btn--controls {
+    font-weight: bold;
+    font-family: 'Megrim', cursive;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 2em;
+    min-height: 36px;
+    min-width: 36px;
+    box-shadow: 1px 3px 1px grey;
+    
+
+}
+
+
+.btn--controls:active {
+    box-shadow: 1px 1px 1px grey;
+    transform: translateY(4px);
+}
+
+.icon--controls {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 2em;
+    min-height: 36px;
+    min-width: 36px;
+    box-shadow: 1px 3px 1px grey;
+    
+
+}
+
+
+.icon--controls:active {
+    box-shadow: 1px 1px 1px grey;
+    transform: translateY(4px);
+}
+
+
+
+/******************************************************/
+/* @media queries. Base starts at 320px screen width */
+/****************************************************/
+
+@media screen and (min-width: 1200px) {
+    .nav__banner { 
+        height:200px;
+        background-image: url(../img/bionicwriter-1900-surrounded.png);
+        background-size:cover;
+        background-position:center;
+
+    }
+    .nav__title--mini, .nav__menu--hamburger {
+        display: none;
+    }
+    .nav__title--macro, .nav__subtitle {
+        display: inline;
+    }
+    .nav__menu {
+     display:flex;
+}
+
 }

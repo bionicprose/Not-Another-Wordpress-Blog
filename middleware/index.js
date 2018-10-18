@@ -171,4 +171,27 @@ middlewareObj.isAdmin = function(req, res, next) {
     });
     }
 };
+
+middlewareObj.isUser = function(req, res, next) {
+    if(!req.isAuthenticated()) {
+        req.flash('error', 'You must be logged in to do that.');
+        res.redirect('/login');
+    } else {
+        User.findById(req.user.id, function(err, foundUser) {
+            if(err || !foundUser) {
+                req.flash('error', 'Sorry, that request could not be completed.');
+                res.redirect('back');
+            } else if(foundUser.id === req.params.user || foundUser.role >= 3) {
+                return next();
+            } else {
+                req.flash('error', 'Sorry, but you do not have permission to do that.');
+                console.log('not user: ' + foundUser.id +' ' + req.params.user);
+                res.redirect('back');
+            }
+            });
+            }
+        };
+    
+    
+
 module.exports = middlewareObj;

@@ -44,22 +44,24 @@ function imageSelector(mode) {
     
     var images = document.querySelector('.imageVar').getAttribute('data-imageVariable');
     var user = document.querySelector('.userVar').getAttribute('data-userVariable');
-    console.log('\n' + images);
+    
+    /* user images are found in the blog route using shelljs and put into a string,
+        the following code cleans up filenames and puts them into an array for use */
+
     images = images.replace(/\[/g, '').replace(/\]/g, '').replace(/\"/g, '');
     var imageArray = images.split(',');
    
 
     var imageDiv = document.createElement('div');
    
-    imageDiv.classList.add('image--selector');
-    imageDiv.style.display = 'grid';
-    imageDiv.style.gridTemplateColumns = '1fr 1fr 1fr 1fr';
-
+    imageDiv.classList.add('editor__image-selector');
+   
   
 
     for(let i = 0; i < imageArray.length; i++) {
         var imageGrid = document.createElement('div');
-        imageGrid.setAttribute('style', 'height: 50px', 'width: 50px');
+        imageGrid.classList.add('editor__image--thumbnail');
+        
 
         if(mode === 'new'){
             var imageSelection = '../bionicUser/' + user +'/'+ imageArray[i];
@@ -67,12 +69,10 @@ function imageSelector(mode) {
             var imageSelection = '../../bionicUser/' + user +'/'+ imageArray[i];
         }
             let img = new Image();
-            // let hero = new Image();
-            // hero.src = imageSelection;
-            // hero.style.maxWidth = '500px';
+           
             img.src = imageSelection;
-            img.style.height = '50px';
-            img.style.width = '50px';
+            img.style.height = '100px';
+            img.style.width = '100px';
             var imageInput = document.createElement('input');
             // var fileDisplayArea = document.querySelector('.editor__hero__image--preview');
             imageInput.setAttribute('type', 'radio');
@@ -82,73 +82,48 @@ function imageSelector(mode) {
             imageInput.setAttribute('name', 'pickedImage');
             }
             imageInput.setAttribute('value',  imageSelection);
-            imageInput.classList.add('image--selection');
+            imageInput.classList.add('editor__image__input--radio');
 
             // sets selection as background iamge for div
             imageInput.addEventListener('change', function(e) {
-                document.querySelector('.editor__img__upload').value = '';
+                document.querySelector('.editor__image__input--upload').value = '';
                 var styles = document.getElementById('bpStyles');
                 console.log(styles.sheet);
-                styles.sheet.insertRule('.blog__hero-img { background-image: url('+this.value+')}', styles.sheet.cssRules.length);
+                
+                styles.sheet.insertRule('.blog__header__image { background-image: url('+this.value+')}', styles.sheet.cssRules.length);
             currentImage = this.value;
             });
             
-            // function(e) {
-                
-                // let heroDiv = document.querySelector('.blog__hero-img');
-                // heroDiv.style.backgroundImage = 'url('+this.value+')';
-                // heroDiv.style.backgroundSize = 'cover';
-                // heroDiv.style.backgroundRepeat = 'no-repeat';
-
-
-
-                // clears upload in favor of radio selection
-                // let upload = document.querySelector('.editor__img__upload');
-                // upload.value = '';
-
-                // if(fileDisplayArea.firstChild) 
-                // fileDisplayArea.removeChild(fileDisplayArea.firstChild);
-
-                // fileDisplayArea.appendChild(hero);
-                // });
+            
             imageGrid.appendChild(img);
             imageGrid.appendChild(imageInput);
             
-            // .innerHTML += '<img src='+imageSelection+' height=50px width=50px><input type="radio" name="pickedImage" value='+imageSelection+' class="image--selection">';
-            
-        // } else {
-            
-        //     imageGrid.innerHTML += '<img src='+imageSelection+' height=50px width=50px><input type="radio" name="blog[pickedImage]" value='+imageSelection+' class="image--selection">';
-        // }
+      
         imageDiv.appendChild(imageGrid);
     }
     
-    // var submitBtn = document.createElement('button').setAttribute('value', 'submit');
-    // imageForm.innerHTML += submitBtn;
-    // imageDiv.appendChild(imageForm);
+   
 
-    var editorImg = document.querySelector('.editor__img');
+    var editorImg = document.querySelector('.editor__image-selection-controls');
     editorImg.insertAdjacentElement('afterend', imageDiv);
 
-    /// toggle image-selector button
-
-    var x = document.querySelector('.editor__button__image-selector');
- 
-        x.style.display = 'none';
-  
 }
 
-// preview uploaded image in hero image
+/************************************** */
+/* preview uploaded image in hero image */
+/************************************* */
 window.onload = function() {
-var fileInput = document.querySelector('.editor__img__upload');
-var fileDisplayArea = document.querySelector('.editor__hero__image--preview');
+var fileInput = document.querySelector('.editor__image__input--upload');
+var fileDisplayArea = document.querySelector('.blog__header__image');
 
 
 		fileInput.addEventListener('change', function(e) {
-           var radio = document.querySelectorAll('.image--selection');
+           var radio = document.querySelectorAll('.editor__image__input--radio');
            for(let i = 0; i < radio.length;i++) { //clears radio selction in favor of upload
                radio[i].checked = false;
            }
+        //    var selector = document.querySelector('.editor__image-selector');
+        //    selector.classList.toggle('hidden');
 			var file = fileInput.files[0];
 			var imageType = /image.*/;
 
@@ -156,23 +131,18 @@ var fileDisplayArea = document.querySelector('.editor__hero__image--preview');
 				var reader = new FileReader();
 
 				reader.onload = function(e) {
-					// fileDisplayArea.innerHTML = "";
+					
 
 					var img = new Image();
                     img.src = reader.result;
-                    // img.style.maxWidth = '500px';
+                    
 
                     
                         var styles = document.getElementById('bpStyles');
                         console.log(styles.sheet);
-                        styles.sheet.insertRule('.blog__hero-img { background-image: url('+img.src+')}', styles.sheet.cssRules.length);
+                        styles.sheet.insertRule('.blog__header__image { background-image: url('+img.src+')}', styles.sheet.cssRules.length);
                     currentImage = img.src;
-                    // let heroDiv = document.querySelector('.blog__hero-img');
-                    // heroDiv.style.backgroundImage = 'url('+img.src+')';
-                    // heroDiv.style.backgroundSize = 'cover';
-                    // heroDiv.style.backgroundRepeat = 'no-repeat';
-
-					// fileDisplayArea.appendChild(img);
+               
 				}
 
 				reader.readAsDataURL(file);	
@@ -191,10 +161,10 @@ var fileDisplayArea = document.querySelector('.editor__hero__image--preview');
     function tinter() {
             var styles = document.getElementById('bpStyles');
             if(gradient === false) {
-                styles.sheet.insertRule('.blog__hero-img { background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('+currentImage+')}', styles.sheet.cssRules.length);
+                styles.sheet.insertRule('.blog__header__image { background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('+currentImage+')}', styles.sheet.cssRules.length);
                 gradient = true;
             } else {
-                styles.sheet.insertRule('.blog__hero-img { background-image: url('+currentImage+')}', styles.sheet.cssRules.length);       
+                styles.sheet.insertRule('.blog__header__image { background-image: url('+currentImage+')}', styles.sheet.cssRules.length);       
                 gradient = false;
             }
 }
@@ -219,7 +189,7 @@ function move(dir) {
             break;
     }
     console.log(currentStyle.backgroundPositionX + ' and ' + currentStyle.backgroundPositionY);
-    styles.sheet.insertRule('.blog__hero-img { background-position: '+currentStyle.backgroundPositionX+'px '+currentStyle.backgroundPositionY+'px}', styles.sheet.cssRules.length);
+    styles.sheet.insertRule('.blog__header__image { background-position: '+currentStyle.backgroundPositionX+'px '+currentStyle.backgroundPositionY+'px}', styles.sheet.cssRules.length);
 }
 
 function size(dir) {
@@ -232,29 +202,14 @@ function size(dir) {
             currentStyle.backgroundSize -= 1;
             break;
         }
-        styles.sheet.insertRule('.blog__hero-img { background-size: '+currentStyle.backgroundSize+'%}', styles.sheet.cssRules.length);
+        styles.sheet.insertRule('.blog__header__image { background-size: '+currentStyle.backgroundSize+'%}', styles.sheet.cssRules.length);
 
     }
-    //////////////// hero image styling /////////////////////
-
-    function heroEditor () {
-        turnRight = document.querySelector('.turnRight');
-        turnRight.addEventListener('onclick', function() {
-
-        });
-        turnLeft = document.querySelector('.turnLeft');
-
-    }
-
-    // function rotate(dir) {
-    //     var heroDiv = document.querySelector('.blog__hero-img');
-    //     heroDiv.classList.add('rotate45');
-    // }
-
+   
     //////////////////title manipulation///////////////
 
     function moveT(dir) {
-        var title = document.querySelector('.blog__hero-text');
+        var title = document.querySelector('.blog__title');
         var styles = document.getElementById('bpStyles');
 
         switch(dir) {
@@ -271,8 +226,8 @@ function size(dir) {
                 titleStyle.left++;
                 break;
         }
-        styles.sheet.insertRule('.blog__hero-text { top: '+titleStyle.top+'%}', styles.sheet.cssRules.length);
-        styles.sheet.insertRule('.blog__hero-text { left: '+titleStyle.left+'%}', styles.sheet.cssRules.length);
+        styles.sheet.insertRule('.blog__title { top: '+titleStyle.top+'%}', styles.sheet.cssRules.length);
+        styles.sheet.insertRule('.blog__title { left: '+titleStyle.left+'%}', styles.sheet.cssRules.length);
     }
 
     function fontManip(effect) {
@@ -285,26 +240,32 @@ function size(dir) {
                 titleStyle.fontSize--;
                 break;
             }
-            styles.sheet.insertRule('.blog__hero-text { font-size: '+titleStyle.fontSize+'em}', styles.sheet.cssRules.length);
+            styles.sheet.insertRule('.blog__title { font-size: '+titleStyle.fontSize+'em}', styles.sheet.cssRules.length);
     }
 
     var colorPicker = document.querySelector('.font__color');
     colorPicker.addEventListener('input', function(e) {
         styles = document.getElementById('bpStyles');
         titleStyle.color = this.value;
-        styles.sheet.insertRule('.blog__hero-text { color: '+titleStyle.color+'}', styles.sheet.cssRules.length);
+        styles.sheet.insertRule('.blog__title { color: '+titleStyle.color+'}', styles.sheet.cssRules.length);
     });
 
     // preview title
-var title = document.querySelector('.title');
+var title = document.querySelector('.input__title');
 title.addEventListener('keyup', function(e) {
-    document.querySelector('.blog__hero-text').innerHTML = this.value;
+    document.querySelector('.blog__title').innerHTML = this.value;
 });
 
-////////////////////////text editor
+/**************************** */
+/*text editor
+/*************************** */
+/**** function called onclick from buttons */
 
 function edit(command) {
-    textarea = document.querySelector('.editor__textarea');
+    var textarea = document.querySelector('.editor__textarea');
+    textarea.designMode = 'On';
+    console.log(document.queryCommandEnabled(command));
+    // textarea.select();
     switch(command) {
         case('bold'):
         document.execCommand('bold', false, null);

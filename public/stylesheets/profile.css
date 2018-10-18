@@ -1,113 +1,147 @@
 
-
 .control-panel {
-    /* padding-top: 10em; */
-    display: grid;
-    grid-template-columns: 20% auto;
-    /* padding: 1em; */
-    grid-gap: 1em;
-    /* align-items: center; */
-    padding-left: 20em;
-    padding-right: 20em;
-    color: #4d4d4d;
-    
-    
+    display:flex;
+    flex-flow:column;
+    margin-left: 2%;
+    margin-right: 2%;
 }
-.control-panel__main {
-    
+.profile__header > h1{
+    /* font-family: 'Megrim', cursive; */
+    font-size: 1.5em;
 }
 
-.blog__table {
-    display: none;
-    /* border-right: 1px solid black; */
-    /* border-bottom: 1px solid-black; */
-    box-shadow: 1px 1px 1px 1px #4d4d4d;
+.control-panel__sidebar{
+    display:flex;
+    flex-flow: column;
 }
-
-
-.table__header > th {
-    color: #4d4d4d;
-    border-bottom: 1px solid #4d4d4d;
-    border-right: 1px solid #4d4d4d;
+.profile-pic {
+    margin: 0 auto;
+}
+.profile-pic__selector {
+    margin: 0 auto;
+}
+.profile-pic > img {
+    height: 200px;
+   
+}
+.profile__btn {
+    background-image: linear-gradient(to bottom, white, #bac9d1);
     font-family: 'Megrim', cursive;
-    font-size: 20px;
-    margin: 5px;
-    padding: 10px;
-}
-
-.table__entry > td {
-    font-size: 15px;
-    padding: 10px;
-}
-.table__entry:nth-child(even) {
-    background-color: #e3e5e8;
-    /* border-right: 1px solid #5c73a5; */
+    font-weight: bold;
+    font-size: 1.35em;
+    cursor: pointer;
+    display: inline-block;
     
 }
 
-
-
-.table__entry:nth-child(odd) {
-    background-color: rgb(183, 201, 204);;
-
+.profile__btn:hover {
+    border: 1px solid rgb(37, 171, 180);
 }
 
-.profile-pic__img {
-    max-width: 200px;
-    /* border: 1px solid red; */
+.profile__btn:active {
+    background-image: linear-gradient(to top, white, #bac9d1);
+    font-size: 1.5em;
+    font-weight: normal;
 }
 
-.comment__table {
-    display: none;
-    box-shadow: 1px 1px 1px 1px #4d4d4d;
+.profile__btn--browse {
+    padding: 2%;
+   border-right:2px solid #8e9394;
+   border-bottom: 2px solid #8e9394;
+   border-left: 2px solid white;
+   border-top: 2px solid white;
 }
-/* .user__table {
-    display: none;
+.profile__btn--browse:hover{
+    outline-style:none;
+}
+
+.profile-pic__buttons > .profile__btn {
+    float:right;
+    margin-right: 4%;
+    margin-bottom: 4%;
+}
+/* .profile-pic__btn--upload {
+    float:right;
+    margin-right: 2%;
 } */
-.users {
+.utility span {
+    float:right;
+    cursor: pointer;
+    margin-right: 1%;
+}
+.accounts {
+    
+}
+.hidden {
     display:none;
 }
-.user__form--hidden {
-    display: none
-}
-.user_table {
-    box-shadow: 1px 1px 1px 1px #4d4d4d;
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-}
-.fa-plus, .fa-minus {
-    float: right;
-}
-.table__user {
-    background-color: #e3e5e8;
-}
-table {
-padding-bottom: 25px;
-}
-.user__form {
-    /* padding-bottom: 25%; */
-    margin-bottom: 20px;
-}
-.user__btn {
-    margin: 10px;
-    padding: 10px;
-    display:inline-block;
-    background-color: #e3e5e8;
-    border: white;
-    box-shadow: 1px 1px 1px 1px #4d4d4d;
+.blog-posts--show span{
+    float:right;
     cursor: pointer;
+    margin-right:1%;
 }
 
-.user__btn:active {
-    background-color: white;
-    border: 1px solid black;
+.comments--show span {
+    float: right;
+    cursor: pointer;
+    margin-right: 1%;
+}
+/* 5 columns plus one for functions */
+.blog__table, .comment__table {
+    display: grid;
+    grid-template-columns: repeat(3, 30%);
+    grid-gap: 2%;
+    grid-row-gap: 5%;
+    margin-left:2%;
+    margin-bottom: 5%;
 }
 
-.profile-pic {
-    background-image: url('../img/blur-purp-2.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    box-shadow: 10px 1px 15px 1px #9392a0;
+.table__header {
+    display:flex;
+    flex-flow: column;
+    background-color: #69838b;
+    font-family: 'Megrim', cursive;
+    color:white;
+    font-weight: bold;
+    font-size: 1.5em;
+    text-align:center;
     
-   
-  }
+}
+.table__data {
+    background-color: rgb(233, 240, 239);
+    color: #4d4d4d;
+    font-family: 'IBM Mono', monospace;
+    font-weight: normal;
+    font-size: 1em;
+    height: 100%;
+    /* margin-top: 1%; */
+}
+.header--1 {
+    grid-column: 1;
+}
+
+.header--2 {
+    grid-column: 2;
+}
+
+.header--3 {
+  display:none;
+}
+
+.header--4 {
+   grid-column: 3;
+}
+
+.header--5 {
+   display: none;
+}
+
+.header--6 {
+   grid-column: 1/4;
+   /* grid-row:2; */
+
+
+}
+.maintenance {
+  padding-bottom: 2%;
+}

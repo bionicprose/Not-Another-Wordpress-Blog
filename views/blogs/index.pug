@@ -10,18 +10,9 @@ block content
         - var count = 0    
         each val in blogs
             if count === 0
-                div(class='heroSettings' data-image = val.heroSettings.heroImg)
-                //-                 data-size = val.heroSettings.size
-                //-                 data-gradient = val.heroSettings.gradient
-                //-                 data-positionx = val.heroSettings.positionX
-                //-                 data-positiony = val.heroSettings.positionY)
-                div(class='titleSettings' data-fontsize = val.titleSettings.fontSize
-                                data-fontcolor = val.titleSettings.fontColor
-                                data-fonttop   = val.titleSettings.fontTop
-                                data-fontleft = val.titleSettings.fontLeft)
                 div.blog__index__post--first
-                    div.blog__image(style='background-image: url('+ val.heroSettings.heroImg +');')
-                        div.blog__title(style='color: '+ val.titleSettings.fontColor+';')
+                    div.blog__header__image(style='background-image: url('+val.heroSettings.heroImg+');background-position: '+val.heroSettings.positionX+'px '+val.heroSettings.positionY+'px; background-size: '+val.heroSettings.size+'%;')
+                        div.blog__title(style='color: '+ val.titleSettings.fontColor+';top: '+val.titleSettings.fontTop+'%;left: '+val.titleSettings.fontLeft+'%;font-size:' +val.titleSettings.fontSize+'em;')
                             a(href='/blog/'+val.url) #{val.title}
                     div.blog__post-date
                         |Posted by #{val.author.username} on #{val.postDate}
@@ -46,12 +37,8 @@ block content
             each val in blogs
                 if x > 0
                     div.blog__index__post 
-                        div(class='titleSettings' data-fontsize = val.titleSettings.fontSize
-                                data-fontcolor = val.titleSettings.fontColor
-                                data-fonttop   = val.titleSettings.fontTop
-                                data-fontleft = val.titleSettings.fontLeft)
-                        div.blog__image(style='background-image: url('+ val.heroSettings.heroImg +');')
-                            div.blog__title(style='color: '+ val.titleSettings.fontColor+';')
+                        div.blog__header__image(style='background-image: url('+val.heroSettings.heroImg+');background-position: '+val.heroSettings.positionX+'px '+val.heroSettings.positionY+'px; background-size: '+val.heroSettings.size+'%;')
+                            div.blog__title(style='color: '+ val.titleSettings.fontColor+';top: '+val.titleSettings.fontTop+'%;left: '+val.titleSettings.fontLeft+'%;font-size:' +val.titleSettings.fontSize+'em;')
                                 a(href='/blog/'+val.url) #{val.title}
                         div.blog__post-date
                             |Posted by #{val.author.username} on #{val.postDate}
@@ -74,5 +61,4 @@ block content
         +sideBar
 
     block append footer
-       
-        script(src='../../javascript/index.js')
+        script(src='../../javascript/global.js')

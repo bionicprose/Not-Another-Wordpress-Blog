@@ -9,74 +9,73 @@ block content
     include ../includes/mixins.pug
     div.bionicProse(data-blogs=blogs)
         div.sidebar--left
-        div.blog
-            div.blog__index__post--first
-                if blog.heroSettings
-                    div.blog__hero-img
-                        div.blog__hero-text
-                            |#{blog.title}
+        div.blog__index__post--first
+            if blog.heroSettings
+                div.blog__header__image(style='background-image: url('+blog.heroSettings.heroImg+');background-position: '+blog.heroSettings.positionX+'px '+blog.heroSettings.positionY+'px; background-size: '+blog.heroSettings.size+'%;')
+                    div.blog__title(style='color: '+ blog.titleSettings.fontColor+';top: '+blog.titleSettings.fontTop+'%;left: '+blog.titleSettings.fontLeft+'%;font-size:' +blog.titleSettings.fontSize+'em;')
+                        |#{blog.title}
                             
-                else
-                    h1= blog.title
-                p Posted by #{blog.author.username} on #{blog.postDate}
-                div.blog__body
-                    p !{blog.content}
-                if blog.tags
-                    div.blog__tags
-                        div.blog__tags--text Tags:
-                        - var z = 0
-                        each tag in blog.tags
-                            if z < (blog.tags.length - 1)
-                                a(href='/blog/tag/'+tag): button.tags__btn  #{tag}
+            else
+                h1= blog.title
+            div.blog__post-date
+                |Posted by #{blog.author.username} on #{blog.postDate}
+            div.blog__body
+                p !{blog.content}
+            if blog.tags
+                div.blog__tags
+                    div.blog__tags__text Tags:
+                    - var z = 0
+                    each tag in blog.tags
+                        if z < (blog.tags.length - 1)
+                            a(href='/blog/tag/'+tag): button.tags__btn  #{tag}
 
-                            else 
-                                a(href='/blog/tag/'+tag): button.tags__btn  #{tag}
-                        - z++
-                div.social__buttons
-                    <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-size="large" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
-                    a.twitter-share-button(href="https://twitter.com/intent/tweet" data-size="large") Share on Twitter</a>
-                    <script src="//platform.linkedin.com/in.js" type="text/javascript"> lang: en_US</script>
-                        <script type="IN/Share"></script>
+                        else 
+                            a(href='/blog/tag/'+tag): button.tags__btn  #{tag}
+                    - z++
+            div.social
+                <div class="fb-share-button social__btn" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-size="large" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+                a.social__btn.twitter-share-button(href="https://twitter.com/intent/tweet" data-size="large") Share on Twitter</a>
+                <script src="//platform.linkedin.com/in.js" type="text/javascript"> lang: en_US</script>
+                    <script type="IN/Share"></script>
                     
-                div.blog__edit
-                    if(currentUser && blog.author.id == currentUser.id)
-                        a(href='/blog/'+blog.url+'/edit'): button.comments__btn Edit post
-                        form(method='POST' action='/blog/'+blog.url+'?_method=DELETE')
-                            button.comments__btn Delete post
+            div.blog__edit
+                if(currentUser && blog.author.id == currentUser.id)
+                    a(href='/blog/'+blog.url+'/edit'): button.comments__btn Edit post
+                    form(method='POST' action='/blog/'+blog.url+'?_method=DELETE')
+                        button.comments__btn Delete post
                 
-                div.comments#comments
-                    h2 Reader Comments
-                    button.comments__btn.comments__btn--add(onclick='reply(null, \''+blog.url+'\')') Add Comment
-                    if comments
-                        each val in comments
-                            if(!val.originalPost)
-                                div.comments__grid(id='comment'+val._id)
-                                    div.comments__entry__author
-                                        div.comments__entry__author--pic
-                                            img(src=val.author.pic)
-                                        div.comments__entry__author--name
-                                            |#{val.author.username}
-                                        div.comments__entry__postDate
-                                            p posted on !{val.postDate}
-                                        if val.editDate
-                                            div.comments__entry__editDate
-                                                p last edited on !{val.editDate}
-                                    div.comments__entry__body
-                                        div.comments__content
-                                            p #{val.content}
-                                    div.comments__buttons
-                                        if(currentUser && val.author.id == currentUser.id && val.editable === true)   
-                                            a(href='/blog/'+blog.url+'/comments/'+val._id+'/edit'): button.comments__btn Edit
-                                            form(method='POST' action='/blog/'+blog.url+'/comments/'+val._id+'?_method=DELETE')
-                                                button.comments__btn Delete
-                                        if(val.editable === true)
-                                            button(onclick='reply(\''+ val._id+'\', \''+blog.url+'\')').comments__btn reply 
+            div.comments#comments
+                div.comments__header
+                    |Reader Comments
+                div.comments__add
+                    button.comments__btn.comments__btn--add(onclick='reply(null, \''+blog.url+'\')') Add Your Comment
+                if comments
+                    each val in comments
+                        if(!val.originalPost)
+                            div.comments__entry(id='comment'+val._id)
+                                div.comments__entry__author
+                                    div.comments__entry__author--pic
+                                        img(src=val.author.pic)
+                                    div.comments__entry__author--name
+                                        |#{val.author.username}
+                                    div.comments__entry__postDate
+                                        p posted on !{val.postDate}
+                                    if val.editDate
+                                        div.comments__entry__editDate
+                                            p last edited on !{val.editDate}
+                                div.comments__entry__body
+                                    div.comments__content
+                                        p #{val.content}
+                                div.comments__buttons
+                                    if(currentUser && val.author.id == currentUser.id && val.editable === true)   
+                                        a(href='/blog/'+blog.url+'/comments/'+val._id+'/edit'): button.comments__btn Edit
+                                        form(method='POST' action='/blog/'+blog.url+'/comments/'+val._id+'?_method=DELETE')
+                                            button.comments__btn Delete
+                                    if(val.editable === true)
+                                        button(onclick='reply(\''+ val._id+'\', \''+blog.url+'\')').comments__btn reply 
                                             //- a(href='/blog/'+blog.url+'/comments/'+val._id+'/reply'): button.blog__comment__btn--add Reply
-                                if val.replies
-                                    
-                                    //- != console.log(comments)
-
-                                    +printReplies(val)                 
+                            if val.replies
+                                +printReplies(val)                 
                                 //- +printReplies(reply, comments)
             if(blog.heroSettings)            
                 div(class='heroSettings' data-image = blog.heroSettings.heroImg
@@ -84,7 +83,7 @@ block content
                                         data-gradient = blog.heroSettings.gradient
                                         data-positionx = blog.heroSettings.positionX
                                         data-positiony = blog.heroSettings.positionY)
-            div(class='titleSettings' data-fontsize = blog.titleSettings.fontSize
+                div(class='titleSettings' data-fontsize = blog.titleSettings.fontSize
                                     data-fontcolor = blog.titleSettings.fontColor
                                     data-fonttop   = blog.titleSettings.fontTop
                                     data-fontleft = blog.titleSettings.fontLeft)
@@ -93,3 +92,4 @@ block content
     block append footer
        
         script(src='../../javascript/show.js')
+        script(src='../../javascript/global.js')

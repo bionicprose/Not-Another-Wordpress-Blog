@@ -40,7 +40,7 @@ router.post('/blog/:url/comments', middleware.isLoggedIn, function(req, res) {
                 var username = req.user.local.name;
             }
             console.log('req.user.local.name: ' + req.user.local.name);
-            var newComment = {'content': req.body.content, 'author': {'id': req.user._id}, 'author.username' : username, 'author.pic' : req.user.pic[0], 'blogPost': {'id': foundBlog._id}, 'blogPost.title': foundBlog.title, 'postDate': date};
+            var newComment = {'content': req.body.content, 'author': {'id': req.user._id}, 'author.username' : username, 'author.pic' : req.user.pic, 'blogPost': {'id': foundBlog._id}, 'blogPost.url': foundBlog.url, 'blogPost.title' : foundBlog.title, 'postDate': date};
             Comment.create(newComment, function(err, comment) {
                 if(err) {
                     console.log(err);

@@ -1,6 +1,6 @@
 mixin printReplies(comment)
     each reply in comment.replies
-        div.reply__grid(id='comment'+reply._id)
+        div.reply__entry(id='comment'+reply._id)
             
             div.comments__entry__author
                 div.comments__entry__author--pic

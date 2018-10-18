@@ -13,7 +13,7 @@ var express = require('express'),
     //                      {name: 'avatar', maxCount: 1});
 // config from Jesse Lewis @ https://medium.com/@Moonstrasse/how-to-make-a-basic-html-form-file-upload-using-multer-in-an-express-node-js-app-16dac2476610
     const multerConfig = {
-        limites: { fieldSize: 25 * 1024 * 1024},
+        limits: { fieldSize: 25 * 1024 * 1024},
         storage: multer.diskStorage({
 
             destination: function(req, file, next) {
@@ -51,8 +51,12 @@ app.use(methodOverride('_method'));
 
 router.get('/blog/new', middleware.isBlogger, function(req, res) {
     // get images in users directory for use in picking blog header and or inserting into content
+    if(req.user) {
     let images = shell.ls('/home/zac/webdev/bionicprose/public/bionicUser/' + req.user.id);
-    res.render('blogs/new', {title: 'New Blog Post on Bionic Prose', images: images, user: req.user});
+    res.render('blogs/new', {title: 'New Blog Post on Bionic Prose', images: images, user: req.user});}
+    else {
+        res.render('blogs/new', {title: 'New Blog Post on Bionic Prose'});
+    }
 });
 
 
