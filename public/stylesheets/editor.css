@@ -70,21 +70,24 @@
 
 .btn--image-selector {
     margin-bottom: 2%;
+
 }
 .editor__image-selector-controls {
     margin-bottom: 4%;
 }
 .editor__image-selector {
+    height: 100px;
    overflow:auto;
    white-space:nowrap;
    background: rgb(207, 238, 238);
+   padding:10px;
 }
 
 .editor__image--thumbnail {
     height: 100px;
     width: 120px;
-    margin-bottom: 5%;
-    
+
+    display:inline-block;
 }
 
 .editor__image__input--radio {
@@ -175,4 +178,17 @@
 
 .font-size--down {
     margin-top: 20%;
+}
+
+
+/******************************************/
+/*  @media queries                        */
+/*****************************************/
+
+@media screen and (min-width: 700px) {
+    .editor {
+        min-width: 700px;
+        max-width: 700px;
+        margin: 0 auto;
+    }
 }

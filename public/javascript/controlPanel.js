@@ -1,21 +1,26 @@
 // controlPannel.js
 
 ///Edit user tables
+function edit(user) {
+    var entries = document.querySelectorAll('.user'+user);
+    for(let i = 0; i < entries.length; i++) {
+        entries[i].setAttribute('contenteditable', 'true');
+        entries[i].style.backgroundColor = '#e5c100';
+    }
+}
 
-var edit = document.querySelectorAll('.edit');
-for(var i = 0; i< edit.length; i++) {
-    edit[i].addEventListener('click', function() {
-        var userId = 'user' + this.getAttribute('data-userId');
-        var table = document.getElementById(userId);
-        table.setAttribute('contenteditable', 'true');
-        table.style.display = 'inline-block';
-        table.execCommand('insertHTML', false, '');
-    });
-};
 
 // take content from edited tables and put it in a hidden form onsubmit
+function updateUser(userId) {
+    document.getElementById('lUsername--hidden' + userId).value = document.getElementById('lUsername' + userId).innerText.replace('<br>', '');
+    document.getElementById('lEmail--hidden' + userId).value = document.getElementById('lEmail' + userId).innerText.replace('<br>', '');
+    document.getElementById('lName--hidden' + userId).value = document.getElementById('lName' + userId).innerText.replace('<br>', '');
+    document.getElementById('lPic--hidden' + userId).value = document.getElementById('lPic' + userId).innerText.replace('<br>', '');
+    document.getElementById('role--hidden' + userId).value = document.getElementById('role' + userId).innerText.replace('<br>', '');
+    return true;
+}
 
-var submit = document.querySelectorAll('.submit');
+/* var submit = document.querySelectorAll('.submit');
 for(var i = 0; i< submit.length; i++) {
     submit[i].addEventListener('click', function() {
         var userId = this.getAttribute('data-userId');
@@ -39,7 +44,7 @@ for(var i = 0; i< submit.length; i++) {
     });
 };
 
-
+*/
 // hide/show tables
 /* show user linked accounts, posts, or comments based on what was clicked */
 

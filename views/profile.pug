@@ -3,14 +3,15 @@ extends includes/layout-profile.pug
 
 
 block content
-    div.profile__header
-        if user.username
-            h1 Profile Page for #{user.username}
-        else 
-            h1 Profile Page for #{user.local.name}
+    
         
        
     div.control-panel
+        div.profile__header
+            if user.username
+                h1 Profile Page for #{user.username}
+            else 
+                h1 Profile Page for #{user.local.name}
         div.control-panel__sidebar
             div.profile-pic
                 img(src=user.pic).profile-pic__img

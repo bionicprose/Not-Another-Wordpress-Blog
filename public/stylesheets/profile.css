@@ -86,16 +86,30 @@
     cursor: pointer;
     margin-right: 1%;
 }
+.users--show span {
+    float:right;
+    cursor: pointer;
+    margin-right: 1%;
+}
 /* 5 columns plus one for functions */
-.blog__table, .comment__table {
+.blog__table, .comment__table, .user__table {
     display: grid;
     grid-template-columns: repeat(3, 30%);
     grid-gap: 2%;
     grid-row-gap: 5%;
     margin-left:2%;
-    margin-bottom: 5%;
+    margin-bottom: 10%;
+    font-size: 1em;
+    word-wrap:break-word;
 }
 
+.table__user {
+    display:flex;
+    flex-flow:row;
+    background-color: rgb(212, 225, 238);
+    margin-bottom: 4%;
+    padding: 1%;
+}
 .table__header {
     display:flex;
     flex-flow: column;
@@ -143,5 +157,62 @@
 
 }
 .maintenance {
-  padding-bottom: 2%;
+  padding-bottom: 4%;
+  height: 100%;
+  width:100%;
+  /* display: inline-flex;
+  flex-flow:row;
+  justify-items: space-between; */
+  
+}
+
+
+
+/************************************************/
+/*  @media queries                              */
+/**********************************************/
+
+@media screen and (min-width:700px) {
+    .blog__table, .comment__table, .user__table {
+        grid-template-columns: repeat(4, 20%);
+    }
+    .header--3 {
+        display: block;
+        grid-column:3;
+        grid-row: 1;
+    }
+    .header--4 {
+        grid-column: 4;
+    }
+    .header--6 {
+        grid-column: 1/5;
+    }
+}
+@media screen and (min-width:1000px) {
+    .blog__table, .comment__table {
+        grid-template-columns: repeat(5, 18%);
+    }
+    .header--5 {
+        display:block;
+        grid-column: 5;
+    }
+    .header--6 {
+        grid-column: 1/6;
+    }
+    .control-panel {
+        display:block;
+        margin: 0 auto;
+        max-width: 1000px;
+    }
+}
+
+/**************************/
+/* login                  */
+/*************************/
+
+@media screen and (min-width:400px) {
+    .login {
+        max-width: 400px;
+        margin: 5% auto;
+    }
 }

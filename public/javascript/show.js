@@ -2,6 +2,11 @@
 /* this function adds a comment/reply input on the blog post */
 
 function reply(comment, blog) {
+    if(document.getElementById('reply__form')) {
+        var origReply = document.getElementById('reply__form');
+        origReply.remove();
+        return;
+    }
     console.log('reply clicked: ' +comment);
     var reply = document.createElement('div');
     reply.innerText = 'Add your comments:';
@@ -26,6 +31,7 @@ function reply(comment, blog) {
     form.appendChild(textArea);
     form.appendChild(submit);
     reply.appendChild(form);
+    reply.id = 'reply__form';
     if(comment !== null) {
         document.querySelector('div#comment'+comment+' div.comments__entry__body').insertAdjacentElement('beforeend', reply);
     } else {

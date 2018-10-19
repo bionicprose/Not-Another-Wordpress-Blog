@@ -82,7 +82,9 @@ function copyContent() {
 
 function imageSelector() {
     console.log('clicked!');
-    
+    if(document.querySelector('.editor__image-selector')) {
+        return;
+    }
     var images = document.querySelector('.imageVar').getAttribute('data-imageVariable');
     var user = document.querySelector('.userVar').getAttribute('data-userVariable');
     console.log('\n' + images);

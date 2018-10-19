@@ -100,18 +100,31 @@ router.put('/user/:user', middleware.isUser, multer(multerConfig).single('profil
             req.flash('error', 'There was a problem loading that user.');
             res.redirect('back');
         } else {
-            var oldPic = foundUser.pic.split('/');
-            shell.rm('/home/zac/webdev/bionicprose/public/bionicUser/'+foundUser._id+'/'+oldPic[3]);
-            User.findByIdAndUpdate(req.params.user, {'pic': '../bionicUser/'+req.user.id+'/'+ res.req.file.filename}, function(err, updatedUser){
-        if(err || !updatedUser) {
-            req.flash('error', 'Sorry, that user could not be updated.');
-            res.redirect('back');
-        } else {
-            req.flash('notify', 'You have updated ' + updatedUser.name + '.');
-            res.redirect('back');
-        }
-    });
-}
+            if(res.req.file) {
+                var oldPic = foundUser.pic.split('/');
+                shell.rm('/home/zac/webdev/bionicprose/public/bionicUser/'+foundUser._id+'/'+oldPic[3]);
+                User.findByIdAndUpdate(req.params.user, {'pic': '../bionicUser/'+req.user.id+'/'+ res.req.file.filename}, function(err, updatedUser){
+            if(err || !updatedUser) {
+                req.flash('error', 'Sorry, that user could not be updated.');
+                res.redirect('back');
+            } else {
+                req.flash('info', 'You have updated ' + updatedUser.name + '.');
+                res.redirect('back');
+            }
+                });
+            } else {
+                User.findByIdAndUpdate(req.params.user, {'local.name': req.body.name, 'local.email': req.body.email, 'local.username': req.body.username, 'role': req.body.role }, function(err, updatedUser){
+                    if(err || !updatedUser) {
+                        req.flash('error', 'Sorry, that user could not be updated. ' + err)
+                        console.log(err);
+                        res.redirect('back');
+                    } else {
+                        req.flash('info', 'You have updated' +updatedUser.username + '.');
+                        res.redirect('back');
+                    }
+                    });
+                }
+            }
     });
 });
 

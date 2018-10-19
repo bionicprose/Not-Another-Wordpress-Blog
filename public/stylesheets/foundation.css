@@ -293,6 +293,7 @@ h3 {
 }
 
 .btn--controls {
+    text-align: center;
     font-weight: bold;
     font-family: 'Megrim', cursive;
     background-color: transparent;

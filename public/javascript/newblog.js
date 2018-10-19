@@ -12,7 +12,7 @@ var currentStyle = {
     backgroundPositionY: 0,
     backgroundSize: 100
 };
-
+document.querySelector('.blog__header__image').style.border = '1px solid grey';
 function copyContent() {
     console.log('running copyContent');
     document.querySelector('.editor__textarea--hidden').value = document.querySelector('.editor__textarea').innerHTML;
@@ -41,7 +41,9 @@ function copyContent() {
 
 function imageSelector(mode) {
     console.log('clicked!');
-    
+    if(document.querySelector('.editor__image-selector')) {
+        return;
+    }
     var images = document.querySelector('.imageVar').getAttribute('data-imageVariable');
     var user = document.querySelector('.userVar').getAttribute('data-userVariable');
     

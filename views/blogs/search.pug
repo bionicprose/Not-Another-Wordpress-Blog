@@ -2,12 +2,13 @@ extends ../includes/layout.pug
 
 block content
     
-    div.bionicProse(data-blogs=blogs) 
-        div.search__terms
-            h1 Search results for:        
-                each term in searchTerms
-                    span.term #{term + ' '}
-        div.searchResults
+    div.bionicProse(data-blogs=blogs)
+        div.searchResults 
+            div.search__terms
+                h1 Search results for:        
+                    each term in searchTerms
+                        span.term #{term + ' '}
+        
             each val in blog
                 div.blog__index__post 
                     div.blog__header__image(style='background-image: url('+val.heroSettings.heroImg+');background-position-x: '+val.heroSettings.positionX+'px '+val.heroSettings.positionY+'px; background-size: '+val.heroSettings.size+'%;')
@@ -21,6 +22,6 @@ block content
         +sideBar
     block append footer
        
-        script(src='../../javascript/search.js')
+    
         script(src='../../javascript/global.js')
             

@@ -2,10 +2,11 @@ extends ../includes/layout-edit.pug
 
 block content
     div.bionicProse(data-blogs=blogs)
-        div.search__terms
-            h1 Blog posts tagged with: 
-                span.term #{tag}
-        div.searchResults   
+        
+        div.searchResults 
+            div.search__terms
+                h1 Blog posts tagged with: 
+                    span.term #{tag}  
             each val in foundBlogs
                 div.blog__index__post 
                     div.blog__header__image(style='background-image: url(../'+val.heroSettings.heroImg+');background-position: '+val.heroSettings.positionX+'px '+val.heroSettings.positionY+'px; background-size: '+val.heroSettings.size+'%;')
@@ -21,4 +22,5 @@ block content
     //- div(class='userVar' data-userVariable = user.id)
     block append footer
         script(src='../../../../javascript/global-edit.js')
+
 
