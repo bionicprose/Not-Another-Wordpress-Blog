@@ -37,7 +37,7 @@ block content
             
             div.editor__tags
                 label(for='tags') Tags:
-                input.editor__tags--input(id='tags' type='text' name='tags')
+                input.editor__tags--input(id='tags' type='text' name='tags' value=tags)
 
 
 
@@ -46,10 +46,10 @@ block content
                 button.btn--controls.btn__image-selector(type='button' onclick='imageSelector("new")') Select Image
                 label.btn--controls.btn__image--upload(for='upload') Upload
                 input.editor__image__input--upload.hidden(type='file' id='upload' name='image')
-                
-            div.blog__header__image
-                div.blog__title
-                    |#{blog.title}        
+            div.blog__header__image__frame   
+                div.blog__header__image
+                    div.blog__title
+                        |#{blog.title}        
             div.editor__image__toolbar
                 
                 div.image__mover
@@ -85,25 +85,25 @@ block content
                 
 
             textarea.editor__textarea--hidden(type='html' name='content')
-            input.hidden(type='text' name='positionX' class='blog__hero-img__positionX--hidden')
-            input(type='text' name='positionY').hidden.blog__hero-img__positionY--hidden
-            input(type='text' name='size').hidden.blog__hero-img__size--hidden
-            input(type='text' name='gradient').hidden.blog__hero-img__gradient--hidden
-            input(type='text' name='fontSize').hidden.blog__hero-img__fontSize--hidden
-            input(type='text' name='fontLeft').hidden.blog__hero-img__fontLeft--hidden
-            input(type='text' name='fontTop').hidden.blog__hero-img__fontTop--hidden
-            input(type='text' name='fontColor').hidden.blog__hero-img__fontColor--hidden
-            input(type='text' name='currentImage').hidden.blog__hero-img__currentImage--hidden
+            input.hidden(type='text' name='positionX' class='blog__header-img__positionX--hidden')
+            input(type='text' name='positionY').hidden.blog__header-img__positionY--hidden
+            input(type='text' name='size').hidden.blog__header-img__size--hidden
+            input(type='text' name='gradient').hidden.blog__header-img__gradient--hidden
+            input(type='text' name='fontSize').hidden.blog__title__fontSize--hidden
+            input(type='text' name='fontLeft').hidden.blog__title__fontLeft--hidden
+            input(type='text' name='fontTop').hidden.blog__title__fontTop--hidden
+            input(type='text' name='fontColor').hidden.blog__title__fontColor--hidden
+            input(type='text' name='currentImage').hidden.blog__header-img__currentImage--hidden
             button.btn--general(type='submit' name='state' value='publish') Publish
             button.btn--general(type='submit' name='state' value='draft') Save
 
     
     //- these are from the blog post itself
-    div(class='heroSettings' data-image = blog.heroSettings.heroImg
-                             data-size = blog.heroSettings.size
-                             data-gradient = blog.heroSettings.gradient
-                             data-positionx = blog.heroSettings.positionX
-                             data-positiony = blog.heroSettings.positionY)
+    div(class='headerSettings' data-image = blog.headerSettings.headerImg
+                             data-size = blog.headerSettings.size
+                             data-gradient = blog.headerSettings.gradient
+                             data-positionx = blog.headerSettings.positionX
+                             data-positiony = blog.headerSettings.positionY)
     div(class='titleSettings' data-fontsize = blog.titleSettings.fontSize
                               data-fontcolor = blog.titleSettings.fontColor
                               data-fonttop   = blog.titleSettings.fontTop

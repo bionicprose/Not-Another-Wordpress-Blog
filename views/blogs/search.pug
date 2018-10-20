@@ -11,7 +11,7 @@ block content
         
             each val in blog
                 div.blog__index__post 
-                    div.blog__header__image(style='background-image: url('+val.heroSettings.heroImg+');background-position-x: '+val.heroSettings.positionX+'px '+val.heroSettings.positionY+'px; background-size: '+val.heroSettings.size+'%;')
+                    div.blog__header__image(style='background-image: url('+val.headerSettings.headerImg+');background-position: '+val.headerSettings.positionX+'px '+val.headerSettings.positionY+'px; padding-top: '+val.headerSettings.size+'%;')
                         div.blog__title(style='color: '+ val.titleSettings.fontColor+';top: '+val.titleSettings.fontTop+'%;left: '+val.titleSettings.fontLeft+'%;font-size:' +val.titleSettings.fontSize+'em;')
                             a(href='/blog/'+val.url) #{val.title}
                     p Posted by #{val.author.username} on #{val.postDate}

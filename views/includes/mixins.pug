@@ -26,13 +26,10 @@ mixin printReplies(comment)
                         button.comments__btn Delete
                 if(reply.editable === true)
                     button(onclick='reply(\''+ reply._id+'\', \''+blog.url+'\')').comments__btn reply 
-                    //- a(href='/blog/'+blog.url+'/comments/'+reply._id+'/reply'): button.blog__comment__btn--add Reply
+              
         if reply.replies
             +printReplies(reply)
-                //- if val.replyTo === reply.replyTo
-                //-     +printReplies(val, comments)
-            //- if reply.replies
-            //-         return: +printReplies(reply.replies)        
+         
 mixin sideBar
     div.sidebar
         +search

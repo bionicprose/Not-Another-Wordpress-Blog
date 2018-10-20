@@ -153,70 +153,9 @@ block content
                                         
 
 
-                                //-     th Local Email
-                                //-     th Local Name
-                                //-     th Local Profile Pic
-                            
-                                //- tr.table__entry
-                                //-     td(id = 'lUsername' + y) 
-                                //-     input(type='text' name='user[local][username]').user__form--hidden(id = 'lUsername--hidden' + y)
-                                //-     td(id = 'lEmail' + y) #{val.local.email}#{val.local.pic}
-                                //-     input(type='text' name='user[local][email]').user__form--hidden(id = 'lEmail--hidden' + y)
-                                //-     td(id = 'lName' + y) #{value=val.local.name}
-                                //-     input(type='text' name='user[local][name]').user__form--hidden(id = 'lName--hidden' + y)
-                                //-     td(id = 'lPic' + y) #{val.local.pic}
-                                //-     input(type='text' name='user[local][pic]').user__form--hidden(id = 'lPic--hidden' + y)
-                                
-                                //- tr.table__header
-                                //-     th Facebook Id
-                                //-     th Facebook Email
-                                //-     th Facebook Name
-                                //-     th Facebook Profile Pic
-
-                                //- tr.table__entry
-                                //-     td(id = 'fId' + y) #{val.facebook.id}
-                                //-     input(type='text' name='user[facebook][id]').user__form--hidden(id = 'fId--hidden' + y)
-                                //-     td(id = 'fEmail' + y) #{val.facebook.email}
-                                //-     input(type='text' name='user[facebook][email]').user__form--hidden(id = 'fEmail--hidden' + y)
-                                //-     td(id = 'fName' + y) #{val.facebook.name}
-                                //-     input(type='text' name='user[facebook][name]').user__form--hidden(id = 'fName--hidden' + y)
-                                //-     td(id = 'fPic' + y) #{val.facebook.pic}
-                                //-     input(type='text' name='user[facebook][pic]').user__form--hidden(id = 'fPic--hidden' + y)
-                                    
-                                //- tr.table__header
-                                //-     th Google Id
-                                //-     th Google Email
-                                //-     th Google Name
-                                //-     th Google Profile Pic
-                                    
-                                //- tr.table__entry
-                                //-     td(id = 'gId' + y) #{val.google.username}
-                                //-     input(type='text' name='user[google][id]').user__form--hidden(id = 'gId--hidden' + y)
-                                //-     td(id = 'gEmail' + y) #{val.google.email}
-                                //-     input(type='text' name='user[google][email]').user__form--hidden(id = 'gEmail--hidden' + y)
-                                //-     td(id = 'gName' + y) #{value=val.google.name}
-                                //-     input(type='text' name='user[google][name]').user__form--hidden(id = 'gName--hidden' + y)
-                                //-     td(id = 'gPic' + y) #{val.local.pic}
-                                //-     input(type='text' name='user[google][pic]').user__form--hidden(id = 'gPic--hidden' + y)
-                                //- tr.table__header
-                                //-     th User ID
-                                //-     th Role 
-
-                                //- tr.table__entry
-                                //-     td(id = 'id' + y) #{val.id}
-                                //-     input(type='text' name='user[id]')(id='id--hidden' + y).user__form--hidden
-                                //-     td(id='role' + y) #{val.role}
-                                //-     input(type='text' name='user[role]')(id='role--hidden' + y).user__form--hidden 
-                         
-
-                                    
-                        
-                            //- td: a(href='/blog/' + val.blogPost.title + '/comments/'+val._id+'/edit'): button Edit
-                            //-     form(method='POST' action='/blog/'+val.blogPost.title+'/comments/'+val._id+'?_method=DELETE')
-                            //-         button.blog__edit__btn--delete Delete
+                               
                                 
 
        
 
     script(src='../../javascript/controlPanel.js') 
-    //- include ../includes/footer.pug

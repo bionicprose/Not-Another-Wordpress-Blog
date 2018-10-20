@@ -10,8 +10,8 @@ block content
     div.bionicProse(data-blogs=blogs)
         div.sidebar--left
         div.blog__index__post--first
-            if blog.heroSettings
-                div.blog__header__image(style='background-image: url('+blog.heroSettings.heroImg+');background-position: '+blog.heroSettings.positionX+'px '+blog.heroSettings.positionY+'px; background-size: '+blog.heroSettings.size+'%;')
+            if blog.headerSettings
+                div.blog__header__image(style='background-image: url('+blog.headerSettings.headerImg+');background-position: '+blog.headerSettings.positionX+'px '+blog.headerSettings.positionY+'px; padding-top: '+blog.headerSettings.size+'%;')
                     div.blog__title(style='color: '+ blog.titleSettings.fontColor+';top: '+blog.titleSettings.fontTop+'%;left: '+blog.titleSettings.fontLeft+'%;font-size:' +blog.titleSettings.fontSize+'em;')
                         |#{blog.title}
                             
@@ -73,22 +73,13 @@ block content
                                             button.comments__btn Delete
                                     if(val.editable === true)
                                         button(onclick='reply(\''+ val._id+'\', \''+blog.url+'\')').comments__btn reply 
-                                            //- a(href='/blog/'+blog.url+'/comments/'+val._id+'/reply'): button.blog__comment__btn--add Reply
+                                    
                             if val.replies
                                 +printReplies(val)                 
-                                //- +printReplies(reply, comments)
-            if(blog.heroSettings)            
-                div(class='heroSettings' data-image = blog.heroSettings.heroImg
-                                        data-size = blog.heroSettings.size
-                                        data-gradient = blog.heroSettings.gradient
-                                        data-positionx = blog.heroSettings.positionX
-                                        data-positiony = blog.heroSettings.positionY)
-                div(class='titleSettings' data-fontsize = blog.titleSettings.fontSize
-                                    data-fontcolor = blog.titleSettings.fontColor
-                                    data-fonttop   = blog.titleSettings.fontTop
-                                    data-fontleft = blog.titleSettings.fontLeft)
+                              
+        
         +sideBar
-    //- div(class='userVar' data-userVariable = user.id)
+   
     block append footer
        
         script(src='../../javascript/show.js')

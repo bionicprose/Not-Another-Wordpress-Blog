@@ -3,8 +3,6 @@ var express         = require('express'),
     passport        = require('passport'),
     bodyParser      = require('body-parser'),
     mongoose        = require('mongoose'),
-    // User            = require('./models/user.js'),
-    // Blog            = require('./models/blog.js'),
     passport        = require('passport'),
     morgan          = require('morgan'),
     cookieParser    = require('cookie-parser'),
@@ -47,22 +45,16 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-// app.use(back());
+
 
 app.use(function(req, res, next) {
     res.locals.currentUser  = req.user;
-    // res.locals.messages     = req.flash();
-    // res.locals.error        = req.flash('error');
-    // res.locals.success      = req.flash('success');
+
     next();
 });
 
 
-// passport.use(new LocalStrategy(User.authenticate()));
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
 
-// require('./routes/indexRoutes.js')(app, passport);
 
 app.use(blogRoutes);
 app.use(commentRoutes);

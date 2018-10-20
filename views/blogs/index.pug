@@ -11,23 +11,14 @@ block content
         each val in blogs
             if count === 0
                 div.blog__index__post--first
-                    div.blog__header__image(style='background-image: url('+val.heroSettings.heroImg+');background-position: '+val.heroSettings.positionX+'px '+val.heroSettings.positionY+'px; background-size: '+val.heroSettings.size+'%;')
+                    div.blog__header__image(style='background-image: url('+val.headerSettings.headerImg+');background-position: '+val.headerSettings.positionX+'px '+val.headerSettings.positionY+'px; padding-top: '+val.headerSettings.size+'%;')
                         div.blog__title(style='color: '+ val.titleSettings.fontColor+';top: '+val.titleSettings.fontTop+'%;left: '+val.titleSettings.fontLeft+'%;font-size:' +val.titleSettings.fontSize+'em;')
                             a(href='/blog/'+val.url) #{val.title}
                     div.blog__post-date
                         |Posted by #{val.author.username} on #{val.postDate}
                     div.blog__body
                         |!{val.content}
-                    //- if val.tags
-                    //-     div.blog__tags
-                    //-         div.blog__tags--text Tags:
-                    //-         - var z = 0
-                    //-         each tag in val.tags
-                    //-             if z < (val.tags.length - 1)
-                    //-                 a(href='/blog/tag/'+tag): button.tags__btn  #{tag}
-                    //-             else 
-                    //-                 a(href='/blog/tag/'+tag): button.tags__btn  #{tag}
-                    //-             - z++
+                  
                     div.comments__link
                         a(href='/blog/'+val.url+'#comments'): button.read-more__btn See Reader Comments
             -count++
@@ -37,7 +28,7 @@ block content
             each val in blogs
                 if x > 0
                     div.blog__index__post 
-                        div.blog__header__image(style='background-image: url('+val.heroSettings.heroImg+');background-position: '+val.heroSettings.positionX+'px '+val.heroSettings.positionY+'px; background-size: '+val.heroSettings.size+'%;')
+                        div.blog__header__image(style='background-image: url('+val.headerSettings.headerImg+');background-position: '+val.headerSettings.positionX+'px '+val.headerSettings.positionY+'px; padding-top: '+val.headerSettings.size+'%;')
                             div.blog__title(style='color: '+ val.titleSettings.fontColor+';top: '+val.titleSettings.fontTop+'%;left: '+val.titleSettings.fontLeft+'%;font-size:' +val.titleSettings.fontSize+'em;')
                                 a(href='/blog/'+val.url) #{val.title}
                         div.blog__post-date
@@ -46,17 +37,7 @@ block content
                             |!{val.content}
                             div.blog__read-more
                                 a(role='button' href='/blog/'+val.url): button.read-more__btn read more
-                            //- if val.tags
-                            //-     div.blog__tags
-                            //-         div.blog__tags--text Tags:
-                            //-         - var z = 0
-                            //-         each tag in val.tags
-                            //-             if z < (val.tags.length - 1)
-                            //-                 div.blog__tags--box: a(href='/blog/tag/'+tag) #{tag}
-
-                            //-             else 
-                            //-                 div.blog__tags--box: a(href='/blog/tag/'+tag) #{tag}
-                            //-             - z++
+                      
                 - x++       
         +sideBar
 

@@ -51,10 +51,10 @@ block content
                 button.btn--controls.btn__image-selector(type='button' onclick='imageSelector("new")') Select Image
                 label.btn--controls.btn__image--upload(for='upload') Upload
                 input.editor__image__input--upload.hidden(type='file' id='upload' name='image')
-                
-            div.blog__header__image
-                div.blog__title
-                    |Your title        
+            div.blog__header__image__frame    
+                div.blog__header__image
+                    div.blog__title
+                        |Your title        
             div.editor__image__toolbar
                 
                 div.image__mover
@@ -90,14 +90,14 @@ block content
                 
 
             textarea.editor__textarea--hidden(type='html' name='content')
-            input.hidden(type='text' name='positionX' class='blog__hero-img__positionX--hidden')
-            input(type='text' name='positionY').hidden.blog__hero-img__positionY--hidden
-            input(type='text' name='size').hidden.blog__hero-img__size--hidden
-            input(type='text' name='gradient').hidden.blog__hero-img__gradient--hidden
-            input(type='text' name='fontSize').hidden.blog__hero-img__fontSize--hidden
-            input(type='text' name='fontLeft').hidden.blog__hero-img__fontLeft--hidden
-            input(type='text' name='fontTop').hidden.blog__hero-img__fontTop--hidden
-            input(type='text' name='fontColor').hidden.blog__hero-img__fontColor--hidden
+            input.hidden(type='text' name='positionX' class='blog__header-img__positionX--hidden')
+            input(type='text' name='positionY').hidden.blog__header-img__positionY--hidden
+            input(type='text' name='size').hidden.blog__header-img__size--hidden
+            input(type='text' name='gradient').hidden.blog__header-img__gradient--hidden
+            input(type='text' name='fontSize').hidden.blog__title__fontSize--hidden
+            input(type='text' name='fontLeft').hidden.blog__title__fontLeft--hidden
+            input(type='text' name='fontTop').hidden.blog__title__fontTop--hidden
+            input(type='text' name='fontColor').hidden.blog__title__fontColor--hidden
             button.btn--general(type='submit' name='state' value='publish') Publish
             button.btn--general(type='submit' name='state' value='draft') Save
 

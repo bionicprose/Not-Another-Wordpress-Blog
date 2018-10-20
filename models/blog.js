@@ -26,8 +26,8 @@ var blogSchema = new mongoose.Schema({
     editDate:[{type: String}],
     content: {type: String, required: true},
     tags: [{type: String}],
-    heroSettings: {
-        heroImg: {type: String},
+    headerSettings: {
+        headerImg: {type: String},
         size: {type: Number},
         positionX: {type: Number},
         positionY: {type: Number},
