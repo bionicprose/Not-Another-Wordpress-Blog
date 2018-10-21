@@ -186,7 +186,9 @@ function(req, token, refreshToken, profile, done) {
             console.log('no req.user');
         User.findOne({'facebook.id' : profile.id}, function(err, user) {
             if(err)
+                req.flash('error', 'Sorry, that action could not be completed. Reason: ' +err);
                 return done(err);
+                
 
             if(user) {
                 return done(null, user);
@@ -349,7 +351,7 @@ function(req, token, refreshToken, profile, done) {
                     newUser.local.name     = profile.displayName;
                     newUser.local.email    = profile.emails[0].value; // pull the first email
                     newUser.google.email   = profile.emails[0].value;
-                    newUser.pic            = '/img/olilver.jpg';
+                    newUser.pic            = '/img/oliver.jpg';
                     shell.mkdir('-p', '/home/zac/webdev/bionicprose/public/bionicUser/' + newUser.id);
                     newUser.save(function(err) {
                         if(err)

@@ -23,10 +23,10 @@ block content
                         a(href='/blog/'+val.url+'#comments'): button.read-more__btn See Reader Comments
             -count++
                                         
-        div.blog__index     
+        div.blog__index#blog--1     
             - var x = 0 
             each val in blogs
-                if x > 0
+                if x > 0 && x < 7
                     div.blog__index__post 
                         div.blog__header__image(style='background-image: url('+val.headerSettings.headerImg+');background-position: '+val.headerSettings.positionX+'px '+val.headerSettings.positionY+'px; padding-top: '+val.headerSettings.size+'%;')
                             div.blog__title(style='color: '+ val.titleSettings.fontColor+';top: '+val.titleSettings.fontTop+'%;left: '+val.titleSettings.fontLeft+'%;font-size:' +val.titleSettings.fontSize+'em;')
@@ -37,9 +37,15 @@ block content
                             |!{val.content}
                             div.blog__read-more
                                 a(role='button' href='/blog/'+val.url): button.read-more__btn read more
-                      
-                - x++       
+                - x++  
+        if blogs.length > 6
+            div.pageTurner
+                button(onclick='showMore(7)' type='button').btn--controls.more-blogs__btn show more blog posts                        
         +sideBar
+        
+
+
+        
 
     block append footer
         script(src='../../javascript/global.js')

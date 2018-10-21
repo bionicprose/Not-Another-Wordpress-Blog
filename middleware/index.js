@@ -1,7 +1,9 @@
 var Blog = require("../models/blog.js"),
   User = require("../models/user.js"),
   Comment = require("../models/comments.js"),
-  validator = require("validator");
+  validator = require("validator"),
+  multer    = require('multer');
+  
 
 var middlewareObj = {};
 
@@ -182,5 +184,67 @@ middlewareObj.isUser = function(req, res, next) {
     });
   }
 };
+
+//multer config from Jesse Lewis @ https://medium.com/@Moonstrasse/how-to-make-a-basic-html-form-file-upload-using-multer-in-an-express-node-js-app-16dac2476610
+
+ middlewareObj.multerConfig = {
+    limits: { fieldSize: 25 * 1024 * 1024 },
+    storage: multer.diskStorage({
+      destination: function(req, file, next) {
+        next(
+          null,
+          "/home/zac/webdev/bionicprose/public/bionicUser/" + req.user.id
+        );
+      },
+  
+      filename: function(req, file, next) {
+        const ext = file.mimetype.split("/")[1];
+        next(null, file.fieldname + "-" + Date.now() + "." + ext);
+      }
+    }),
+  
+    fileFilter: function(req, file, next) {
+      if (!file) {
+        next();
+      }
+      const image = file.mimetype.startsWith("image/");
+      if (image) {
+        next(null, true);
+      } else {
+        req.flash("error", "You cannot upload an image of that file type.");
+        return next();
+      }
+    }
+  };
+  middlewareObj.multerProfilePic = {
+    limits: { fieldSize: 25 * 1024 * 1024,
+            fileSize: 50000 },
+    storage: multer.diskStorage({
+      destination: function(req, file, next) {
+        next(
+          null,
+          "/home/zac/webdev/bionicprose/public/bionicUser/" + req.user.id
+        );
+      },
+  
+      filename: function(req, file, next) {
+        const ext = file.mimetype.split("/")[1];
+        next(null, file.fieldname + "-" + Date.now() + "." + ext);
+      }
+    }),
+  
+    fileFilter: function(req, file, next) {
+      if (!file) {
+        next();
+      }
+      const image = file.mimetype.startsWith("image/");
+      if (image) {
+        next(null, true);
+      } else {
+        req.flash("error", "You cannot upload an image of that file type.");
+        return next();
+      }
+    }
+  };
 
 module.exports = middlewareObj;

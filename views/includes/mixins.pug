@@ -59,3 +59,23 @@ mixin search
             label(for='search')
             input(type='text' id='search' name='search')
             button(type='submit').search__button.btn--controls search
+
+mixin moreBlogs(index)
+    div.blog__index     
+            - var x = 0 
+            each val in blogs
+                if x > index  && x < index + 6
+                    div.blog__index__post 
+                        div.blog__header__image(style='background-image: url('+val.headerSettings.headerImg+');background-position: '+val.headerSettings.positionX+'px '+val.headerSettings.positionY+'px; padding-top: '+val.headerSettings.size+'%;')
+                            div.blog__title(style='color: '+ val.titleSettings.fontColor+';top: '+val.titleSettings.fontTop+'%;left: '+val.titleSettings.fontLeft+'%;font-size:' +val.titleSettings.fontSize+'em;')
+                                a(href='/blog/'+val.url) #{val.title}
+                        div.blog__post-date
+                            |Posted by #{val.author.username} on #{val.postDate}
+                        div.blog__body__preview
+                            |!{val.content}
+                            div.blog__read-more
+                                a(role='button' href='/blog/'+val.url): button.read-more__btn read more
+            - x++  
+    if blogs.length > index +6
+        div.pageTurner
+            button(onclick='showMore('+index+6+')' type='button').btn--controls.more-blogs__btn show more blog posts                        

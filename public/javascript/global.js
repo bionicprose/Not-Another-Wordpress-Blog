@@ -265,3 +265,79 @@ function menu(action) {
     document.body.scroll = "yes";
   }
 }
+/* adds up to 6 more blog posts on button click */
+
+function showMore(index) {
+  var bionicProse = document.querySelector('.bionicProse');
+  var blogs = JSON.parse(bionicProse.dataset.blogs);
+  for(let i = index;  i < index + 6 && i < blogs.length; i++) {
+    var blogIndexPost = document.createElement('div');
+    blogIndexPost.classList.add('blog__index__post');
+
+    var blogHeaderImage = document.createElement('div');
+    blogHeaderImage.classList.add('blog__header__image');
+    console.log('the index is ' + index);
+    if(blogs[i].headerSettings !== undefined) {
+      blogHeaderImage.style.backgroundImage = 'url('+blogs[i].headerSettings.headerImg+')';
+    
+      blogHeaderImage.style.backgroundPosition = blogs[i].headerSettings.positionX+'px '+blogs[i].headerSettings.positionY + 'px';
+    blogHeaderImage.style.paddingTop = blogs[i].headerSettings.size+'%';
+    }
+    var blogTitle = document.createElement('div');
+    blogTitle.classList.add('blog__title');
+    blogTitle.style.color = blogs[i].titleSettings.fontColor;
+    blogTitle.style.top = blogs[i].titleSettings.fontTop+'%';
+    blogTitle.style.left = blogs[i].titleSettings.fontLeft+'%';
+    blogTitle.style.fontSize = blogs[i].titleSettings.fontSize+'em';
+
+    var titleLink = document.createElement('a');
+    titleLink.setAttribute('href','/blog/'+blogs[i].url);
+    titleLink.innerText = blogs[i].title;
+
+    blogTitle.appendChild(titleLink);
+    blogHeaderImage.appendChild(blogTitle);
+
+        
+    var postDate = document.createElement('div');
+    postDate.classList.add('blog__post-date');
+    postDate.innerText = 'Posted by' + blogs[i].author.username+' on ' + blogs[i].postDate;
+
+    
+    var bodyPreview = document.createElement('div');
+    bodyPreview.classList.add('blog__body__preview');
+    bodyPreview.innerHTML = blogs[i].content;
+
+    
+    var readMore = document.createElement('div');
+    readMore.classList.add('blog__read-more');
+    var readMoreLink = document.createElement('a');
+    readMoreLink.setAttribute('href', '/blog/'+blogs[i].url);
+    readMoreLink.setAttribute('role','button');
+    var readMoreButton = document.createElement('button');
+    readMoreButton.classList.add('read-more__btn');
+    readMoreButton.innerText = 'read more';
+    
+    readMoreLink.appendChild(readMoreButton);
+    readMore.appendChild(readMoreLink);
+    bodyPreview.appendChild(readMore);
+
+
+
+    blogIndexPost.appendChild(blogHeaderImage);
+    blogIndexPost.appendChild(postDate);
+    blogIndexPost.appendChild(bodyPreview);
+  
+
+    var blogIndex = document.querySelector('.blog__index');
+    blogIndex.insertAdjacentElement('beforeend', blogIndexPost);
+    
+  }
+  if(blogs.length > index+6 ) {
+    index = Number(index) + 6;
+    var moreBlogsButton = document.querySelector('.more-blogs__btn');
+    moreBlogsButton.setAttribute('onclick', 'showMore('+index+')');
+  } else {
+    var pageTurner = document.querySelector('.pageTurner');
+    pageTurner.remove();
+  }
+}

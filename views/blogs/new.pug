@@ -20,7 +20,10 @@ block content
                 h3:label(for='body') Body:
                  
                 div.editor__textarea(contenteditable='true' id='body' onclick="document.execCommand('defaultParagraphSeparator', false, 'p');")
-                    | some content
+                    if savedContent
+                        |!{savedContent.content}
+                    else
+                        |some content
             div.editor__toolbar
                 
                 button.btn--controls.btn--h2(type='button' onclick='bolder()') h2

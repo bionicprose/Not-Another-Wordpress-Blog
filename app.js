@@ -16,7 +16,7 @@ var express         = require('express'),
 
 var commentRoutes   = require('./routes/commentRoutes'),
     blogRoutes      = require('./routes/blogRoutes'),
-    indexRoutes     = require('./routes/indexRoutes'),
+    // indexRoutes     = require('./routes/indexRoutes');
     userRoutes      = require('./routes/userRoutes');
 
 mongoose.connect('mongodb://localhost:27017/bionicprose', {useNewUrlParser: true});
@@ -58,7 +58,7 @@ app.use(function(req, res, next) {
 
 app.use(blogRoutes);
 app.use(commentRoutes);
-app.use(indexRoutes);
+// app.use(indexRoutes);
 app.use(userRoutes);
 
 //// error handling

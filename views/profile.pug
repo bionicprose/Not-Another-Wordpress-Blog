@@ -23,23 +23,14 @@ block content
                         div.profile-pic__buttons
                             label.profile__btn--browse.profile__btn(for='profilePic' onclick='show("upload")') browse
                             input.pic__input.hidden(type='file' id='profilePic' name='profilePic')
-                            button.profile__btn.profile-pic__btn--upload.hidden Upload
+                            button(type='submit').profile__btn.profile-pic__btn--upload.hidden Upload
                             div.profile-pic__filename
 
             div.utility
-                h2 Your Identity
-                    span(onclick='show("id")').icon.fas.fa-plus
-                div.accounts.hidden
-                    if(!user.local.username)
-                        p:a(href='/local-connect'): button.user-data__button--local-connect Set a Username and Password
-                    if !user.facebook.id
-                        p: a(href='/connect/facebook'): button.utility__btn__facebook--connect Connect Your Facebook Account
-                    if !user.twitter.id
-                        p: a(href='/connect/twitter'): button.utility__btn__twitter--connect Connect Your Twitter Account
-                    if !user.google.id
-                        p: a(href='/connect/google'): button.utility__btn__google--connect Connect Your Google Account
-                    p Write a Blog Post
-                        a(href='/blog/new'): span.icon.fas.fa-plus
+                h2 If you have any comments or blog posts, you can review them below:
+                    if(user.role > 1)
+                        p Write a Blog Post
+                            a(href='/blog/new'): span.icon.fas.fa-plus
                
             if(blogs.length > 0)
                 div.blog-posts--show 
@@ -100,7 +91,7 @@ block content
                                 div.table__header.header--3
                                     |reply to
                                     div.table__data
-                                        |#{val.replyTo}
+                                        |#{val.originalPost.author}
                                 div.table__header.header--4
                                     |post date
                                     div.table__data
@@ -117,7 +108,7 @@ block content
                                                 button.profile__btn Delete
                                         
                                 
-            a(href='/logout') Logout             
+                     
 
     block foot append   
         script(src='../../javascript/controlPanel.js')

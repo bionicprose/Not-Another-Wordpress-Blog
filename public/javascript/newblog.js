@@ -348,7 +348,7 @@ function edit(command) {
       break;
 
     case "insertImage":
-      document.execCommand("insertImage", false, null);
+      document.execCommand("insertImage", true);
       break;
 
     case "underline":

@@ -1,138 +1,123 @@
 var express = require("express"),
+  passport = require('passport'),
   router = express.Router({ mergeParams: true }),
-  User = require("../models/user"),
   middleware = require("../middleware"),
-  Blog = require("../models/blog"),
-  Comment = require("../models/comments"),
   multer = require("multer"),
-  shell = require("shelljs");
+  user__controller = require('../controllers/userController');
 
-// config from Jesse Lewis @ https://medium.com/@Moonstrasse/how-to-make-a-basic-html-form-file-upload-using-multer-in-an-express-node-js-app-16dac2476610
-const multerConfig = {
-  limits: {
-    fieldSize: 25 * 1024 * 1024,
-    fileSize: 50000
-  },
-  storage: multer.diskStorage({
-    destination: function(req, file, next) {
-      next(
-        null,
-        "/home/zac/webdev/bionicprose/public/bionicUser/" + req.user.id
-      );
-    },
 
-    filename: function(req, file, next) {
-      console.log(file);
-      const ext = file.mimetype.split("/")[1];
-      next(null, file.fieldname + "-" + Date.now() + "." + ext);
-    }
-  }),
-
-  fileFilter: function(req, file, next) {
-    if (!file) {
-      next();
-    }
-    const image = file.mimetype.startsWith("image/");
-    if (image) {
-      console.log("photo uploaded");
-      next(null, true);
-    } else {
-      console.log("file not support");
-
-      req.flash("error", "You cannot upload an image of that file type.");
-      return next();
-    }
-  }
-};
 
 ////////////////////////
 // admin route
 ///////////////////////
-router.get("/admin", middleware.isAdmin, function(req, res) {
-  Blog.find({}, function(err, foundBlog) {
-    User.find({}, function(err, foundUser) {
-      Comment.find({}, function(err, foundComment) {
-        res.render("admin/admin", {
-          blogs: foundBlog,
-          users: foundUser,
-          comments: foundComment
-        });
-      });
-    });
-  });
-});
+router.get("/admin", middleware.isAdmin, user__controller.user__admin__get);
 
 //////////////////////////////
 // Edit and Update User Routes
 //////////////////////////////
 
-router.get("/user/:user/edit", function(req, res) {
-  res.render("user/edit");
-});
+
 
 router.put(
   "/user/:user",
   middleware.isUser,
-  multer(multerConfig).single("profilePic"),
-  function(req, res) {
-    User.findOne({ _id: req.params.user }, function(err, foundUser) {
-      if (err || !foundUser) {
-        req.flash("error", "There was a problem loading that user.");
-        res.redirect("back");
-      } else {
-        if (res.req.file) {
-          var oldPic = foundUser.pic.split("/");
-          shell.rm(
-            "/home/zac/webdev/bionicprose/public/bionicUser/" +
-              foundUser._id +
-              "/" +
-              oldPic[3]
-          );
-          User.findByIdAndUpdate(
-            req.params.user,
-            {
-              pic: "../bionicUser/" + req.user.id + "/" + res.req.file.filename
-            },
-            function(err, updatedUser) {
-              if (err || !updatedUser) {
-                req.flash("error", "Sorry, that user could not be updated.");
-                res.redirect("back");
-              } else {
-                req.flash("info", "You have updated " + updatedUser.name + ".");
-                res.redirect("back");
-              }
-            }
-          );
-        } else {
-          User.findByIdAndUpdate(
-            req.params.user,
-            {
-              "local.name": req.body.name,
-              "local.email": req.body.email,
-              "local.username": req.body.username,
-              role: req.body.role
-            },
-            function(err, updatedUser) {
-              if (err || !updatedUser) {
-                req.flash(
-                  "error",
-                  "Sorry, that user could not be updated. " + err
-                );
-                console.log(err);
-                res.redirect("back");
-              } else {
-                req.flash(
-                  "info",
-                  "You have updated" + updatedUser.username + "."
-                );
-                res.redirect("back");
-              }
-            }
-          );
-        }
-      }
-    });
-  }
+  multer(middleware.multerProfilePic).single("profilePic"), user__controller.user__update__post);
+  
+
+
+/////////////////////
+// Login
+////////////////////
+
+router.get("/login", function(req, res, next) {
+  console.log(req.flash("loginMessage"));
+  res.render("login", { message: req.flash("loginMessage") });
+});
+
+router.post(
+  "/login",
+  passport.authenticate("local-login", {
+    successRedirect: "/profile",
+    failureRedirect: "/login",
+    failureFlash: true
+  })
 );
 
+/////////////////
+// signup
+////////////////
+
+router.get("/signup", function(req, res) {
+  res.render("signup", { message: req.flash("signupMessage") });
+});
+
+router.post(
+  "/signup",
+  middleware.validify,
+  passport.authenticate("local-signup", {
+    successRedirect: "/profile",
+    failureRedirect: "/signup",
+    failureFlash: true
+  })
+);
+
+///////////////////////
+// Profile section
+//////////////////////
+
+router.get("/profile", middleware.isLoggedIn, user__controller.user__profile__get);
+
+//////////////////////
+// Facebook Routes
+/////////////////////
+
+router.get(
+  "/auth/facebook",
+  passport.authenticate("facebook", {
+    scope: ["public_profile", "email"]
+  })
+);
+
+router.get("/auth/facebook/callback", user__controller.user__facebook__callback);
+
+////////////////////////
+// Twitter Routes for future use
+///////////////////////
+
+// app.get('/auth/twitter', passport.authenticate('twitter'));
+
+// app.get('auth/twitter/callback',
+//     passport.authenticate('twitter', {
+//         successRedirect: '/profile',
+//         failureRedirect: '/'
+
+// }));
+
+///////////////////
+// Google Routes
+////////////////////
+
+
+
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+router.get("/auth/google/callback", user__controller.user__google__callback);
+
+
+
+///////////////////////
+// Logout
+////////////////////////
+
+router.get("/logout", user__controller.user__logout);
+
+
+  /************ */
+/* catchall   */
+
+router.get('/*', user__controller.user__catchall);
 module.exports = router;
+// module.exports = app;
