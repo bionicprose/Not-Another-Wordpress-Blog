@@ -350,6 +350,8 @@
   position: relative;
   display: inline-block;
   cursor: pointer;
+  text-align:left;
+ 
 }
 .tooltip .tooltiptext {
   visibility: hidden;
@@ -363,6 +365,7 @@
   top: 100%;
   left: 50%;
   margin-left: -60px;
+  padding-left: 15px;
 }
 
 .tooltip:hover .tooltiptext {
