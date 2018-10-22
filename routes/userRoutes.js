@@ -43,23 +43,7 @@ router.post(
   })
 );
 
-/////////////////
-// signup
-////////////////
 
-router.get("/signup", function(req, res) {
-  res.render("signup", { message: req.flash("signupMessage") });
-});
-
-router.post(
-  "/signup",
-  middleware.validify,
-  passport.authenticate("local-signup", {
-    successRedirect: "/profile",
-    failureRedirect: "/signup",
-    failureFlash: true
-  })
-);
 
 ///////////////////////
 // Profile section

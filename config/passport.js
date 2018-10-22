@@ -185,10 +185,10 @@ function(req, token, refreshToken, profile, done) {
         if(!req.user){
             console.log('no req.user');
         User.findOne({'facebook.id' : profile.id}, function(err, user) {
-            if(err)
+            if(err){
                 req.flash('error', 'Sorry, that action could not be completed. Reason: ' +err);
                 return done(err);
-                
+            }
 
             if(user) {
                 return done(null, user);

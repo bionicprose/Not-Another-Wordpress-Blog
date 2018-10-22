@@ -579,6 +579,7 @@
   }
 }
 @media screen and (min-width: 1500px) {
+  
   .comment__edit {
     margin: 0 0 0 35%;
   }
@@ -588,15 +589,20 @@
   .blog__index {
     grid-template-columns: repeat(3, 350px);
   }
+  .pageTurner {
+    margin-left:12%;
+  }
 }
 
 @media screen and (min-width: 1800px) {
   .blog__index {
     margin-left: 25%;
   }
+
 }
 @media screen and (min-width: 1900px) {
   .searchResults {
     grid-template-columns: repeat(4, 350px);
   }
+ 
 }

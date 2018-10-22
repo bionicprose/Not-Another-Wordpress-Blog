@@ -157,9 +157,12 @@ exports.user__profile__get = function(req, res) {
 
 exports.user__logout = function(req, res) {
     req.logout();
-    req.session = null;
+    
     req.flash("info", "You have logged out!");
-    res.redirect("/");
+   
+      res.redirect("/");
+    
+   
     
   };
   //catchall GET route

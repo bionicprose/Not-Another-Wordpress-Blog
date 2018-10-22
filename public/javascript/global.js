@@ -49,7 +49,7 @@ function setDate(year, month) {
     var newDate = new Date(year, month);
   }
   var today = newDate.toDateString().split(" ");
-  console.log("today is " + today);
+
   var cal = {
     day: {
       num: today[2],
@@ -84,12 +84,10 @@ function setDate(year, month) {
       break;
   }
   if (year === null) {
-    console.log(
-      "first day calculated" + cal.year + cal.month.num + cal.day.num
-    );
+
     cal.firstDay = newDate.getDay(cal.year, cal.month.num);
   } else {
-    console.log("new first day " + year + month + today[2]);
+  
     cal.firstDay = newDate.getDay(year, month);
   }
   return cal;
@@ -101,13 +99,13 @@ buildWeek(currentDate, remove);
 
 function buildWeek(date, remove) {
   if (remove === true) {
-    console.log("remove is true");
+   
     var theadX = document.querySelector(".calendar__header");
     theadX.remove();
     var tbodyX = document.querySelector(".calendar__body");
     tbodyX.remove();
   }
-  console.log("first day is " + date.firstDay);
+
   var tHead = document.createElement("thead");
   tHead.classList.add("calendar__header");
 
@@ -142,6 +140,7 @@ function buildWeek(date, remove) {
   weekHead.appendChild(fri);
   weekHead.appendChild(sat);
   tHead.appendChild(weekHead);
+  var dateCalc = new Date();
 
   var tbody = document.createElement("tbody");
   tbody.classList.add("calendar__body");
@@ -165,20 +164,19 @@ function buildWeek(date, remove) {
 
           var tipText = document.createElement("span");
           tipText.classList.add("tooltiptext");
-          console.log(typeof blogIndex);
           for (let i = 0; i < blogIndex.length; i++) {
             if (x < 10) {
               var dayDigit = "0" + x;
             } else {
               var dayDigit = x;
             }
-
+            var tempDate = dateCalc.toDateString(blogIndex[i].postDate)
             if (
-              blogIndex[i].postDate.includes(
+              tempDate.includes(
                 date.month.name + " " + dayDigit + " " + date.year
               )
             ) {
-              console.log(blogIndex[i].title);
+              
               day.style.fontWeight = "bold";
               day.style.color = " #dfdfdf";
               day.style.background = "#0066ed";
