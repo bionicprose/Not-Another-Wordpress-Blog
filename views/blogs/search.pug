@@ -2,16 +2,17 @@ extends ../includes/layout.pug
 
 block content
     
-    div.bionicProse(data-blogs=blogs) 
-        div.search__terms
-            h2 Search results for:        
-            each term in searchTerms
-                |#{term + ' '}
-        div.searchResults
+    div.bionicProse(data-blogs=blogs)
+        div.searchResults 
+            div.search__terms
+                h1 Search results for:        
+                    each term in searchTerms
+                        span.term #{term + ' '}
+        
             each val in blog
                 div.blog__index__post 
-                    div.blog__image(style='background-image: url('+ val.heroSettings.heroImg +');')
-                        div.blog__text__title(style='color: '+ val.titleSettings.fontColor+';')
+                    div.blog__header__image(style='background-image: url('+val.headerSettings.headerImg+');background-position: '+val.headerSettings.positionX+'px '+val.headerSettings.positionY+'px; padding-top: '+val.headerSettings.size+'%;')
+                        div.blog__title(style='color: '+ val.titleSettings.fontColor+';top: '+val.titleSettings.fontTop+'%;left: '+val.titleSettings.fontLeft+'%;font-size:' +val.titleSettings.fontSize+'em;')
                             a(href='/blog/'+val.url) #{val.title}
                     p Posted by #{val.author.username} on #{val.postDate}
                     div.blog__body__preview
@@ -21,5 +22,6 @@ block content
         +sideBar
     block append footer
        
-        script(src='../../javascript/search.js')
+    
+        script(src='../../javascript/global.js')
             

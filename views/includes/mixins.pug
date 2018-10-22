@@ -1,6 +1,6 @@
 mixin printReplies(comment)
     each reply in comment.replies
-        div.reply__grid(id='comment'+reply._id)
+        div.reply__entry(id='comment'+reply._id)
             
             div.comments__entry__author
                 div.comments__entry__author--pic
@@ -26,32 +26,29 @@ mixin printReplies(comment)
                         button.comments__btn Delete
                 if(reply.editable === true)
                     button(onclick='reply(\''+ reply._id+'\', \''+blog.url+'\')').comments__btn reply 
-                    //- a(href='/blog/'+blog.url+'/comments/'+reply._id+'/reply'): button.blog__comment__btn--add Reply
+              
         if reply.replies
             +printReplies(reply)
-                //- if val.replyTo === reply.replyTo
-                //-     +printReplies(val, comments)
-            //- if reply.replies
-            //-         return: +printReplies(reply.replies)        
+         
 mixin sideBar
     div.sidebar
         +search
         div.calendar
             |Previous Blog Posts:
             div.selector__year
-                button( onclick='changeDate("year", "sub")').calendar__btn.calendar__btn--left #{'<'}</button>
+                button(type='button' onclick='changeDate("year", "sub")').btn--controls.left #{'<'}</button>
                     span.year
-                    button( onclick='changeDate("year", "add")').calendar__btn.calendar__btn--right #{'>'}
+                    button(type='button' onclick='changeDate("year", "add")').btn--controls.right #{'>'}
             div.selector__month
-                button( onclick='changeDate("month", "sub")').calendar__btn.calendar__btn--left #{'<'}</button>
+                button(type='button' onclick='changeDate("month", "sub")').btn--controls.left #{'<'}</button>
                     span.month
-                    button( onclick='changeDate("month", "add")').calendar__btn.calendar__btn--right #{'>'}
+                    button(type='button' onclick='changeDate("month", "add")').btn--controls.right #{'>'}
             table.calendar__table
                    
                        
                              
                     
-        div.social   
+        div.sidebar__social   
             |Follow Bionic Prose on these social media sites:  
             a(href="https://twitter.com/bionicprose?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @bionicprose): script(async src="https://platform.twitter.com/widgets.js" charset="utf-8")           
             div.fb-like(data-href="http://www.bionicprose.com/blog" data-width="100" data-layout="standard" data-action="like" data-size="large" data-show-faces="true" data-share="true")
@@ -59,5 +56,26 @@ mixin sideBar
 mixin search
     div.search
         form(action='/blog/search' method='POST').search__form
-            input(type='text' name='search')
-            button.search__btn search
+            label(for='search')
+            input(type='text' id='search' name='search')
+            button(type='submit').search__button.btn--controls search
+
+mixin moreBlogs(index)
+    div.blog__index     
+            - var x = 0 
+            each val in blogs
+                if x > index  && x < index + 6
+                    div.blog__index__post 
+                        div.blog__header__image(style='background-image: url('+val.headerSettings.headerImg+');background-position: '+val.headerSettings.positionX+'px '+val.headerSettings.positionY+'px; padding-top: '+val.headerSettings.size+'%;')
+                            div.blog__title(style='color: '+ val.titleSettings.fontColor+';top: '+val.titleSettings.fontTop+'%;left: '+val.titleSettings.fontLeft+'%;font-size:' +val.titleSettings.fontSize+'em;')
+                                a(href='/blog/'+val.url) #{val.title}
+                        div.blog__post-date
+                            |Posted by #{val.author.username} on #{val.postDate}
+                        div.blog__body__preview
+                            |!{val.content}
+                            div.blog__read-more
+                                a(role='button' href='/blog/'+val.url): button.read-more__btn read more
+            - x++  
+    if blogs.length > index +6
+        div.pageTurner
+            button(onclick='showMore('+index+6+')' type='button').btn--controls.more-blogs__btn show more blog posts                        

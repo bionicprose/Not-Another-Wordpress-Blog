@@ -1,202 +1,324 @@
-html {
-    min-height: 100%;
-}
+html,
 body {
-    height: 100%;
-    width: 100%;
-    /* background-image: url('/img/transparent.jpg'); */
-     margin: 0;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    line-height: 1.5;
-    
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5em;
+  font-family: "IBM Plex Mono", monospace;
+  color: #4d4d4d;
+}
+.hidden {
+  display: none;
 }
 button {
-    min-height: 36px;
-    min-width: 36px;
+  min-height: 36px;
+  min-width: 36px;
+}
+button::-moz-focus-inner {
+  border: 0;
 }
 h1 {
-    font-family: 'Megrim', cursive;
-    font-size: 4em;
+  font-family: "Megrim", cursive;
+  font-size: 2em;
+  line-height: 1em;
 }
 
 h2 {
-    font-family: 'Megrim', cursive;
-    font-size: 3em;
+  font-family: "Megrim", cursive;
+  font-size: 1.5em;
 }
 
+h3 {
+  font-family: "Megrim", cursive;
+  font-size: 1.25em;
+}
 .nav {
-    top: 0;
-    
-    width:100%;
-   
-    margin: 0px;
- 
+  top: 0;
+  margin-bottom: 1%;
+
+  width: 100%;
 }
 
 .nav__banner {
-    position: relative;
-    height: 350px;
-    background-image: url(../img/bionicwriter-1900-c.png);
-    background-repeat: no-repeat;
-    background-size: cover;
-    width:100%;
-    background-position: center;
-  
-    z-index: 1;
-    
+  position: relative;
+  height: 50px;
+  background-image: url(../img/bionicwriter-100px.png),
+    url(../img/chaos-bar.png);
+  background-repeat: no-repeat, no-repeat;
+  background-size: contain, cover;
+  width: 100%;
+  background-position: top left, center;
+
+  z-index: 1;
 }
 
+.nav__title--mini {
+  position: relative;
+  font-family: "Megrim", cursive;
+  font-weight: bold;
+  font-size: 2em;
+  color: #4d4d4d;
+  left: 10%;
+  top: 65%;
+}
+.nav__title--macro,
+.nav__subtitle {
+  display: none;
+  position: absolute;
+}
+.nav__title--macro {
+  left: 30%;
+  top: 10%;
+  font-size: 2vw;
+}
 
- .nav__menu--hamburger {
-     display: none;
-     font-size: 12px;
-        font-family: 'Megrim', cursive;
-        font-weight: bold;
-        writing-mode: vertical-lr;
-        text-orientation: upright;
-        color: 4d4d4d;
-        position:absolute;
-        top: 0;
-        right: 15px;
-        cursor: pointer;
- }
- .nav__menu--hamburger:hover {
-     color: rgb(37, 171, 180);
- }
+.nav__subtitle {
+  text-align: right;
+  font-size: 1.75vw;
+  line-height: 1em;
+  width: 250px;
+  left: 57%;
+  top: 50%;
+}
+.nav__menu--hamburger {
+  font-size: 1em;
+  font-family: "Megrim", cursive;
+  font-weight: bold;
+  writing-mode: vertical-lr;
+  text-orientation: upright;
+  color: #4d4d4d;
+  position: absolute;
+  top: 15%;
+  right: 15px;
+  cursor: pointer;
+}
+
 .nav__menu--hamburger:active {
-    color: rgb(118, 222, 230);
+  color: rgb(118, 222, 230);
 }
- .overlay {
-     position:fixed;
-     top: 0;
-     left: 0;
-     right: 0;
-     bottom: 0;
-     display: none;
-     /* height: 100%;
-     width: 100%; */
-     z-index: 2;
-     background-image: url(../img/bionicwriter-mobile-3.png), url(../img/clouds-mobile-3.png);
-     background-color: white;
-     background-repeat: no-repeat, no-repeat;
-     background-position: center bottom;
-     background-size: auto, cover;
-     /* background-attachment: scroll, auto; */
-     /* opacity: 30%; */
- }
-.overlay__menu a{
-    
-    color: black;
-    text-decoration: none;
+.overlay {
+  display: none;
+  min-height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  z-index: 2;
+  background-image: url(../img/bionicwriter-mobile-3.png),
+    url(../img/clouds-mobile-3.png);
+  background-color: white;
+  background-repeat: no-repeat, no-repeat;
+  background-position: center bottom;
+  background-size: auto, cover;
+}
+.overlay__menu > div {
+  margin-top: 2%;
+}
+
+.overlay__menu__btn {
+  cursor: pointer;
+  border: none;
+  background: transparent;
 }
 .overlay__menu__btn {
-    cursor: pointer;
-    font-weight: bold;
-    border:none;
-    background: transparent;
+  color: #4d4d4d;
+  text-shadow: -1px -1px 1px rgb(152, 213, 231), 1px -1px 1px rgb(152, 213, 231),
+    -1px 1px 1px rgb(152, 213, 231), 1px 1px 1px rgb(152, 213, 231);
 }
-.overlay__menu__btn:active{
-    top: 5px;
-    text-shadow:
-		-1px -1px 2px rgb(11, 185, 238),
-		1px -1px 2px rgb(11, 185, 238),
-		-1px 1px 2px rgb(11, 185, 238),
-		1px 1px 2px rgb(11, 185, 238)
+.overlay__menu__btn:focus {
+  outline: none;
+}
+.overlay__menu__btn:active {
+  text-decoration: none;
+  padding-top: 5px;
+  font-size: 0.8em;
+}
+.overlay__search__input {
+  width: 100px;
 }
 
- .overlay__x {
-     cursor: pointer;
-     position: absolute;
-     top: 0;
-     right: 15px;
- }
- .overlay__x:hover {
-    color: rgb(37, 171, 180);
- }
- .overlay__x:active {
-    color: rgb(118, 222, 230);
- }
+.overlay__x {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 15px;
+}
+.overlay__x:hover {
+  color: rgb(37, 171, 180);
+}
+.overlay__x:active {
+  color: rgb(118, 222, 230);
+}
 
- .overlay__menu {
-     font-size: 2em;
-     font-family: 'Megrim', cursive;
-     margin-left: 2%;
-     margin-bottom: 5%;
- }
+.overlay__menu {
+  font-size: 2em;
+  font-family: "Megrim", cursive;
+  margin-left: 2%;
+  margin-bottom: 5%;
+  color: rgb(18, 152, 175);
+}
 .nav__menu {
-   
-   
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-    width:30%;
-    margin: 0 auto;
-    font-family: 'Megrim', cursive;
-    font-size: 2em;
-    padding-bottom: 3em;
-    /* grid-gap: 1em; */
-   
+  font-family: "megrim", cursive;
+  font-weight: bold;
+  font-size: 1.5vw;
+  flex-flow: row;
+  margin: 1% auto;
+  width: 700px;
+  justify-content: space-between;
+  display: none;
+  text-shadow: 2px 1px 1px rgb(95, 235, 223);
 }
 
-.nav__menu  div {
-    
-   
-    /* margin-top: 1em;
-    padding-bottom: 2em; */
-    
-    text-align: center;
-    border-bottom: 2px solid white;
-    color: white;
-    
+.nav__menu div {
+  text-align: center;
+  border-bottom: 2px solid white;
+  color: white;
 }
 
-.nav__menu  a{
-    text-decoration: none;
+.nav__menu a {
+  text-decoration: none;
+  color: grey;
+}
+.nav__menu a:hover {
+  outline: none;
+  text-shadow: 2px 1px 1px rgb(148, 25, 148);
+}
+.nav__menu a:active {
+  outline: none;
+  font-size: 1.25vw;
 }
 .nav__menu__item--1 {
-    grid-column: 1/1;
+  grid-column: 1/1;
 }
 .nav__menu__item--2 {
-    grid-column: 2/2;
+  grid-column: 2/2;
 }
 
 .nav__menu__item--3 {
-    grid-column:3/3;
+  grid-column: 3/3;
 }
 
 .nav__menu__item--4 {
-    grid-column:4/4;
+  grid-column: 4/4;
 }
-
 
 .footer__links {
-    padding-top: 10em;
-    top:50em;
-    /* width: 400px; */
-    margin: 0 auto;
-    text-align: center;
+  padding-top: 10em;
+  top: 50em;
+
+  margin: 0 auto;
+  text-align: center;
 }
 .footer__links a {
-    
-    margin: 25px;
+  margin: 1%;
 }
-
+.messages {
+  text-align:center;
+  font-size: 1.5em;
+}
 .messages__error {
-    grid-column: 1/5;
-    grid-row: 2;
-    /* margin: 0 auto; */
-    /* width: 400px;
-    height: 50px; */
-    background-color: rgba(209, 20, 20, 0.548);
-    color: rgb(10, 7, 201);
+  grid-column: 1/5;
+  grid-row: 2;
+  font-family: "Megrim", cursive;
+  font-weight: bold;
+  margin: 0 auto;
+  background-color: rgba(209, 20, 20, 0.548);
+  color: rgb(10, 7, 201);
 }
 
 .messages__info {
-    grid-column: 1/5;
-    grid-row: 2;
-    /* margin: 0 auto; */
-    /* width: 400px;
-    height: 50px; */
-    background-color: rgba(20, 187, 209, 0.973);
-    color: rgb(10, 7, 201);
+  font-family: "Megrim", cursive;
+  font-weight: bold;
+  grid-column: 1/5;
+  grid-row: 2;
+  margin: 0 auto;
+
+  background-color: rgba(20, 187, 209, 0.973);
+  color: rgb(10, 7, 201);
+}
+
+/**** buttons *****/
+
+.btn--general {
+  background-image: linear-gradient(to bottom, white, #bac9d1);
+  font-family: "Megrim", cursive;
+  font-weight: bold;
+  font-size: 1.35em;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.btn--general:hover {
+  border: 1px solid rgb(37, 171, 180);
+}
+
+.btn--general:active {
+  background-image: linear-gradient(to top, white, #bac9d1);
+  font-size: 1.5em;
+  font-weight: normal;
+}
+
+.btn--controls {
+  text-align: center;
+  font-weight: bold;
+  font-family: "Megrim", cursive;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 2em;
+  min-height: 36px;
+  min-width: 36px;
+  box-shadow: 1px 3px 1px grey;
+}
+
+.btn--controls:active {
+  box-shadow: 1px 1px 1px grey;
+  transform: translateY(4px);
+}
+
+.icon--controls {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 2em;
+  min-height: 36px;
+  min-width: 36px;
+  box-shadow: 1px 3px 1px grey;
+}
+
+.icon--controls:active {
+  box-shadow: 1px 1px 1px grey;
+  transform: translateY(4px);
+}
+
+/******************************************************/
+/* @media queries. Base starts at 320px screen width */
+/****************************************************/
+
+@media screen and (min-width: 1200px) {
+  .nav__banner {
+    height: 200px;
+    background-image: url(../img/bionicwriter-1900-surrounded.png);
+    background-size: cover;
+    background-position: center;
+  }
+  .nav__title--mini,
+  .nav__menu--hamburger {
+    display: none;
+  }
+  .nav__title--macro,
+  .nav__subtitle {
+    display: inline;
+  }
+  .nav__menu {
+    display: flex;
+  }
 }

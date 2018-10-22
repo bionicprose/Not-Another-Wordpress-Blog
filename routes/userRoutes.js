@@ -1,82 +1,107 @@
-var express = require('express'),
-    router  = express.Router({mergeParams:true}),
-    User    = require('../models/user'),
-    middleware  = require('../middleware'),
-    Blog    = require('../models/blog'),
-    Comment = require('../models/comments');
-
+var express = require("express"),
+  passport = require('passport'),
+  router = express.Router({ mergeParams: true }),
+  middleware = require("../middleware"),
+  multer = require("multer"),
+  user__controller = require('../controllers/userController');
 
 
 
 ////////////////////////
-// admin route need to add isAdmin middleware to routes
+// admin route
 ///////////////////////
-router.get('/admin', middleware.isAdmin, function(req, res) {
-    Blog.find({}, function(err, foundBlog) {
-        User.find({}, function(err, foundUser) {
-            Comment.find({}, function(err, foundComment) {
-                res.render('admin/admin', {blogs: foundBlog, users: foundUser, comments: foundComment});
-
-            });
-        });
-
-        });
-    });
-
-//////////////////////////////
-//Index Route /writers only
-//////////////////////////////
-
-router.get('/user', function(req, res) {
-    res.render('user/index');
-});
-
-//////////////////////////////
-// New User Routes
-/////////////////////////////
-
-router.get('/user/new', function(req, res) {
-    res.render('user/new');
-});
-
-router.post('/user', function(req, res) {
-    
-});
-
-//////////////////////////////////////////////
-// User Show Route / to see other user profiles
-///////////////////////////////////////////////
-router.get('/user/:user', function(req, res) {
-    res.render('user/show');
-});
-
+router.get("/admin", middleware.isAdmin, user__controller.user__admin__get);
 
 //////////////////////////////
 // Edit and Update User Routes
 //////////////////////////////
 
-router.get('/user/:user/edit', function(req, res) {
-    res.render('user/edit');
+
+
+router.put(
+  "/user/:user",
+  middleware.isUser,
+  multer(middleware.multerProfilePic).single("profilePic"), user__controller.user__update__post);
+  
+
+
+/////////////////////
+// Login
+////////////////////
+
+router.get("/login", function(req, res, next) {
+  console.log(req.flash("loginMessage"));
+  res.render("login", { message: req.flash("loginMessage") });
 });
 
-router.put('/user/:user', middleware.isAdmin, function(req, res) {
-    User.findByIdAndUpdate(req.params.user, req.body.user, function(err, updatedUser){
-        if(err || !updatedUser) {
-            req.flash('error', 'Sorry, that user could not be updated.');
-        } else {
-            req.flash('notify', 'You have updated ' + updatedUser.name + '.');
-            res.redirect('/admin');
-        }
-    });
-});
+router.post(
+  "/login",
+  passport.authenticate("local-login", {
+    successRedirect: "/profile",
+    failureRedirect: "/login",
+    failureFlash: true
+  })
+);
 
 
-//////////////////////////////
-//Destroy User Routes
-/////////////////////////////
-router.delete('/user/:user', function(res, req) {
-    res.render('user/index');
-});
+
+///////////////////////
+// Profile section
+//////////////////////
+
+router.get("/profile", middleware.isLoggedIn, user__controller.user__profile__get);
+
+//////////////////////
+// Facebook Routes
+/////////////////////
+
+router.get(
+  "/auth/facebook",
+  passport.authenticate("facebook", {
+    scope: ["public_profile", "email"]
+  })
+);
+
+router.get("/auth/facebook/callback", user__controller.user__facebook__callback);
+
+////////////////////////
+// Twitter Routes for future use
+///////////////////////
+
+// app.get('/auth/twitter', passport.authenticate('twitter'));
+
+// app.get('auth/twitter/callback',
+//     passport.authenticate('twitter', {
+//         successRedirect: '/profile',
+//         failureRedirect: '/'
+
+// }));
+
+///////////////////
+// Google Routes
+////////////////////
 
 
+
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+router.get("/auth/google/callback", user__controller.user__google__callback);
+
+
+
+///////////////////////
+// Logout
+////////////////////////
+
+router.get("/logout", user__controller.user__logout);
+
+
+  /************ */
+/* catchall   */
+
+router.get('/*', user__controller.user__catchall);
 module.exports = router;
+// module.exports = app;

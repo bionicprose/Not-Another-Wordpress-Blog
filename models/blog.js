@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var blogSchema = new mongoose.Schema({
-    title: {type: String, required: true},
+    title: {type: String, required: true, unique: true},
     url: {type: String},
     author: {
         id: {
@@ -22,12 +22,12 @@ var blogSchema = new mongoose.Schema({
             default: 'publish'
         }, 
     createDate: {type: Date, 'default': Date.now},   
-    postDate: {type: String},
-    editDate:[{type: String}],
+    postDate: {type: Date},
+    editDate:[{type: Date}],
     content: {type: String, required: true},
     tags: [{type: String}],
-    heroSettings: {
-        heroImg: {type: String},
+    headerSettings: {
+        headerImg: {type: String},
         size: {type: Number},
         positionX: {type: Number},
         positionY: {type: Number},

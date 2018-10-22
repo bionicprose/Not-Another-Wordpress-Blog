@@ -1,0 +1,13 @@
+extends includes/layout.pug 
+//- include includes/mixins.pug
+
+block content
+    div.bionicProse(data-blogs=blogs)
+        div.not-found
+            h1 404
+            h3 That file could not be found
+    
+        +sideBar
+    
+    block foot append
+        script(src='../../javascript/global.js')

@@ -73,7 +73,7 @@ console.log('passport is being used');
                             newUser.local.email = email;
                             newUser.local.username  = username;
                             newUser.local.password = newUser.generateHash(password);
-                            newUser.pic.push('/img/profile-iris.svg');
+                            newUser.pic = '/img/oliver.jpg';
                             shell.mkdir('-p', '/home/zac/webdev/bionicprose/public/bionicUser/' + newUser.id);
                             //setting local credentials
                             newUser.save(function(err) {
@@ -89,7 +89,7 @@ console.log('passport is being used');
                     newUser.local.email = email;
                     newUser.local.username = username;
                     newUser.local.password = newUser.generateHash(password);
-                    newUser.pic.push('/img/profile-iris.svg');
+                    newUser.pic = ('/img/oliver.jpg');
                     
                     newUser.save(function(err) {
                                if(err) {
@@ -185,8 +185,10 @@ function(req, token, refreshToken, profile, done) {
         if(!req.user){
             console.log('no req.user');
         User.findOne({'facebook.id' : profile.id}, function(err, user) {
-            if(err)
+            if(err){
+                req.flash('error', 'Sorry, that action could not be completed. Reason: ' +err);
                 return done(err);
+            }
 
             if(user) {
                 return done(null, user);
@@ -198,7 +200,11 @@ function(req, token, refreshToken, profile, done) {
                 newUser.facebook.token  = token;
                 newUser.local.name   = profile.name.givenName + ' ' + profile.name.familyName;
                 newUser.local.email  = profile.emails[0].value;
-                newUser.pic.push('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200');
+                if('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200') {
+                    newUser.pic.push('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200');
+                } else {
+                    newUser.pic =  '/img/oliver.jpg';
+                }
                 newUser.facebook.name   = profile.name.givenName + ' ' + profile.name.familyName;
                 newUser.facebook.email  = profile.emails[0].value;
                 shell.mkdir('-p', '/home/zac/webdev/bionicprose/public/bionicUser/' + newUser.id);
@@ -234,7 +240,10 @@ function(req, token, refreshToken, profile, done) {
         }
         user.facebook.name   = profile.name.givenName + ' ' + profile.name.familyName;
         user.facebook.email  = profile.emails[0].value;
-        user.pic.push('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200');
+        if (!user.pic && 'https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200' ) {
+            user.pic = ('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200');
+    }
+
         // save the user
 
         user.save(function(err) {
@@ -342,6 +351,7 @@ function(req, token, refreshToken, profile, done) {
                     newUser.local.name     = profile.displayName;
                     newUser.local.email    = profile.emails[0].value; // pull the first email
                     newUser.google.email   = profile.emails[0].value;
+                    newUser.pic            = '/img/oliver.jpg';
                     shell.mkdir('-p', '/home/zac/webdev/bionicprose/public/bionicUser/' + newUser.id);
                     newUser.save(function(err) {
                         if(err)
@@ -370,6 +380,9 @@ function(req, token, refreshToken, profile, done) {
             }
             user.google.name           = profile.displayName;
             user.google.email          = profile.emails[0].value;
+            if(!user.pic) {
+                user.pic = '/img/oliver.jpg';
+            }
             user.save(function(err) {
                 if(err)
                     throw err;

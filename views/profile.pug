@@ -1,80 +1,115 @@
-extends includes/layout.pug
+extends includes/layout-profile.pug
 
 
 
 block content
-    if user.username
-        h1 Profile Page for #{user.username}
-    else 
-        h1 Profile Page for #{user.local.name}
+    
         
        
     div.control-panel
+        div.profile__header
+            if user.username
+                h1 Profile Page for #{user.username}
+            else 
+                h1 Profile Page for #{user.local.name}
         div.control-panel__sidebar
-            img(src=user.pic[0]).profile-pic__img
-            p: button.profile-pic__btn Choose Profile Picture
-            
+            div.profile-pic
+                img(src=user.pic).profile-pic__img
+            div.profile-pic__selector
+                button.profile__btn(onclick='show("pic")') Choose Profile Picture
+                div.profile-pic__form.hidden
+                    form(action='/user/'+currentUser.id+'?_method=PUT' enctype='multipart/form-data' method='POST')
+                        p Upload a new profile picture(JPG, GIF, or PNG under 50kb)
+                        div.profile-pic__buttons
+                            label.profile__btn--browse.profile__btn(for='profilePic' onclick='show("upload")') browse
+                            input.pic__input.hidden(type='file' id='profilePic' name='profilePic')
+                            button(type='submit').profile__btn.profile-pic__btn--upload.hidden Upload
+                            div.profile-pic__filename
+
             div.utility
-                if(!user.local.username)
-                    p:a(href='/local-connect'): button.user-data__button--local-connect Set a Username and Password
-                if !user.facebook.id
-                    p: a(href='/connect/facebook'): button.utility__btn__facebook--connect Connect Your Facebook Account
-                if !user.twitter.id
-                    p: a(href='/connect/twitter'): button.utility__btn__twitter--connect Connect Your Twitter Account
-                if !user.google.id
-                    p: a(href='/connect/google'): button.utility__btn__google--connect Connect Your Google Account
-                p Write a Blog Post
-                    a(href='/blog/new'): span.icon.fas.fa-plus
-                a(href='/logout') Logout
+                h2 If you have any comments or blog posts, you can review them below:
+                    if(user.role > 1)
+                        p Write a Blog Post
+                            a(href='/blog/new'): span.icon.fas.fa-plus
+               
+            if(blogs.length > 0)
+                div.blog-posts--show 
+                    h2 Your Blog Posts 
+                        span(onclick='show("posts")').icon.fas.fa-plus
+                    div.blog-posts.hidden
 
-        div.control-panel__main
-            div.blog-posts--show 
-                h2 Your Blog Posts 
-                    span(onclick='showPosts()').icon.fas.fa-plus
-            
-
-            table.blog__table 
-                tr.table__header
-                    th Title
-                    th Tags
-                    th Status
-                    th Post Date
-                    th Edit Date
-                each val in blogs
-                    tr.table__entry
-                        td: a(href='/blog/'+val.url) #{val.title}
-                        td #{val.tags}
-                        td #{val.state}
-                        td #{val.postDate}
-                        td #{val.editDate}
-                        td: a(href='/blog/' + val.url + '/edit'): button Edit
-                            form(method='POST' action='/blog/'+val.url+'?_method=DELETE')
-                                button.blog__edit__btn--delete Delete
-                            if val.state == 'draft'
-                                form(method='POST' action='/blog/'+val.url+'?_method=PUT')
-                                    button.editor__button__publish(type='submit' name='state' value='publish-only') Publish
-            
-            div.comments--show 
-                h2 Your Comments
-                    span(onclick='showComments()').icon.fas.fa-plus
-            
-            
-            table.comment__table
-                tr.table__header
-                    th Your Comment
-                    th Blog Title
-                    th Post Date
-                    th Edit Date
-                each val in comments
-                    tr.table__entry
-                        td #{val.content}
-                        td: a(href='/blog/'+val.blogPost.url) #{val.blogPost.title}
-                        td #{val.postDate}
-                        td #{val.editDate}
-                        td: a(href='/blog/' + val.blogPost.url + '/comments/'+val._id+'/edit'): button Edit
-                            form(method='POST' action='/blog/'+val.blogPost.url+'/comments/'+val._id+'?_method=DELETE')
-                                button.blog__edit__btn--delete Delete
+                        
+                        each val in blogs
+                            div.blog__table
+                                div.table__header.header--1
+                                    |title
+                                    div.table__data
+                                        a(href='/blog/'+val.url) #{val.title}
+                                div.table__header.header--2
+                                    |status
+                                    div.table__data
+                                        |#{val.state}
+                                div.table__header.header--3
+                                    |tags
+                                    div.table__data
+                                        |#{val.tags}
+                                div.table__header.header--4
+                                    |post date
+                                    div.table__data
+                                        |#{val.postDate}
+                                div.table__header.header--5
+                                    |edit date
+                                    div.table__data
+                                        |#{val.editDate}
+                                div.table__header.header--6
+                                    |maintenance
+                                    div.table__data.maintenance
+                                        a(href='/blog/' + val.url + '/edit'): button.profile__btn Edit
+                                            form(method='POST' action='/blog/'+val.url+'?_method=DELETE')
+                                                button.profile__btn Delete
+                                                if val.state == 'draft'
+                                                    form(method='POST' action='/blog/'+val.url+'?_method=PUT')
+                                                        button.profile__btn(type='submit' name='state' value='publish-only') Publish
+                        
                             
+            if(comments.length > 0)    
+                div.comments--show 
+                    h2 Your Comments
+                        span(onclick='show("comments")').icon.fas.fa-plus
+                
+                    div.comments.hidden
+                        each val in comments
+                            div.comment__table
+                                div.table__header.header--1
+                                    |comment
+                                    div.table__data
+                                        |#{val.content}
+                                div.table__header.header--2
+                                    |Orig. Post
+                                    div.table__data
+                                        a(href='/blog/'+val.blogPost.url) #{val.blogPost.title}
+                                div.table__header.header--3
+                                    |reply to
+                                    div.table__data
+                                        |#{val.originalPost.author}
+                                div.table__header.header--4
+                                    |post date
+                                    div.table__data
+                                        |#{val.postDate}
+                                div.table__header.header--5
+                                    |edit date
+                                    div.table__data
+                                        |#{val.editDate}
+                                div.table__header.header--6
+                                    |maintenance
+                                    div.table__data.maintenance
+                                        a(href='/blog/' + val.blogPost.url + '/comments/'+val._id+'/edit'): button.profile__btn Edit
+                                            form(method='POST' action='/blog/'+val.blogPost.url+'/comments/'+val._id+'?_method=DELETE')
+                                                button.profile__btn Delete
+                                        
+                                
+                     
 
-       
-    script(src='../../javascript/controlPanel.js')
+    block foot append   
+        script(src='../../javascript/controlPanel.js')
+        script(src='../../javascript/global.js')

@@ -19,12 +19,13 @@ var commentSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Blog'
         },
-        title: String
+        url: String,
+        title: String,
     },
     originalPost : {
         id : {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Commet'
+        ref: 'Comment'
     },
     author: String
     },

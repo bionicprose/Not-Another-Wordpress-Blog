@@ -4,38 +4,58 @@ html
         block head
             title= title
             meta(charset='utf-8')
-            meta(name='viweport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
+            meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
             link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous")
-            link(href="https://fonts.googleapis.com/css?family=Amatic+SC|Audiowide|Codystar|Cutive+Mono|Diplomata+SC|Hi+Melody|IBM+Plex+Mono|Megrim|Space+Mono|Text+Me+One" rel="stylesheet") 
+            link(href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono|Megrim" rel="stylesheet") 
             link(id='bpStyles' type='text/css' rel='stylesheet' href='../../stylesheets/main-login.css')
 
-    //- var messages = getMessages()
-
-    //- if messages.notify
-    //-     each msg in messages.info
-    //-         .info= msg
-    //- if messages.uError
-    //-     each msg in messages.uError
-    //-         .uError= msg
-    body    
+    body 
         div.nav
+            div.overlay
+                |Bionic Prose
+                div.overlay__x(onclick='menu("x")')
+                    i.fas.fa-times.fa-3x
+                div.overlay__menu
+                    div.overlay__menu__item--1
+                        a(href='/'): button.overlay__menu__btn Home
+                    div.overlay__menu__item--2
+                        a(href='/about'): button.overlay__menu__btn About
+                    div.overlay__menu__item--3
+                        a(href='/projects'): button.overlay__menu__btn Projects
+                    div.overlay__menu__item--4 
+                        a(href='/contact'): button.overlay__menu__btn Contact
+                    div.overlay__search.overlay__menu__item--5 
+                        form(action='/blog/search' method='POST').overlay__search__form
+                            button.overlay__menu__btn search:
+                            input(type='text' name='search' onclick='showBionicWriter("-")' onblur=('showBionicWriter("+")')).overlay__search__input
+                 
+            
             div.nav__banner
+                span.nav__title--macro
+                    |Bionic Prose
+                span.nav__subtitle
+                    |writing for the 21st century
+                span.nav__title--mini
+                    |bp
+                div.nav__menu--hamburger(onclick='menu("+")')
+                    i.fas.fa-bars.fa-3x
             div.nav__menu
                 div.nav__menu__item--1
-                    a(href='/blog') Home
+                    a(href='/') Home
                 div.nav__menu__item--2
                     a(href='/about') About
                 div.nav__menu__item--3
                     a(href='/projects') Projects
                 div.nav__menu__item--4
                     a(href='/contact') Contact
-                if messages
-                    if messages.error
-                        div.messages__error
-                            |#{messages.error}
-                    if messages.info
-                        div.messages__info
-                            |#{messages.info}    
+                    #{messages.info}
+            if messages
+                if messages.error
+                    div.messages__error.messages
+                        |#{messages.error}
+                if messages.info
+                    div.messages__info.messages
+                        |#{messages.info} 
 
                 
 

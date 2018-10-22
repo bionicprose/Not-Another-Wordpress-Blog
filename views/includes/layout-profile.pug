@@ -8,7 +8,7 @@ html
             <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no'>
             link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous")
             link(href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono|Megrim" rel="stylesheet") 
-            link(id='bpStyles' type='text/css' rel='stylesheet' href='../stylesheets/main.css')
+            link(id='bpStyles' type='text/css' rel='stylesheet' href='../stylesheets/main-profile.css')
 
 
     body 
@@ -30,7 +30,8 @@ html
                         form(action='/blog/search' method='POST').overlay__search__form
                             button.overlay__menu__btn search:
                             input(type='text' name='search' onclick='showBionicWriter("-")' onblur=('showBionicWriter("+")')).overlay__search__input
-             
+                            
+           
        
             
             div.nav__banner

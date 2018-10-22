@@ -2,9 +2,10 @@ extends ../includes/layout.pug
 
 block content
 
-    h1 Admin Panel
+    
 
     div.control-panel
+        h1 Admin Panel
         div.control-panel__sidebar
 
             div.utility
@@ -21,133 +22,140 @@ block content
         div.control-panel__main
             div.blog-posts--show
                 h2 Blog Posts
-                    span(onclick='showPosts()').icon.fas.fa-plus
+                    span(onclick='show("posts")').icon.fas.fa-plus
 
-                table.blog__table 
-                    tr.table__header
-                        th Title
-                        th Author
-                        th Tags
-                        th Status
-                        th Post Date
-                        th Edit Date
+                div.blog-posts.hidden
                     each val in blogs
-                        tr.table__entry
-                            td: a(href='/blog/'+val.url) #{val.title}
-                            td #{val.author.username}
-                            td #{val.tags}
-                            td #{val.state}
-                            td #{val.postDate}
-                            td #{val.editDate}
-                            td: a(href='/blog/' + val.url + '/edit'): button Edit
-                                form(method='POST' action='/blog/'+val.url+'?_method=DELETE')
-                                    button.blog__edit__btn--delete Delete
-                                if val.state == 'draft'
-                                    form(method='POST' action='/blog/'+val.url+'?_method=PUT')
-                                        button.editor__button__publish(type='submit' name='state' value='publish-only') Publish
+                        div.blog__table
+                            div.table__header.header--1
+                                |title
+                                div.table__data
+                                    a(href='/blog/'+val.url) #{val.title}
+                            div.table__header.header--2
+                                |Author
+                                div.table__data
+                                    |#{val.author.username}
+                            div.table__header.header--3
+                                |State
+                                div.table__data
+                                    |#{val.state}
+                            div.table__header.header--4
+                                |post date
+                                div.table__data
+                                    |#{val.postDate}
+                            div.table__header.header--5
+                                |edit date
+                                div.table__data
+                                    |#{val.editDate}
+                            div.table__header.header--6
+                                |maintenance
+                                div.table__data.maintenance
+                                    a(href='/blog/' + val.url + '/edit'): button.profile__btn Edit
+                                        form(method='POST' action='/blog/'+val.url+'?_method=DELETE')
+                                            button.profile__btn Delete
+                                            if val.state == 'draft'
+                                                form(method='POST' action='/blog/'+val.url+'?_method=PUT')
+                                                    button.profile__btn(type='submit' name='state' value='publish-only') Publish
+               
+            if(comments.length > 0)    
+                div.comments--show 
+                    h2 Your Comments
+                        span(onclick='show("comments")').icon.fas.fa-plus
                 
-            div.comments--show 
-                h2 Comments
-                    span(onclick='showComments()').icon.fas.fa-plus
-                
-                
-                table.comment__table
-                    tr.table__header
-                        th Comment
-                        th Blog Title
-                        th Post Date
-                        th Edit Date
-                    each val in comments
-                        tr.table__entry
-                            td #{val.content}
-                            td #{val.author.username}
-                            td: a(href='/blog/'+val.blogPost.url) #{val.blogPost.title}
-                            td #{val.postDate}
-                            td #{val.editDate}
-                            td: a(href='/blog/' + val.blogPost.url + '/comments/'+val._id+'/edit'): button Edit
-                                form(method='POST' action='/blog/'+val.blogPost.url+'/comments/'+val._id+'?_method=DELETE')
-                                    button.blog__edit__btn--delete Delete
+                    div.comments.hidden
+                        each val in comments
+                            div.comment__table
+                                div.table__header.header--1
+                                    |comment
+                                    div.table__data
+                                        |#{val.content}
+                                div.table__header.header--2
+                                    |Author
+                                    div.table__data
+                                        #{val.author.username}
+                                div.table__header.header--3
+                                    |reply to
+                                    div.table__data
+                                        |#{val.replyTo}
+                                div.table__header.header--4
+                                    |Original Post
+                                    div.table__data
+                                         a(href='/blog/'+val.blogPost.url) #{val.blogPost.title}
+                                div.table__header.header--5
+                                    |post date/edit date
+                                    div.table__data
+                                        |#{val.postDate} /
+                                        p #{val.editDate}
+                                div.table__header.header--6
+                                    |maintenance
+                                    div.table__data.maintenance
+                                        a(href='/blog/' + val.blogPost.url + '/comments/'+val._id+'/edit'): button.profile__btn Edit
+                                            form(method='POST' action='/blog/'+val.blogPost.url+'/comments/'+val._id+'?_method=DELETE')
+                                                button.profile__btn Delete
             
             div.users--show 
                 h2 Users
-                    span(onclick='showUsers()').icon.fas.fa-plus
+                    span(onclick='show("users")').icon.fas.fa-plus
                     
                 - var y = 0;
-                div.users
+                div.users.hidden
                     each val in users 
                         - y++
-                        form(action='/user/'+val._id+'?_method=PUT' method='POST').user__form
-                            table( id ='user' + y).user__table
-                                div.table__user
+                        form(action='/user/'+val._id+'?_method=PUT' method='POST' onsubmit='return updateUser('+y+')').user__form
+                            div.table__user
                                     |User #{val._id} 
-                                    span(data-userId=y).edit.user__btn Edit
-                                    button(data-userId=y type='submit').submit.user__btn Submit
-                                tr.table__header
-                                    th Local Username
-                                    th Local Email
-                                    th Local Name
-                                    th Local Profile Pic
-                            
-                                tr.table__entry
-                                    td(id = 'lUsername' + y) #{val.local.username}
-                                    input(type='text' name='user[local][username]').user__form--hidden(id = 'lUsername--hidden' + y)
-                                    td(id = 'lEmail' + y) #{val.local.email}
-                                    input(type='text' name='user[local][email]').user__form--hidden(id = 'lEmail--hidden' + y)
-                                    td(id = 'lName' + y) #{value=val.local.name}
-                                    input(type='text' name='user[local][name]').user__form--hidden(id = 'lName--hidden' + y)
-                                    td(id = 'lPic' + y) #{val.local.pic}
-                                    input(type='text' name='user[local][pic]').user__form--hidden(id = 'lPic--hidden' + y)
+                                   
+                            div( id ='user' + y).user__table
                                 
-                                tr.table__header
-                                    th Facebook Id
-                                    th Facebook Email
-                                    th Facebook Name
-                                    th Facebook Profile Pic
+                                div.table__header.header--1
+                                    |Local Username
+                                    div.table__data(class='user'+y id = 'lUsername' + y)
+                                        |#{val.local.username}
+                                        input(type='text' name='username' id='lUsername--hidden' + y).hidden    
+                                div.table__header.header--2    
+                                    |Local email
+                                    div.table__data(class='user'+y id = 'lEmail' + y)
+                                        |#{val.local.email}
+                                        input(type='text' name='email' id = 'lEmail--hidden' + y).hidden
+                                div.table__header.header--4 
+                                    |Local name
+                                    div.table__data(class='user'+y id = 'lName' + y)
+                                        |#{value=val.local.name}
+                                        input(type='text' name='name' id = 'lName--hidden' + y).hidden
+                                div.table__header.header--3
+                                    |profile pic
+                                    div.table__data(class='user'+y id = 'lPic' + y)
+                                        |#{val.pic}
+                                        input(type='text' name='pic' id = 'lPic--hidden' + y).hidden
+                                div.table__header.header--5 
+                                    |Social Media
+                                    div.table__data
+                                        |facebook :
+                                        if val.facebook.id
+                                            |yes
+                                        else
+                                            |no
+                                        p google: 
+                                        if val.google.id
+                                            |yes
+                                        else
+                                            |no
+                                div.table__header.header--7 
+                                    |role
+                                    div.table__data(class='user'+y id='role'+y)
+                                        |#{val.role}
+                                        input(type='text' name='role' id='role--hidden' + y).hidden
+                                div.table__header.header--6 
+                                    |Maintenance
+                                    div.table__data.maintenance
+                                        button(type='button' onclick='edit('+y+')').edit.profile__btn.btn--general Edit
+                                        button(data-userId=y type='submit').submit.profile__btn.btn--general Submit
+                                        
 
-                                tr.table__entry
-                                    td(id = 'fId' + y) #{val.facebook.id}
-                                    input(type='text' name='user[facebook][id]').user__form--hidden(id = 'fId--hidden' + y)
-                                    td(id = 'fEmail' + y) #{val.facebook.email}
-                                    input(type='text' name='user[facebook][email]').user__form--hidden(id = 'fEmail--hidden' + y)
-                                    td(id = 'fName' + y) #{val.facebook.name}
-                                    input(type='text' name='user[facebook][name]').user__form--hidden(id = 'fName--hidden' + y)
-                                    td(id = 'fPic' + y) #{val.facebook.pic}
-                                    input(type='text' name='user[facebook][pic]').user__form--hidden(id = 'fPic--hidden' + y)
-                                    
-                                tr.table__header
-                                    th Google Id
-                                    th Google Email
-                                    th Google Name
-                                    th Google Profile Pic
-                                    
-                                tr.table__entry
-                                    td(id = 'gId' + y) #{val.google.username}
-                                    input(type='text' name='user[google][id]').user__form--hidden(id = 'gId--hidden' + y)
-                                    td(id = 'gEmail' + y) #{val.google.email}
-                                    input(type='text' name='user[google][email]').user__form--hidden(id = 'gEmail--hidden' + y)
-                                    td(id = 'gName' + y) #{value=val.google.name}
-                                    input(type='text' name='user[google][name]').user__form--hidden(id = 'gName--hidden' + y)
-                                    td(id = 'gPic' + y) #{val.local.pic}
-                                    input(type='text' name='user[google][pic]').user__form--hidden(id = 'gPic--hidden' + y)
-                                tr.table__header
-                                    th User ID
-                                    th Role 
 
-                                tr.table__entry
-                                    td(id = 'id' + y) #{val.id}
-                                    input(type='text' name='user[id]')(id='id--hidden' + y).user__form--hidden
-                                    td(id='role' + y) #{val.role}
-                                    input(type='text' name='user[role]')(id='role--hidden' + y).user__form--hidden 
-                         
-
-                                    
-                        
-                            //- td: a(href='/blog/' + val.blogPost.title + '/comments/'+val._id+'/edit'): button Edit
-                            //-     form(method='POST' action='/blog/'+val.blogPost.title+'/comments/'+val._id+'?_method=DELETE')
-                            //-         button.blog__edit__btn--delete Delete
+                               
                                 
 
        
 
     script(src='../../javascript/controlPanel.js') 
-    //- include ../includes/footer.pug

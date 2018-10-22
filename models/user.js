@@ -1,10 +1,9 @@
 var mongoose = require('mongoose'),
-    // passportLocalMongoose   = require('passport-local-mongoose'),
     bcrypt                  = require('bcrypt-nodejs');
 
 
     var userSchema = new mongoose.Schema ({
-        pic             : [{type: String}],
+        pic             : {type: String},
 
         local           : {
             username    : String,
@@ -57,39 +56,6 @@ var mongoose = require('mongoose'),
     };
 
     
-        // username: {type: String, required: true, index: { unique: true} },
-        // password: {type: String, required: true },
-        // loginAttempts: { type: Number, required: true, default: 0 },
-        // lockUntil: {type: Number}
-        // email: {type: String, required: true, unique: true},
-        // hash: String,
-        // salt: String,
-        // role: {type: String, enum:['Admin', 'Writer', 'Commenter', 'Mute'], default: 'Commenter'},
-        // creationDate: {type: Date},
-        // f_name: {type: String},
-        // l_name: {type: String},
-        // image: {type: String},
-        // bio: {type: String},
-        
-        // blogPost: [
-        //     {
-        //         type: mongoose.Schema.Types.ObjectId,
-        //         ref: 'Blog'
-        //     }
-                    
-        // ],
-
-        // comments: [
-        //     {
-        //         type: mongoose.Schema.Types.ObjectId,
-        //         ref: 'Comment'
-        //     }
-        // ]
-
-    // });
-
-   
-
-// userSchema.plugin(passportLocalMongoose);
+     
 
 module.exports = mongoose.model('User', userSchema);

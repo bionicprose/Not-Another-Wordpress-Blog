@@ -1,39 +1,19 @@
 extends ../includes/layout-comment.pug
+include ../includes/mixins.pug
 
 block content
     div.bionicProse(data-blogs=blogs)
         
         div.comment__edit
-        
+            h1 Edit your comment for !{blog.title}
             form(method='POST' action='/blog/'+blog.url+'/comments/'+comment._id+'?_method=PUT').comment__edit__form
-                h2 Edit your comment for !{blog.title}
-                textarea(rows='20' cols='100' name='comment[content]' required='true') #{comment.content}
+                textarea(rows='20' cols='100' name='comment[content]' required='true').comment__reply__textArea #{comment.content}
                 button.comments__btn Submit
             
-        div.sidebar
-            div.search
-                form(action='/blog/search' method='POST').search__form
-                    input(type='text' name='search')
-                    button.search__btn search
-            div.calendar
-                |Previous Blog Posts:
-                div.selector__year
-                    button( onclick='changeDate("year", "sub")').calendar__btn #{'<'}</button>
-                        span.year
-                        button( onclick='changeDate("year", "add")').calendar__btn #{'>'}
-                div.selector__month
-                    button( onclick='changeDate("month", "sub")').calendar__btn #{'<'}</button>
-                        span.month
-                        button( onclick='changeDate("month", "add")').calendar__btn #{'>'}
-                table.calendar__table
-                       
-            div.social   
-                |Follow Bionic Prose on these social media sites:  
-                a(href="https://twitter.com/bionicprose?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @bionicprose): script(async src="https://platform.twitter.com/widgets.js" charset="utf-8")           
-                div.fb-like(data-href="http://www.bionicprose.com/blog" data-width="100" data-layout="standard" data-action="like" data-size="large" data-show-faces="true" data-share="true")
+        +sideBar
 
-    //- div(class='userVar' data-userVariable = user.id)
     block append footer
        
-        script(src='../../../../javascript/search.js')
+
+        script(src='../../../../javascript/global.js')
 

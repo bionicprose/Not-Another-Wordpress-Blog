@@ -3,20 +3,13 @@ extends includes/layout-login.pug
 block content
     div.login
         if(!currentUser)
-            p Login or Register with:
-            div.signup
-                form(action='/login', method='POST').signup__form
-                    label Email
-                        input(type='text', name='username')
-                    label Password
-                        input(type='password' name='password')
-                    button.signup__btna(href='/login') Local Login
-
-            | To leave a comment or reply, please login with your Facebook or Google account   
+            div.login__message
+                |To leave a comment or reply, please login with Facebook or Google:        
             p: a(href='/auth/facebook'): button.login__btn.login__btn--facebook Login with Facebook
-            
             p: a(href='/auth/google'): button.login__btn.login__btn--google Login with Google
-
+            
+    block append footer
+        script(src='../javascript/global.js')
       
 
 

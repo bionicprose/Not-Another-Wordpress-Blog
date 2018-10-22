@@ -1,8 +1,8 @@
 extends ../includes/layout.pug
 
 block content
-    div#fb-root
-        <script>(function(d, s, id) { js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.1&appId=1905109646218883&autoLogAppEvents=1'; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.1&appId=1905109646218883&autoLogAppEvents=1'; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
     div.bionicProse(data-blogs=blogs)
         div.sidebar--left
         
@@ -10,64 +10,42 @@ block content
         - var count = 0    
         each val in blogs
             if count === 0
-                div(class='heroSettings' data-image = val.heroSettings.heroImg
-                                data-size = val.heroSettings.size
-                                data-gradient = val.heroSettings.gradient
-                                data-positionx = val.heroSettings.positionX
-                                data-positiony = val.heroSettings.positionY)
-                div(class='titleSettings' data-fontsize = val.titleSettings.fontSize
-                                data-fontcolor = val.titleSettings.fontColor
-                                data-fonttop   = val.titleSettings.fontTop
-                                data-fontleft = val.titleSettings.fontLeft)
                 div.blog__index__post--first
-                    div.blog__hero-img
-                        div.blog__hero-text(style='color: '+ val.titleSettings.fontColor+';')
+                    div.blog__header__image(style='background-image: url('+val.headerSettings.headerImg+');background-position: '+val.headerSettings.positionX+'px '+val.headerSettings.positionY+'px; padding-top: '+val.headerSettings.size+'%;')
+                        div.blog__title(style='color: '+ val.titleSettings.fontColor+';top: '+val.titleSettings.fontTop+'%;left: '+val.titleSettings.fontLeft+'%;font-size:' +val.titleSettings.fontSize+'em;')
                             a(href='/blog/'+val.url) #{val.title}
-                    div.blog__text__date
+                    div.blog__post-date
                         |Posted by #{val.author.username} on #{val.postDate}
                     div.blog__body
                         |!{val.content}
-                    //- if val.tags
-                    //-     div.blog__tags
-                    //-         div.blog__tags--text Tags:
-                    //-         - var z = 0
-                    //-         each tag in val.tags
-                    //-             if z < (val.tags.length - 1)
-                    //-                 a(href='/blog/tag/'+tag): button.tags__btn  #{tag}
-                    //-             else 
-                    //-                 a(href='/blog/tag/'+tag): button.tags__btn  #{tag}
-                    //-             - z++
+                  
                     div.comments__link
                         a(href='/blog/'+val.url+'#comments'): button.read-more__btn See Reader Comments
             -count++
                                         
-        div.blog__index     
+        div.blog__index#blog--1     
             - var x = 0 
             each val in blogs
-                if x > 0
+                if x > 0 && x < 7
                     div.blog__index__post 
-                        div.blog__image(style='background-image: url('+ val.heroSettings.heroImg +');')
-                            div.blog__text__title(style='color: '+ val.titleSettings.fontColor+';')
+                        div.blog__header__image(style='background-image: url('+val.headerSettings.headerImg+');background-position: '+val.headerSettings.positionX+'px '+val.headerSettings.positionY+'px; padding-top: '+val.headerSettings.size+'%;')
+                            div.blog__title(style='color: '+ val.titleSettings.fontColor+';top: '+val.titleSettings.fontTop+'%;left: '+val.titleSettings.fontLeft+'%;font-size:' +val.titleSettings.fontSize+'em;')
                                 a(href='/blog/'+val.url) #{val.title}
-                        p Posted by #{val.author.username} on #{val.postDate}
+                        div.blog__post-date
+                            |Posted by #{val.author.username} on #{val.postDate}
                         div.blog__body__preview
                             |!{val.content}
                             div.blog__read-more
                                 a(role='button' href='/blog/'+val.url): button.read-more__btn read more
-                            //- if val.tags
-                            //-     div.blog__tags
-                            //-         div.blog__tags--text Tags:
-                            //-         - var z = 0
-                            //-         each tag in val.tags
-                            //-             if z < (val.tags.length - 1)
-                            //-                 div.blog__tags--box: a(href='/blog/tag/'+tag) #{tag}
-
-                            //-             else 
-                            //-                 div.blog__tags--box: a(href='/blog/tag/'+tag) #{tag}
-                            //-             - z++
-                - x++       
+                - x++  
+        if blogs.length > 6
+            div.pageTurner
+                button(onclick='showMore(7)' type='button').btn--controls.more-blogs__btn show more blog posts                        
         +sideBar
         
+
+
+        
+
     block append footer
-       
-        script(src='../../javascript/index.js')
+        script(src='../../javascript/global.js')
