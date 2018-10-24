@@ -49,8 +49,10 @@
 }
 
 .blog__body {
-  padding-left: 2%;
-  font-size: 1.5em;
+  /* line-height: 1.75em; */
+  margin-left: 5%;
+  margin-right: 5%;
+  font-size: 1.25em;
 }
 .comments__link {
   margin: 0 auto;
@@ -402,6 +404,26 @@
 .more-blogs__btn {
   border-radius: 15px;
 }
+
+/*********************************/
+/** styles for standalone pages */
+/*******************************/
+
+.page {
+ 
+ margin-left: 2%;
+ margin-right: 2%;
+  grid-column: 1;
+  display:flex;
+  flex-flow: column;
+  max-width: 700px;
+}
+.page__content {
+  margin-left: 5%;
+  margin-right: 5%;
+  font-size: 1.25em;
+}
+
 /******************************************/
 /* @media queries                        */
 /*                                      */
@@ -491,6 +513,9 @@
   }
 }
 @media screen and (min-width: 700px) {
+  .page {
+    margin: 0 auto;
+  }
   .blog__index__post--first {
     min-width: 700px;
     margin: 0 auto;
@@ -542,7 +567,8 @@
   .bionicProse {
     display: grid;
     grid-template-columns: auto 200px;
-    margin-right: 10%;
+    margin: 0 auto;
+    max-width: 1200px;
   }
   .sidebar {
     display: flex;
@@ -551,38 +577,29 @@
   .blog__index__post--first {
     grid-column: 1;
     grid-row: 1;
-    margin: 2% 15% 0% auto;
+    margin: 2% 10% 0% auto;
     border-bottom: 1px solid #4d4d4d;
     padding-bottom: 2%;
   }
   .blog__index {
     grid-column: 1;
     grid-row: 2;
-    margin-left: 5%;
+    margin-left: 20%;
     grid-gap: 3%;
   }
+  .page {
+    margin-left: 20%;
 
 }
-@media screen and (min-width: 1250px) {
-  .blog__index {
-    margin-left: 10%;
+
+ @media screen and (min-width: 1500px) {
+  .bionicProse {
+    max-width: 1500px;
+    margin: 0 auto;
   }
-}
-@media screen and (min-width: 1300px) {
-  .blog__index {
-    margin-left: 15%;
+  .blog__index__post--first {
+    margin: 2% 17% 0% auto;
   }
-}
-@media screen and (min-width: 1400px) {
-  .comment__edit {
-    margin: 0 0 0 25%;
-  }
-  .blog__index {
-    margin-left: 20%;
-  }
-}
-@media screen and (min-width: 1500px) {
-  
   .comment__edit {
     margin: 0 0 0 35%;
   }
@@ -595,17 +612,7 @@
   .pageTurner {
     margin-left:12%;
   }
-}
-
-@media screen and (min-width: 1800px) {
-  .blog__index {
-    margin-left: 25%;
+  .page {
+    margin-left: 30%;
   }
-
-}
-@media screen and (min-width: 1900px) {
-  .searchResults {
-    grid-template-columns: repeat(4, 350px);
-  }
- 
 }

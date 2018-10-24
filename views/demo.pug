@@ -1,0 +1,23 @@
+extend includes/layout.pug 
+include includes/mixins.pug
+
+block content
+    div.bionicProse(data-blogs=blogs)
+        div.page
+            div.page__title
+                h1 A New Career in a New Town
+            div.page__content
+                p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nulla sapien, dapibus pharetra mi eu, mattis faucibus libero. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere lorem in ultricies viverra. Sed sagittis eget felis non laoreet. Aliquam porttitor neque odio, et condimentum purus tincidunt sed. Vestibulum in hendrerit risus. Vestibulum posuere felis vitae magna euismod, non consectetur massa mollis.
+
+                p Vivamus vel ornare ipsum. Praesent auctor ipsum sed enim suscipit venenatis. In lacus purus, lobortis ac nisi dictum, dapibus luctus quam. Nullam in eleifend justo, sit amet congue elit. Sed non dui eget leo dignissim accumsan eu ut odio. Duis id justo sed turpis interdum sagittis. Morbi id quam tempor, egestas arcu in, vehicula augue. Suspendisse potenti. Mauris faucibus tincidunt accumsan. Donec rhoncus egestas dignissim. Morbi bibendum ac turpis eu laoreet. Nulla metus ante, auctor in eros in, viverra porttitor velit. Sed scelerisque quam lacus, in dignissim neque consectetur ultrices. Vestibulum convallis mauris ut nulla bibendum egestas. Nunc sit amet tristique justo. Pellentesque non arcu turpis.
+
+                p Suspendisse convallis condimentum dui, sit amet rhoncus velit volutpat ut. Mauris vestibulum aliquet pharetra. Mauris consectetur neque at tortor vestibulum rutrum. Fusce faucibus, eros vel dignissim aliquam, dolor enim imperdiet ex, eu gravida quam ipsum eu lacus. Vivamus pulvinar, quam non ultricies tempor, libero tellus varius lacus, sit amet aliquet purus risus in libero. Mauris quis vehicula quam. Donec sed egestas magna. Nunc pellentesque tortor id sagittis luctus. Donec condimentum tincidunt rutrum. Sed sed ex venenatis, consequat massa a, pellentesque ante. Suspendisse consequat tortor blandit ante congue, et finibus quam gravida. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+
+                p Pellentesque eget nisl lorem. Sed aliquet elit diam, eu fringilla ipsum fermentum quis. Aliquam eleifend aliquet varius. Nunc non orci nunc. Aenean sodales purus eget nibh sodales, et facilisis enim auctor. Praesent a hendrerit erat. Nunc ultricies vel nibh porta fringilla. Vestibulum accumsan dignissim eros. Sed lobortis sem ac ipsum ultrices, non auctor orci gravida. Nunc pulvinar ornare leo. 
+
+        +sideBar
+
+
+
+    block foot append
+        script(src='../javascript/global.js')

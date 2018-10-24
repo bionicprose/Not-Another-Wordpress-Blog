@@ -12,11 +12,10 @@ var express         = require('express'),
     LocalStrategy   = require('passport-local'),
     back            = require("express-back"),
     router          = express.Router({mergeParams:true}),
-    myAPIKey        = process.env.MYAPIKEY;
-
-var commentRoutes   = require('./routes/commentRoutes'),
+    myAPIKey        = process.env.MYAPIKEY,
+    commentRoutes   = require('./routes/commentRoutes'),
     blogRoutes      = require('./routes/blogRoutes'),
-    // indexRoutes     = require('./routes/indexRoutes');
+    miscRoutes     = require('./routes/miscRoutes');
     userRoutes      = require('./routes/userRoutes');
 
 mongoose.connect('mongodb://localhost:27017/bionicprose', {useNewUrlParser: true});
@@ -58,7 +57,7 @@ app.use(function(req, res, next) {
 
 app.use(blogRoutes);
 app.use(commentRoutes);
-// app.use(indexRoutes);
+app.use(miscRoutes);
 app.use(userRoutes);
 
 //// error handling

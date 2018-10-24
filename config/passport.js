@@ -201,7 +201,7 @@ function(req, token, refreshToken, profile, done) {
                 newUser.local.name   = profile.name.givenName + ' ' + profile.name.familyName;
                 newUser.local.email  = profile.emails[0].value;
                 if('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200') {
-                    newUser.pic.push('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200');
+                    newUser.pic = ('https://graph.facebook.com/' + profile.id + '/picture?width=200&height=200');
                 } else {
                     newUser.pic =  '/img/oliver.jpg';
                 }
