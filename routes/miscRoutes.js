@@ -2,6 +2,8 @@ var express = require("express"),
   passport = require('passport'),
   router = express.Router({ mergeParams: true }),
   misc__controller = require('../controllers/miscController');
+  const nodemailer = require('nodemailer');
+
 
 
   /* About page */
@@ -15,6 +17,7 @@ router.get('/projects', misc__controller.misc__projects__get);
 /* Contact page */
 
 router.get('/contact', misc__controller.misc__contact__get);
+router.post('/contact', misc__controller.misc__contact__post );
 
 /* Demo page -- I might put this in blog routes*/
 
